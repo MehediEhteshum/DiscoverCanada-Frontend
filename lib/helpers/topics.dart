@@ -7,7 +7,7 @@ import '../models/topic.dart';
 
 Future<List<Topic>> fetchTopics() async {
   List<Topic> topics = [];
-  var homeUrl = "${FlutterConfig.get('BASE_URL')}/api/home";
+  var homeUrl = "${FlutterConfig.get('BASE_URL')}/discover-canada/api/home";
   final response = await http.get(homeUrl);
   if (response.statusCode == 200) {
     final extractedData = jsonDecode(response.body);

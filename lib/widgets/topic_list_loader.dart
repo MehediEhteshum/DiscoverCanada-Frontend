@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './topic_card.dart';
 import '../helpers/topics.dart';
 import '../models/topic.dart';
 
@@ -29,10 +30,12 @@ class _TopicListLoaderState extends State<TopicListLoader> {
             var topics = snapshot.data;
             return topics.length > 0
                 ? ListView.builder(
+                    padding: EdgeInsets.only(bottom: 20),
                     itemCount: topics.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        title: Text('${topics[index].title}'),
+                    itemBuilder: (BuildContext _, int index) {
+                      return TopicCard(
+                        topics: topics,
+                        index: index,
                       );
                     },
                   )

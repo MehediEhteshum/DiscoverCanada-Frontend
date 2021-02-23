@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
   final String title;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Discover Canada'),
