@@ -5,12 +5,21 @@ import 'package:flutter_config/flutter_config.dart';
 
 import '../models/topic.dart';
 
-Topic topic1 = Topic(id: 1, title: "Test");
-
-Future<void> fetchHomeTopics() async {
+Future<List<Topic>> fetchTopics() async {
   List<Topic> topics = [];
   var homeUrl = "${FlutterConfig.get('BASE_URL')}/api/home";
   final response = await http.get(homeUrl);
-  print(response.body);
-  // final extractedData = json.decode(response.body) as Map<String, dynamic>;
+  if (response.statusCode == 200) {
+    final extractedData = jsonDecode(response.body);
+    if (extractedData != null) {
+      extractedData.forEach((topicObj) => {
+            topics.add(
+              Topic(id: topicObj["id"], title: topicObj["title"]),
+            ),
+          });
+    }
+  } else {
+    print("Error loading data");
+  }
+  return topics;
 }
