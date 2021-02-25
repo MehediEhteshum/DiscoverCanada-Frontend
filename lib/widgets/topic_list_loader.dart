@@ -30,7 +30,7 @@ class _TopicListLoaderState extends State<TopicListLoader> {
             var topics = snapshot.data;
             return topics.length > 0
                 ? ListView.builder(
-                    padding: EdgeInsets.only(bottom: 20),
+                    padding: EdgeInsets.symmetric(vertical: 10),
                     itemCount: topics.length,
                     itemBuilder: (BuildContext _, int index) {
                       return TopicCard(

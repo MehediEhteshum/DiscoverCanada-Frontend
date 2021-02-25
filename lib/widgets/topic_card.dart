@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
 
 import '../models/topic.dart';
 
@@ -12,29 +13,41 @@ class TopicCard extends StatelessWidget {
   final List<Topic> topics;
   final int index;
 
+  void selectTopic() {
+    // do smthng
+    print("tapped");
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height / 3,
-      child: Card(
-        color: Colors.lightGreen,
-        elevation: 10,
-        margin: const EdgeInsets.only(
-          left: 10,
-          top: 20,
-          right: 10,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(MediaQuery.of(context).size.width / 30),
-        ),
-        child: Stack(children: <Widget>[
+    double unitWidthFactor = MediaQuery.of(context).size.width / 30;
+    double unitHeightFactor = MediaQuery.of(context).size.height / 30;
+    double cardHeight = unitHeightFactor * 10;
+
+    return Card(
+      shadowColor: Colors.grey,
+      elevation: 8,
+      margin: const EdgeInsets.all(10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(unitWidthFactor),
+      ),
+      child: Stack(
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(unitWidthFactor),
+            child: Image.network(
+              '${FlutterConfig.get('BASE_URL')}/${topics[index].imageUrl}',
+              height: cardHeight,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
           Positioned(
-            bottom: MediaQuery.of(context).size.width / 30,
-            right: MediaQuery.of(context).size.width / 30,
+            bottom: unitWidthFactor,
+            right: unitWidthFactor,
             child: Container(
-              width: MediaQuery.of(context).size.width / 1.75,
-              color: Colors.black38,
+              width: unitWidthFactor * 17,
+              color: Colors.black54,
               padding: const EdgeInsets.symmetric(
                 vertical: 5,
                 horizontal: 5,
@@ -45,13 +58,21 @@ class TopicCard extends StatelessWidget {
                 softWrap: true,
                 overflow: TextOverflow.fade,
                 style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.height / 30,
+                  fontSize: unitWidthFactor * 1.6,
                   color: Colors.white,
                 ),
               ),
             ),
-          )
-        ]),
+          ),
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: selectTopic,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
