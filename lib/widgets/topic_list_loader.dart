@@ -39,7 +39,14 @@ class _TopicListLoaderState extends State<TopicListLoader> {
                       );
                     },
                   )
-                : Text('Something went wrong');
+                : Text(
+                    'Something went wrong! :(',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
