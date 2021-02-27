@@ -16,15 +16,15 @@ class TopicCard extends StatelessWidget {
 
   void _selectTopic(BuildContext context) {
     print("tapped");
-    // List<String> testList = ["A", "B", "C"];
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Text("Select a Province"),
-    //     );
-    //   },
-    // );
+    List<String> testList = ["A", "B", "C"];
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Select a Province"),
+        );
+      },
+    );
   }
 
   @override
