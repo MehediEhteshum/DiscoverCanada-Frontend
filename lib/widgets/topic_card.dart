@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:frontend/screens/chapter_screen.dart';
 
+import './province_selection_dialog.dart';
 import '../models/topic.dart';
 
 class TopicCard extends StatelessWidget {
@@ -16,13 +16,10 @@ class TopicCard extends StatelessWidget {
 
   void _selectTopic(BuildContext context) {
     print("tapped");
-    List<String> testList = ["A", "B", "C"];
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text("Select a Province"),
-        );
+        return ProvinceSelectionDialog();
       },
     );
   }
