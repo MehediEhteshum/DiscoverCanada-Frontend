@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:frontend/screens/chapter_screen.dart';
 
 import '../models/topic.dart';
 
@@ -13,9 +14,17 @@ class TopicCard extends StatelessWidget {
   final List<Topic> topics;
   final int index;
 
-  void selectTopic() {
-    // do smthng
+  void _selectTopic(BuildContext context) {
     print("tapped");
+    // List<String> testList = ["A", "B", "C"];
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Text("Select a Province"),
+    //     );
+    //   },
+    // );
   }
 
   @override
@@ -68,7 +77,7 @@ class TopicCard extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: selectTopic,
+                onTap: () => _selectTopic(context),
               ),
             ),
           ),

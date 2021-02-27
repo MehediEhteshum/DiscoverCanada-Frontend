@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../widgets/topic_list_loader.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({Key key, this.title}) : super(key: key);
+class TopicScreen extends StatelessWidget {
+  TopicScreen({Key key, this.title}) : super(key: key);
 
   final String title;
 

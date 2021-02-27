@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 
-import './screens/home_screen.dart';
+import './screens/chapter_screen.dart';
+import './screens/topic_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      initialRoute: "/",
+      routes: {
+        "/": (ctx) => TopicScreen(),
+        ChapterScreen.routeName: (ctx) => ChapterScreen(),
+      },
     );
   }
 }
