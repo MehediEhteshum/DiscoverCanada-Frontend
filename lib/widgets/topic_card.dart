@@ -15,7 +15,6 @@ class TopicCard extends StatelessWidget {
   final int index;
 
   void _selectTopic(BuildContext context) {
-    print("tapped");
     showDialog(
       context: context,
       builder: (context) {

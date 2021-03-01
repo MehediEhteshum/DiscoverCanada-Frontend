@@ -12,29 +12,29 @@ class TopicListLoader extends StatefulWidget {
 }
 
 class _TopicListLoaderState extends State<TopicListLoader> {
-  Future<List<Topic>> futureTopics;
+  Future<List<Topic>> _futureTopics;
 
   @override
   void initState() {
     super.initState();
-    futureTopics = fetchTopics();
+    _futureTopics = fetchTopics();
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: FutureBuilder<List<Topic>>(
-        future: futureTopics,
+        future: _futureTopics,
         builder: (_, snapshot) {
           if (snapshot.hasData) {
-            var topics = snapshot.data;
-            return topics.length > 0
+            var _topics = snapshot.data;
+            return _topics.length > 0
                 ? ListView.builder(
                     padding: EdgeInsets.symmetric(vertical: 10),
-                    itemCount: topics.length,
+                    itemCount: _topics.length,
                     itemBuilder: (BuildContext _, int index) {
                       return TopicCard(
-                        topics: topics,
+                        topics: _topics,
                         index: index,
                       );
                     },

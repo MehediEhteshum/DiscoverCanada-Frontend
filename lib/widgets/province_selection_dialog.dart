@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 
-List<String> _testList = ["A", "B", "C"];
-String _itemSelected = _testList[0];
+List<String> _provinces = [
+  "All Provinces",
+  "Alberta",
+  "British Columbia",
+  "Manitoba",
+  "New Brunswick",
+  "Newfoundland and Labrador",
+  "Nova Scotia",
+  "Ontario",
+  "Prince Edward Island",
+  "Quebec",
+  "Saskatchewan"
+];
+String _selectedProvince = _provinces[0];
 
 class ProvinceSelectionDialog extends StatefulWidget {
   const ProvinceSelectionDialog({
@@ -14,27 +27,37 @@ class ProvinceSelectionDialog extends StatefulWidget {
 }
 
 class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
+  final ScrollController _provinceScrollontroller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("Select a Province"),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: _testList
-            .map(
-              (e) => RadioListTile(
-                title: Text(e),
-                value: e,
-                groupValue: _itemSelected,
-                selected: _itemSelected == e,
+      content: Container(
+        width: double.maxFinite,
+        height: double.maxFinite,
+        child: DraggableScrollbar.rrect(
+          backgroundColor: Colors.grey,
+          alwaysVisibleScrollThumb: true,
+          controller: _provinceScrollontroller,
+          child: ListView.builder(
+            controller: _provinceScrollontroller,
+            itemCount: _provinces.length,
+            itemBuilder: (BuildContext _, int index) {
+              return RadioListTile(
+                title: Text(_provinces[index]),
+                value: _provinces[index],
+                groupValue: _selectedProvince,
+                selected: _selectedProvince == _provinces[index],
                 onChanged: (value) {
                   setState(() {
-                    _itemSelected = value;
+                    _selectedProvince = value;
                   });
                 },
-              ),
-            )
-            .toList(),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
