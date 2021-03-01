@@ -35,8 +35,10 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
       title: Text("Select a Province"),
       content: Container(
         width: double.maxFinite,
-        height: double.maxFinite,
+        height: MediaQuery.of(context).size.height * 2 / 3,
         child: DraggableScrollbar.rrect(
+          heightScrollThumb:
+              (MediaQuery.of(context).size.height * 2 / 3) * (8 / 10),
           backgroundColor: Colors.grey,
           alwaysVisibleScrollThumb: true,
           controller: _provinceScrollontroller,
