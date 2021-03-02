@@ -31,14 +31,16 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    double _provinceListHeight = MediaQuery.of(context).size.height * 2 / 3;
+    double _percItemsVisible = (_provinceListHeight / 57) /
+        _provinces.length; // each item height is approx. 57 pixels
     return AlertDialog(
       title: Text("Select a Province"),
       content: Container(
         width: double.maxFinite,
-        height: MediaQuery.of(context).size.height * 2 / 3,
+        height: _provinceListHeight,
         child: DraggableScrollbar.rrect(
-          heightScrollThumb:
-              (MediaQuery.of(context).size.height * 2 / 3) * (8 / 10),
+          heightScrollThumb: _provinceListHeight * _percItemsVisible,
           backgroundColor: Colors.grey,
           alwaysVisibleScrollThumb: true,
           controller: _provinceScrollontroller,
