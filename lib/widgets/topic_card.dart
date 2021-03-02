@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 
-import './province_selection_dialog.dart';
+import 'loader_province_selection_dialog.dart';
 import '../models/topic.dart';
 
 class TopicCard extends StatelessWidget {
@@ -18,7 +18,7 @@ class TopicCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
-        return ProvinceSelectionDialog();
+        return LoaderProvinceSelectionDialog();
       },
     );
   }

@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 
-import './topic_card.dart';
+import 'topic_card.dart';
 import '../helpers/topics.dart';
 import '../models/topic.dart';
 
-class TopicListLoader extends StatefulWidget {
-  const TopicListLoader({Key key}) : super(key: key);
+class LoaderTopicList extends StatefulWidget {
+  const LoaderTopicList({Key key}) : super(key: key);
 
   @override
-  _TopicListLoaderState createState() => _TopicListLoaderState();
+  _LoaderTopicListState createState() => _LoaderTopicListState();
 }
 
-class _TopicListLoaderState extends State<TopicListLoader> {
-  Future<List<Topic>> _futureTopics;
+class _LoaderTopicListState extends State<LoaderTopicList> {
+  Future<List<Topic>> _fetchTopics;
 
   @override
   void initState() {
     super.initState();
-    _futureTopics = fetchTopics();
+    _fetchTopics = fetchTopics();
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: FutureBuilder<List<Topic>>(
-        future: _futureTopics,
+        future: _fetchTopics,
         builder: (_, snapshot) {
           if (snapshot.hasData) {
             var _topics = snapshot.data;

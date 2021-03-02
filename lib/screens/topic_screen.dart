@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/topic_list_loader.dart';
+import '../widgets/loader_topic_list.dart';
 
 class TopicScreen extends StatelessWidget {
   TopicScreen({Key key, this.title}) : super(key: key);
@@ -13,7 +13,7 @@ class TopicScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Discover Canada'),
       ),
-      body: TopicListLoader(),
+      body: LoaderTopicList(),
     );
   }
 }

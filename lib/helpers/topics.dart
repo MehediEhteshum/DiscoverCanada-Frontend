@@ -6,19 +6,19 @@ import 'package:flutter_config/flutter_config.dart';
 import '../models/topic.dart';
 
 Future<List<Topic>> fetchTopics() async {
-  List<Topic> topics = [];
-  var topicsUrl =
+  List<Topic> _topics = [];
+  var _topicsUrl =
       "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/topics";
-  final response = await http.get(topicsUrl);
-  if (response.statusCode == 200) {
-    final extractedData = jsonDecode(response.body);
-    if (extractedData["data"] != null) {
-      extractedData["data"].forEach((topicObj) => {
-            topics.add(
+  final _response = await http.get(_topicsUrl);
+  if (_response.statusCode == 200) {
+    final _extractedData = jsonDecode(_response.body);
+    if (_extractedData["data"] != null) {
+      _extractedData["data"].forEach((_topicObj) => {
+            _topics.add(
               Topic(
-                id: topicObj["id"],
-                title: topicObj["title"],
-                imageUrl: topicObj["image_url"],
+                id: _topicObj["id"],
+                title: _topicObj["title"],
+                imageUrl: _topicObj["image_url"],
               ),
             ),
           });
@@ -26,5 +26,5 @@ Future<List<Topic>> fetchTopics() async {
   } else {
     print("Error loading data");
   }
-  return topics;
+  return _topics;
 }
