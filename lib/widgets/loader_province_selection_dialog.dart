@@ -33,7 +33,6 @@ class _LoaderProvinceSelectionDialogState
       child: FutureBuilder<dynamic>(
         future: _fetchProvinces,
         builder: (_, snapshot) {
-          print(snapshot);
           if (snapshot.hasData) {
             var _provinces = snapshot.data;
             if (_provinces.length > 0) {

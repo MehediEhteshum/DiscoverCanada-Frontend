@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'topic_card.dart';
 import '../helpers/topics.dart';
-import '../models/topic.dart';
 
 class LoaderTopicList extends StatefulWidget {
   const LoaderTopicList({Key key}) : super(key: key);
@@ -12,7 +11,7 @@ class LoaderTopicList extends StatefulWidget {
 }
 
 class _LoaderTopicListState extends State<LoaderTopicList> {
-  Future<List<Topic>> _fetchTopics;
+  Future<dynamic> _fetchTopics;
 
   @override
   void initState() {
@@ -23,7 +22,7 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: FutureBuilder<List<Topic>>(
+      child: FutureBuilder<dynamic>(
         future: _fetchTopics,
         builder: (_, snapshot) {
           if (snapshot.hasData) {
