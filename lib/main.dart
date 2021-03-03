@@ -4,6 +4,7 @@ import 'package:flutter_config/flutter_config.dart';
 import './screens/chapter_screen.dart';
 import './screens/topic_screen.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterConfig.loadEnvVariables();

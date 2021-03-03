@@ -24,7 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  
   http: ^0.12.2
   flutter_config: ^1.0.8
   draggable_scrollbar: ^0.0.4
