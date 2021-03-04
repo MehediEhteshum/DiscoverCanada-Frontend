@@ -11,6 +11,7 @@ class ErrorMessageDialog extends StatelessWidget {
       title: Text(
         "ERROR 404: Content not found",
         textAlign: TextAlign.center,
+        softWrap: true,
         style: TextStyle(
           color: Colors.red,
         ),
@@ -18,10 +19,30 @@ class ErrorMessageDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('Something went wrong! :('),
-          const Text('Please check your internet connection.'),
+          const Text(
+            'Don\'t give up! :(',
+            textAlign: TextAlign.center,
+            softWrap: true,
+          ),
+          const Text(
+            'Please check your internet connection or try again later.',
+            textAlign: TextAlign.center,
+            softWrap: true,
+          ),
         ],
       ),
+      actions: <Widget>[
+        FlatButton(
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          child: Text(
+            'Close',
+            style: TextStyle(fontSize: 17),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
     );
   }
 }
