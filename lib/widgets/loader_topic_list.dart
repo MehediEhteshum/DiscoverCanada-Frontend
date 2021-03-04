@@ -20,6 +20,12 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
     _fetchTopics = fetchTopics();
   }
 
+  Future<void> _refreshWidget() async {
+    setState(() {
+      _fetchTopics = fetchTopics();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -39,9 +45,9 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
                       );
                     },
                   )
-                : Retry(routeToReload: "/");
+                : Retry(refreshWidget: _refreshWidget);
           } else if (snapshot.hasError) {
-            return Retry(routeToReload: "/");
+            return Retry(refreshWidget: _refreshWidget);
           }
 
           // By default, show a loading spinner.

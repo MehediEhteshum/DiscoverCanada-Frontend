@@ -26,7 +26,10 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
             .provinces.length; // each RadioListTile height is approx. 57 pixels
 
     return AlertDialog(
-      title: const Text("Select a Province"),
+      title: const Text(
+        "Select a Province",
+        softWrap: true,
+      ),
       content: Container(
         width: double.maxFinite,
         height: _provinceListHeight,
@@ -40,7 +43,10 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
             itemCount: widget.provinces.length,
             itemBuilder: (BuildContext _, int index) {
               return RadioListTile(
-                title: Text(widget.provinces[index]),
+                title: Text(
+                  widget.provinces[index],
+                  softWrap: true,
+                ),
                 value: widget.provinces[index],
                 groupValue: _defaultSelectedProvince,
                 selected: _defaultSelectedProvince == widget.provinces[index],

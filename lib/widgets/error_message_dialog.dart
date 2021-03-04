@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './error_message.dart';
+import '../helpers/base.dart';
 
 class ErrorMessageDialog extends StatelessWidget {
   const ErrorMessageDialog({
@@ -18,14 +19,7 @@ class ErrorMessageDialog extends StatelessWidget {
             color: Colors.red,
           ),
           const SizedBox(height: 20),
-          const Text(
-            "ERROR 404: Content not found",
-            textAlign: TextAlign.center,
-            softWrap: true,
-            style: const TextStyle(
-              color: Colors.red,
-            ),
-          ),
+          ErrorTitle,
         ],
       ),
       content: ErrorMessage(),
