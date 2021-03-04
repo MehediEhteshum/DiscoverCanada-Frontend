@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-int timeOut = 3; // seconds
+int timeOut = 10; // seconds
 int successCode = 200; // success statusCode
 
 const Widget ErrorTitle = Text(

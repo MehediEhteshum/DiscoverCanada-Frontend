@@ -13,16 +13,30 @@ class LoaderTopicList extends StatefulWidget {
 
 class _LoaderTopicListState extends State<LoaderTopicList> {
   Future<dynamic> _fetchTopics;
+  static bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchTopics = fetchTopics();
+    _fetchTopics = fetchTopics().then((data) {
+      _isLoading = false;
+      return data; // return data to capture in the snapshot
+    }).catchError((_) {
+      // retruns null error to snapshot.error
+      _isLoading = false;
+    });
   }
 
   Future<void> _refreshWidget() async {
+    _isLoading = true;
     setState(() {
-      _fetchTopics = fetchTopics();
+      _fetchTopics = fetchTopics().then((data) {
+        _isLoading = false;
+        return data; // return data to capture in the snapshot
+      }).catchError((_) {
+        // retruns null error to snapshot.error
+        _isLoading = false;
+      });
     });
   }
 
@@ -32,26 +46,29 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
       child: FutureBuilder<dynamic>(
         future: _fetchTopics,
         builder: (_, snapshot) {
-          if (snapshot.hasData) {
+          if (_isLoading) {
+            return const CircularProgressIndicator();
+          } else {
             var _topics = snapshot.data;
-            return _topics.length > 0
-                ? ListView.builder(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    itemCount: _topics.length,
-                    itemBuilder: (BuildContext _, int index) {
-                      return TopicCard(
-                        topics: _topics,
-                        index: index,
-                      );
-                    },
-                  )
-                : Retry(refreshWidget: _refreshWidget);
-          } else if (snapshot.hasError) {
-            return Retry(refreshWidget: _refreshWidget);
+            if (_topics != null) {
+              // null when snapshot.hasError == true
+              return _topics.length > 0
+                  ? ListView.builder(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      itemCount: _topics.length,
+                      itemBuilder: (BuildContext _, int index) {
+                        return TopicCard(
+                          topics: _topics,
+                          index: index,
+                        );
+                      },
+                    )
+                  : Retry(refreshWidget: _refreshWidget);
+            } else {
+              // when snapshot.hasError == true
+              return Retry(refreshWidget: _refreshWidget);
+            }
           }
-
-          // By default, show a loading spinner.
-          return const CircularProgressIndicator();
         },
       ),
     );
