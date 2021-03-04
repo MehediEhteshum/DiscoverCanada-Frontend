@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './error_message.dart';
+
 class ErrorMessageDialog extends StatelessWidget {
   const ErrorMessageDialog({
     Key key,
@@ -8,33 +10,28 @@ class ErrorMessageDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-        "ERROR 404: Content not found",
-        textAlign: TextAlign.center,
-        softWrap: true,
-        style: TextStyle(
-          color: Colors.red,
-        ),
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            'Don\'t give up! :(',
-            textAlign: TextAlign.center,
-            softWrap: true,
+      title: Column(
+        children: <Widget>[
+          const Icon(
+            Icons.warning,
+            size: 50,
+            color: Colors.red,
           ),
+          const SizedBox(height: 20),
           const Text(
-            'Please check your internet connection or try again later.',
+            "ERROR 404: Content not found",
             textAlign: TextAlign.center,
             softWrap: true,
+            style: const TextStyle(
+              color: Colors.red,
+            ),
           ),
         ],
       ),
+      content: ErrorMessage(),
       actions: <Widget>[
-        FlatButton(
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          child: Text(
+        TextButton(
+          child: const Text(
             'Close',
             style: TextStyle(fontSize: 17),
           ),

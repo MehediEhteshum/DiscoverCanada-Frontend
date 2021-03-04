@@ -36,10 +36,10 @@ class _LoaderProvinceSelectionDialogState
               _provinces = ["All Provinces", ..._provinces];
               return ProvinceSelectionDialog(provinces: _provinces);
             } else {
-              return ErrorMessageDialog();
+              return const ErrorMessageDialog();
             }
           } else if (snapshot.hasError) {
-            return ErrorMessageDialog();
+            return const ErrorMessageDialog();
           }
 
           // By default, show a loading spinner.

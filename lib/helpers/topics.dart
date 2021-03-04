@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_config/flutter_config.dart';
 
 import '../models/topic.dart';
+import './base.dart';
 
 Future<dynamic> fetchTopics() async {
   List<Topic> _topics = [];
@@ -10,8 +11,8 @@ Future<dynamic> fetchTopics() async {
     var _topicsUrl =
         "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/topics";
     final Response _response =
-        await Dio().get(_topicsUrl).timeout(Duration(seconds: 10));
-    if (_response.statusCode == 200) {
+        await Dio().get(_topicsUrl).timeout(Duration(seconds: timeOut));
+    if (_response.statusCode == successCode) {
       final _extractedData = _response.data;
       if (_extractedData["data"] != null) {
         _extractedData["data"].forEach((_topicObj) => {

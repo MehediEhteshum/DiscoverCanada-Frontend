@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './retry.dart';
 import 'topic_card.dart';
 import '../helpers/topics.dart';
 
@@ -38,16 +39,9 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
                       );
                     },
                   )
-                : Text(
-                    'Something went wrong! :(',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
+                : Retry(routeToReload: "/");
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Retry(routeToReload: "/");
           }
 
           // By default, show a loading spinner.

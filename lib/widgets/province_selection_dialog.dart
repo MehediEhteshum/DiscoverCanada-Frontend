@@ -26,7 +26,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
             .provinces.length; // each RadioListTile height is approx. 57 pixels
 
     return AlertDialog(
-      title: Text("Select a Province"),
+      title: const Text("Select a Province"),
       content: Container(
         width: double.maxFinite,
         height: _provinceListHeight,
