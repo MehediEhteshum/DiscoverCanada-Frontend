@@ -27,5 +27,5 @@ Future<dynamic> fetchProvinces() async {
     return Future.error(e.toString());
   }
 
-  return _provinces;
+  return [..._provinces];
 }

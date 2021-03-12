@@ -32,5 +32,5 @@ Future<dynamic> fetchTopics() async {
     return Future.error(e.toString());
   }
 
-  return _topics;
+  return [..._topics];
 }
