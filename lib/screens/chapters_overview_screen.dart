@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../models and providers/selected_topic_provider.dart';
+import '../widgets/selection_info_container.dart';
 
 class ChaptersOverviewScreen extends StatelessWidget {
   static const routeName = "/chapters";
@@ -9,17 +8,20 @@ class ChaptersOverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext _) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chapters'),
-      ),
-      body: Consumer<SelectedTopic>(
-        builder: (ctx, selectedTopic, _) {
-          return Text(
-            "${selectedTopic.title}",
+        appBar: AppBar(
+          title: const Text(
+            "Chapters",
             softWrap: true,
-          );
-        },
-      ),
-    );
+          ),
+        ),
+        body: Column(
+          children: <Widget>[
+            SelectionInfoContainer(),
+            const Text(
+              "Chapters Grid",
+              softWrap: true,
+            ),
+          ],
+        ));
   }
 }

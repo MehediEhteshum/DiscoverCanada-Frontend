@@ -33,7 +33,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
     return AlertDialog(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Consumer<SelectedTopic>(
             builder: (ctx, selectedTopic, _) {
               return Text(
