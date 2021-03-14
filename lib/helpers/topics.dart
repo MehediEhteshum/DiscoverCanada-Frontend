@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_config/flutter_config.dart';
 
-import '../models/topic.dart';
+import '../models and providers/topic.dart';
 import './base.dart';
 
 Future<dynamic> fetchTopics() async {

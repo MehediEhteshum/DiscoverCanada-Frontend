@@ -58,8 +58,7 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
                       itemCount: _topics.length,
                       itemBuilder: (BuildContext _, int index) {
                         return TopicCard(
-                          topics: _topics,
-                          index: index,
+                          topic: _topics[index],
                         );
                       },
                     )

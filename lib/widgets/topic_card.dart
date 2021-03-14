@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:provider/provider.dart';
 
-import 'loader_province_selection_dialog.dart';
-import '../models/topic.dart';
+import '../models and providers/selected_topic_provider.dart';
+import './loader_province_selection_dialog.dart';
+import '../models and providers/topic.dart';
 
 class TopicCard extends StatelessWidget {
   const TopicCard({
     Key key,
-    @required this.topics,
-    @required this.index,
+    @required this.topic,
   }) : super(key: key);
 
-  final List<Topic> topics;
-  final int index;
+  final Topic topic;
 
-  void _selectTopic(BuildContext context) {
+  void _tapTopic(BuildContext context) {
+    Provider.of<SelectedTopic>(context, listen: false).selectTopic(topic);
     showDialog(
       context: context,
       builder: (context) {
@@ -41,7 +42,7 @@ class TopicCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(unitWidthFactor),
             child: Image.network(
-              '${FlutterConfig.get('BASE_URL')}/${topics[index].imageUrl}',
+              '${FlutterConfig.get('BASE_URL')}/${topic.imageUrl}',
               height: cardHeight,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -58,7 +59,7 @@ class TopicCard extends StatelessWidget {
                 horizontal: 5,
               ),
               child: Text(
-                '${topics[index].title}',
+                '${topic.title}',
                 textAlign: TextAlign.center,
                 softWrap: true,
                 overflow: TextOverflow.fade,
@@ -73,7 +74,7 @@ class TopicCard extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => _selectTopic(context),
+                onTap: () => _tapTopic(context),
               ),
             ),
           ),

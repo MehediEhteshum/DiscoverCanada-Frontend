@@ -1,5 +1,7 @@
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/models%20and%20providers/selected_topic_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProvinceSelectionDialog extends StatefulWidget {
   const ProvinceSelectionDialog({
@@ -20,16 +22,35 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    double _provinceListHeight = MediaQuery.of(context).size.height * 2 / 3;
+    double _provinceListHeight = MediaQuery.of(context).size.height * 3 / 5;
     double _percItemsVisible = (_provinceListHeight / 57) /
         widget
             .provinces.length; // each RadioListTile height is approx. 57 pixels
 
     return AlertDialog(
-      title: const Text(
-        "Select a Province",
-        softWrap: true,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Consumer<SelectedTopic>(
+            builder: (ctx, selectedTopic, _) {
+              return Text(
+                "${selectedTopic.title}",
+                softWrap: true,
+              );
+            },
+          ),
+          const SizedBox(height: 15),
+          const Text(
+            "Select a Province",
+            softWrap: true,
+            textScaleFactor: 0.90,
+            style: const TextStyle(
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ],
       ),
+      contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 20),
       content: Container(
         width: double.maxFinite,
         height: _provinceListHeight,
