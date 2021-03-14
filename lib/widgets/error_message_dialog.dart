@@ -23,11 +23,12 @@ class ErrorMessageDialog extends StatelessWidget {
         ],
       ),
       content: ErrorMessage(),
+      contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 0),
       actions: <Widget>[
         TextButton(
           child: const Text(
             'Close',
-            style: TextStyle(fontSize: 17),
+            style: const TextStyle(fontSize: 17),
           ),
           onPressed: () {
             Navigator.of(context).pop();

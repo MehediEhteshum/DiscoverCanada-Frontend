@@ -1,7 +1,10 @@
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/models%20and%20providers/selected_topic_provider.dart';
 import 'package:provider/provider.dart';
+
+import '../screens/chapters_overview_screen.dart';
+import '../models and providers/selected_topic_provider.dart';
+import '../models and providers/selected_province_provider.dart';
 
 class ProvinceSelectionDialog extends StatefulWidget {
   const ProvinceSelectionDialog({
@@ -50,7 +53,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
           ),
         ],
       ),
-      contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 20),
+      contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
       content: Container(
         width: double.maxFinite,
         height: _provinceListHeight,
@@ -73,6 +76,8 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
                 selected: _defaultSelectedProvince == widget.provinces[index],
                 onChanged: (value) {
                   setState(() {
+                    Provider.of<SelectedProvince>(context, listen: false)
+                        .selectProvince(value);
                     _defaultSelectedProvince = value;
                   });
                 },
@@ -81,6 +86,19 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
           ),
         ),
       ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text(
+            'Continue',
+            style: const TextStyle(fontSize: 17),
+            softWrap: true,
+          ),
+          onPressed: () {
+            Navigator.of(context)
+                .popAndPushNamed(ChaptersOverviewScreen.routeName);
+          },
+        ),
+      ],
     );
   }
 }

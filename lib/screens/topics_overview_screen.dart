@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/loader_topic_list.dart';
 
-class TopicScreen extends StatelessWidget {
+class TopicsOverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext _) {
     return Scaffold(

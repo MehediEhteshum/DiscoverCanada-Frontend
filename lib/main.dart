@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:provider/provider.dart';
 
-import './screens/chapter_screen.dart';
-import './screens/topic_screen.dart';
+import 'screens/chapters_overview_screen.dart';
+import 'screens/topics_overview_screen.dart';
 import './models and providers/selected_topic_provider.dart';
+import './models and providers/selected_province_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (ctx) => SelectedTopic(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => SelectedProvince(),
+        ),
       ],
       child: MaterialApp(
         title: 'Discover Canada',
@@ -30,8 +34,8 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: "/",
         routes: {
-          "/": (ctx) => TopicScreen(),
-          ChapterScreen.routeName: (ctx) => ChapterScreen(),
+          "/": (ctx) => TopicsOverviewScreen(),
+          ChaptersOverviewScreen.routeName: (ctx) => ChaptersOverviewScreen(),
         },
       ),
     );
