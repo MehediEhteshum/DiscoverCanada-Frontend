@@ -10,22 +10,23 @@ class ChaptersOverviewScreen extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
-            floating: true,
-            expandedHeight: 150,
+          const SliverAppBar(
             title: const Text("Chapters"),
-            flexibleSpace: FlexibleSpaceBar(
-              background: SelectionInfo(),
+            floating: true,
+            expandedHeight:
+                150, // AppBar kToolbarHeight + Topic title 25 + Province name 20 + Bottom padding statusbarHeight + extra 25
+            flexibleSpace: const FlexibleSpaceBar(
+              background: const SelectionInfo(),
             ),
           ),
           SliverToBoxAdapter(
             child: Column(
-              children: <Widget>[
+              children: const <Widget>[
                 const Text(
                   "Chapters Grid jhsdfjhhgs jskdbfjsjbhdf jhbsdjfjhsb kjbsdjkfhkjs jkhskjfkjsh fjksbdfjsjhf jkshdf jhbsdfh hsjhfjs jksbdfjksfbjk sjkdfjkshf kjdbhfjgbdfbjgd sdfbgjdbfjhgbjdsh sjkdbfjsbjfhs jsdbfjsbjdfhbs jsdbfjhsbjfh",
                   softWrap: true,
                 ),
-                SizedBox(height: 2000)
+                const SizedBox(height: 2000)
               ],
             ),
           ),
