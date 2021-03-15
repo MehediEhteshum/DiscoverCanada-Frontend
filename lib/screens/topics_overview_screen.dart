@@ -7,7 +7,10 @@ class TopicsOverviewScreen extends StatelessWidget {
   Widget build(BuildContext _) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Discover Canada"),
+        title: const Text(
+          "Discover Canada",
+          softWrap: true,
+        ),
       ),
       body: LoaderTopicList(),
     );

@@ -21,7 +21,7 @@ class ProvinceSelectionDialog extends StatefulWidget {
 
 class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
   final ScrollController _provinceScrollontroller = ScrollController();
-  String _defaultSelectedProvince = "All Provinces";
+  String _selectedProvinceName = "All Provinces"; // default
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +72,11 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
                   softWrap: true,
                 ),
                 value: widget.provinces[index],
-                groupValue: _defaultSelectedProvince,
-                selected: _defaultSelectedProvince == widget.provinces[index],
+                groupValue: _selectedProvinceName,
+                selected: _selectedProvinceName == widget.provinces[index],
                 onChanged: (value) {
                   setState(() {
-                    Provider.of<SelectedProvince>(context, listen: false)
-                        .selectProvince(value);
-                    _defaultSelectedProvince = value;
+                    _selectedProvinceName = value;
                   });
                 },
               );
@@ -94,6 +92,8 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
             softWrap: true,
           ),
           onPressed: () {
+            Provider.of<SelectedProvince>(context, listen: false)
+                .selectProvince(_selectedProvinceName);
             Navigator.of(context)
                 .popAndPushNamed(ChaptersOverviewScreen.routeName);
           },
