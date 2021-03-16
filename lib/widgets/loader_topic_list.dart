@@ -42,6 +42,7 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
 
   @override
   Widget build(BuildContext context) {
+    print("Memeory leaks? build _LoaderTopicListState");
     return Center(
       child: FutureBuilder<dynamic>(
         future: _fetchTopics,

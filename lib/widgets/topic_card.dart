@@ -26,6 +26,7 @@ class TopicCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Memeory leaks? build TopicCard");
     double unitWidthFactor = MediaQuery.of(context).size.width / 30;
     double unitHeightFactor = MediaQuery.of(context).size.height / 30;
     double cardHeight = unitHeightFactor * 10;

@@ -7,6 +7,7 @@ class ChaptersOverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext _) {
+    print("Memeory leaks? build ChaptersOverviewScreen");
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[

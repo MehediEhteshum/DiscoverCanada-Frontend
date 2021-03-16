@@ -10,6 +10,7 @@ class ErrorMessageDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Memeory leaks? build ErrorMessageDialog");
     return AlertDialog(
       title: Column(
         children: <Widget>[

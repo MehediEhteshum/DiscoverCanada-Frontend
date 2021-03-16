@@ -25,6 +25,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    print("Memeory leaks? build _ProvinceSelectionDialogState");
     double _provinceListHeight = MediaQuery.of(context).size.height * 3 / 5;
     double _percItemsVisible = (_provinceListHeight / 57) /
         widget

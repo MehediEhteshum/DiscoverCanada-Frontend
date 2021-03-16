@@ -7,6 +7,7 @@ class ErrorMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Memeory leaks? build ErrorMessage");
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
