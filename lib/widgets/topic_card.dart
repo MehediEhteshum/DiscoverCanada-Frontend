@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/base.dart';
 import '../models and providers/selected_topic_provider.dart';
 import './loader_province_selection_dialog.dart';
 import '../models and providers/topic.dart';
@@ -27,37 +28,36 @@ class TopicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("Memeory leaks? build TopicCard");
-    double unitWidthFactor = MediaQuery.of(context).size.width / 30;
-    double unitHeightFactor = MediaQuery.of(context).size.height / 30;
-    double cardHeight = unitHeightFactor * 10;
+    double cardHeight = screenWidth * 0.5; // proportional to screen width
 
     return Card(
       shadowColor: Colors.grey,
-      elevation: 8,
-      margin: const EdgeInsets.all(10),
+      elevation: 8, // fixed dim
+      margin: const EdgeInsets.all(10), // fixed dim
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(unitWidthFactor),
+        borderRadius: BorderRadius.circular(15), // fixed dim
       ),
       child: Stack(
         children: <Widget>[
           ClipRRect(
-            borderRadius: BorderRadius.circular(unitWidthFactor),
+            borderRadius: BorderRadius.circular(15), // fixed dim
             child: Image.network(
               '${FlutterConfig.get('BASE_URL')}/${topic.imageUrl}',
-              height: cardHeight,
+              height:
+                  cardHeight, // proportional to screen width, dictating card height
               width: double.infinity,
               fit: BoxFit.cover,
             ),
           ),
           Positioned(
-            bottom: unitWidthFactor,
-            right: unitWidthFactor,
+            bottom: 15, // fixed dim
+            right: 15, // fixed dim
             child: Container(
-              width: unitWidthFactor * 17,
+              width: cardHeight * 1.1, // proportional to card height
               color: Colors.black54,
               padding: const EdgeInsets.symmetric(
-                vertical: 5,
-                horizontal: 5,
+                vertical: 5, // fixed dim
+                horizontal: 5, // fixed dim
               ),
               child: Text(
                 '${topic.title}',
@@ -65,7 +65,7 @@ class TopicCard extends StatelessWidget {
                 softWrap: true,
                 overflow: TextOverflow.fade,
                 style: TextStyle(
-                  fontSize: unitWidthFactor * 1.6,
+                  fontSize: cardHeight * 0.10, // proportional to card height
                   color: Colors.white,
                 ),
               ),

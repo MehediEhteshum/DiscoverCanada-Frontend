@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../helpers/base.dart';
+
 class ErrorMessage extends StatelessWidget {
   const ErrorMessage({
     Key key,
@@ -15,11 +17,17 @@ class ErrorMessage extends StatelessWidget {
           'Don\'t give up! :(',
           textAlign: TextAlign.center,
           softWrap: true,
+          style: TextStyle(
+            fontSize: fontSize1, // fixed dim
+          ),
         ),
         const Text(
           'Please check your internet connection or try again later.',
           textAlign: TextAlign.center,
           softWrap: true,
+          style: TextStyle(
+            fontSize: fontSize1, // fixed dim
+          ),
         ),
       ],
     );

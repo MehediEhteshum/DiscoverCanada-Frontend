@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../helpers/base.dart';
 import '../widgets/selection_info.dart';
 
 class ChaptersOverviewScreen extends StatelessWidget {
@@ -11,11 +12,14 @@ class ChaptersOverviewScreen extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          const SliverAppBar(
-            title: const Text("Chapters"),
+          SliverAppBar(
+            title: Text(
+              "Chapters",
+              softWrap: true,
+            ),
             floating: true,
-            expandedHeight:
-                150, // AppBar kToolbarHeight + Topic title 25 + Province name 20 + Bottom padding statusbarHeight + extra 25
+            expandedHeight: screenWidth *
+                0.4, // proportional to screen width = AppBar kToolbarHeight + Topic title w/ extra 1 line + Province name + Bottom padding statusbarHeight
             flexibleSpace: const FlexibleSpaceBar(
               background: const SelectionInfo(),
             ),
@@ -26,6 +30,7 @@ class ChaptersOverviewScreen extends StatelessWidget {
                 const Text(
                   "Chapters Grid jhsdfjhhgs jskdbfjsjbhdf jhbsdjfjhsb kjbsdjkfhkjs jkhskjfkjsh fjksbdfjsjhf jkshdf jhbsdfh hsjhfjs jksbdfjksfbjk sjkdfjkshf kjdbhfjgbdfbjgd sdfbgjdbfjhgbjdsh sjkdbfjsbjfhs jsdbfjsbjdfhbs jsdbfjhsbjfh",
                   softWrap: true,
+                  style: TextStyle(fontSize: fontSize1),
                 ),
                 const SizedBox(height: 2000)
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:frontend/helpers/base.dart';
 import 'package:provider/provider.dart';
 
 import '../models and providers/selected_topic_provider.dart';
@@ -29,10 +30,8 @@ class SelectionInfo extends StatelessWidget {
           },
         ),
         Container(
-          padding: EdgeInsets.only(
-            top: _statusBarHeight + _appBarHeight,
-            bottom: _statusBarHeight,
-          ),
+          padding: EdgeInsets.fromLTRB(20, _statusBarHeight + _appBarHeight, 20,
+              _statusBarHeight), // variable
           color: Colors.black54,
           width: double.maxFinite,
           child: Column(
@@ -43,9 +42,10 @@ class SelectionInfo extends StatelessWidget {
                   return Text(
                     "${selectedTopic.title}",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 25,
+                      fontSize: unitWidthFactor *
+                          1.75, // proportional to screen width
                     ),
                   );
                 },
@@ -54,9 +54,10 @@ class SelectionInfo extends StatelessWidget {
                 builder: (ctx, selectedProvince, _) {
                   return Text(
                     "${selectedProvince.name}",
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize:
+                          unitWidthFactor * 1.3, // proportional to screen width
                     ),
                   );
                 },

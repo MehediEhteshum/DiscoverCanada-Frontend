@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './error_message.dart';
 import '../helpers/base.dart';
+import './error_message.dart';
 
 class ErrorMessageDialog extends StatelessWidget {
   const ErrorMessageDialog({
@@ -14,22 +14,18 @@ class ErrorMessageDialog extends StatelessWidget {
     return AlertDialog(
       title: Column(
         children: <Widget>[
-          const Icon(
-            Icons.warning,
-            size: 50,
-            color: Colors.red,
-          ),
-          const SizedBox(height: 20),
+          ErrorIcon,
+          const SizedBox(height: 20), // fixed dim
           ErrorTitle,
         ],
       ),
       content: ErrorMessage(),
-      contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 0),
+      contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 0), // fixed dim
       actions: <Widget>[
         TextButton(
-          child: const Text(
+          child: Text(
             'Close',
-            style: const TextStyle(fontSize: 17),
+            style: TextStyle(fontSize: fontSize1), // fixed dim
           ),
           onPressed: () {
             Navigator.of(context).pop();

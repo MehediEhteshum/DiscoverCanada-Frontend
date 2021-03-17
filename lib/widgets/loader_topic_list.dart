@@ -55,7 +55,7 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
               // null when snapshot.hasError == true
               return _topics.length > 0
                   ? ListView.builder(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.symmetric(vertical: 10), // fixed dim
                       itemCount: _topics.length,
                       itemBuilder: (BuildContext _, int index) {
                         return TopicCard(
