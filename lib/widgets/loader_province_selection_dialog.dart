@@ -40,6 +40,7 @@ class _LoaderProvinceSelectionDialogState
             var _provinces = snapshot.data;
             if (_provinces.length > 0) {
               if (topicIdsForAllProvincesOpt.contains(_selectedTopicId)) {
+                // adding "All Provinces" option only when necessary
                 _provinces = ["All Provinces", ..._provinces];
               }
               return ProvinceSelectionDialog(provinces: _provinces);

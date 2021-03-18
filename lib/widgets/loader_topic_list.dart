@@ -52,7 +52,7 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
           } else {
             var _topics = snapshot.data;
             if (_topics != null) {
-              // null when snapshot.hasError == true
+              // not null when snapshot.hasError != true
               return _topics.length > 0
                   ? ListView.builder(
                       padding: EdgeInsets.symmetric(vertical: 10), // fixed dim
