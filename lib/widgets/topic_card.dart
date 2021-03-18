@@ -17,12 +17,14 @@ class TopicCard extends StatelessWidget {
 
   void _tapTopic(BuildContext context) {
     Provider.of<SelectedTopic>(context, listen: false).selectTopic(topic);
-    showDialog(
-      context: context,
-      builder: (context) {
-        return LoaderProvinceSelectionDialog();
-      },
-    );
+    if (topic.provinceDependent) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return LoaderProvinceSelectionDialog();
+        },
+      );
+    }
   }
 
   @override

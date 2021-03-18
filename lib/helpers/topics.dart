@@ -21,6 +21,8 @@ Future<dynamic> fetchTopics() async {
                   id: _topicObj["id"],
                   title: _topicObj["title"],
                   imageUrl: _topicObj["image_url"],
+                  provinceDependent: (_topicObj["province_dependent"] ==
+                      1), // converting 0, 1 to bool
                 ),
               ),
             });
