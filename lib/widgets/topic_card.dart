@@ -20,6 +20,7 @@ class TopicCard extends StatelessWidget {
   void _tapTopic(BuildContext context) {
     Provider.of<SelectedTopic>(context, listen: false).selectTopic(topic);
     if (topic.provinceDependent) {
+      // when topic requires province selection
       showDialog(
         context: context,
         builder: (context) {
@@ -27,6 +28,7 @@ class TopicCard extends StatelessWidget {
         },
       );
     } else {
+      // when topic doesn't require province selection
       Provider.of<SelectedProvince>(context, listen: false)
           .selectProvince("All Provinces");
       Navigator.of(context).pushNamed(ChaptersOverviewScreen.routeName);

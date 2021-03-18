@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:frontend/helpers/base.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/base.dart';
 import '../models and providers/selected_topic_provider.dart';
 import '../models and providers/selected_province_provider.dart';
 
