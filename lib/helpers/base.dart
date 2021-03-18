@@ -6,6 +6,7 @@ const double errorIconSize = 50;
 const Color errorIconColor = Colors.red;
 const double fontSize1 = 20;
 const double fontSize2 = 25;
+const List<int> topicIdsForAllProvincesOpt = [4];
 
 double screenWidth = 400;
 double unitWidthFactor = screenWidth / 30; // unit width variable

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/base.dart';
 import './province_selection_dialog.dart';
 import 'error_message_dialog.dart';
 import '../helpers/provinces.dart';
@@ -29,7 +30,7 @@ class _LoaderProvinceSelectionDialogState
   @override
   Widget build(BuildContext context) {
     print("Memeory leaks? build _LoaderProvinceSelectionDialogState");
-    int selectedTopicId = Provider.of<SelectedTopic>(context).id;
+    int _selectedTopicId = Provider.of<SelectedTopic>(context).id;
 
     return Center(
       child: FutureBuilder<dynamic>(
@@ -38,7 +39,7 @@ class _LoaderProvinceSelectionDialogState
           if (snapshot.hasData) {
             var _provinces = snapshot.data;
             if (_provinces.length > 0) {
-              if (selectedTopicId == 4) {
+              if (topicIdsForAllProvincesOpt.contains(_selectedTopicId)) {
                 _provinces = ["All Provinces", ..._provinces];
               }
               return ProvinceSelectionDialog(provinces: _provinces);

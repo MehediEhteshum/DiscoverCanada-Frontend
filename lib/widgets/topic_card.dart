@@ -6,6 +6,7 @@ import '../helpers/base.dart';
 import '../models and providers/selected_topic_provider.dart';
 import './loader_province_selection_dialog.dart';
 import '../models and providers/topic.dart';
+import '../screens/chapters_overview_screen.dart';
 
 class TopicCard extends StatelessWidget {
   const TopicCard({
@@ -24,6 +25,8 @@ class TopicCard extends StatelessWidget {
           return LoaderProvinceSelectionDialog();
         },
       );
+    } else {
+      Navigator.of(context).pushNamed(ChaptersOverviewScreen.routeName);
     }
   }
 
