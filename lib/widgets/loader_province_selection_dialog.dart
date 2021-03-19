@@ -30,7 +30,8 @@ class _LoaderProvinceSelectionDialogState
   @override
   Widget build(BuildContext context) {
     print("Memeory leaks? build _LoaderProvinceSelectionDialogState");
-    int _selectedTopicId = Provider.of<SelectedTopic>(context).topicId;
+    int _selectedTopicId =
+        Provider.of<SelectedTopic>(context, listen: false).topicId;
 
     return Center(
       child: FutureBuilder<dynamic>(

@@ -12,7 +12,7 @@ class SpecificChapters with ChangeNotifier {
 
   void clearChapters() {
     _specificChapters = [];
-    notifyListeners();
+    // notifyListeners(); // tries to call 'build' during disposing widget, hence avoided
   }
 
   Future<void> fetchAndSetSpecificChapters(
