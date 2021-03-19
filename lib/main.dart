@@ -6,6 +6,7 @@ import 'screens/chapters_overview_screen.dart';
 import 'screens/topics_overview_screen.dart';
 import './models and providers/selected_topic_provider.dart';
 import './models and providers/selected_province_provider.dart';
+import './models and providers/specific_chapters_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => SelectedProvince(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => SpecificChapters(),
         ),
       ],
       child: MaterialApp(

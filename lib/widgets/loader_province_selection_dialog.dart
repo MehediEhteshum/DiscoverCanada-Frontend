@@ -23,14 +23,14 @@ class _LoaderProvinceSelectionDialogState
 
   @override
   void initState() {
-    super.initState();
     _fetchProvinces = fetchProvinces();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     print("Memeory leaks? build _LoaderProvinceSelectionDialogState");
-    int _selectedTopicId = Provider.of<SelectedTopic>(context).id;
+    int _selectedTopicId = Provider.of<SelectedTopic>(context).topicId;
 
     return Center(
       child: FutureBuilder<dynamic>(

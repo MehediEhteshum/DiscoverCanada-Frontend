@@ -22,7 +22,7 @@ class SelectionInfo extends StatelessWidget {
         Consumer<SelectedTopic>(
           builder: (ctx, selectedTopic, _) {
             return Image.network(
-              '${FlutterConfig.get('BASE_URL')}/${selectedTopic.imageUrl}',
+              '${FlutterConfig.get('BASE_URL')}/${selectedTopic.topicImageUrl}',
               height: double.infinity,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -40,7 +40,7 @@ class SelectionInfo extends StatelessWidget {
               Consumer<SelectedTopic>(
                 builder: (ctx, selectedTopic, _) {
                   return Text(
-                    "${selectedTopic.title}",
+                    "${selectedTopic.topicTitle}",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
@@ -53,7 +53,7 @@ class SelectionInfo extends StatelessWidget {
               Consumer<SelectedProvince>(
                 builder: (ctx, selectedProvince, _) {
                   return Text(
-                    "${selectedProvince.name}",
+                    "${selectedProvince.provinceName}",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize:

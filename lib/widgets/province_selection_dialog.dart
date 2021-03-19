@@ -26,8 +26,8 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
 
   @override
   void initState() {
-    super.initState();
     _selectedProvinceName = widget.provinces[0]; // default
+    super.initState();
   }
 
   @override
@@ -46,7 +46,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
           Consumer<SelectedTopic>(
             builder: (ctx, selectedTopic, _) {
               return Text(
-                "${selectedTopic.title}",
+                "${selectedTopic.topicTitle}",
                 softWrap: true,
                 style: const TextStyle(
                   fontSize: fontSize2, // fixed dim

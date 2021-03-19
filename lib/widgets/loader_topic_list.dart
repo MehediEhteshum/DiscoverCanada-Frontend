@@ -17,7 +17,6 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
 
   @override
   void initState() {
-    super.initState();
     _fetchTopics = fetchTopics().then((data) {
       _isLoading = false;
       return data; // return data to capture in the snapshot
@@ -25,6 +24,7 @@ class _LoaderTopicListState extends State<LoaderTopicList> {
       // retruns null error to snapshot.error
       _isLoading = false;
     });
+    super.initState();
   }
 
   Future<void> _refreshWidget() async {
