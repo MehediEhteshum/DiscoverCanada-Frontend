@@ -7,7 +7,7 @@ Future<dynamic> fetchProvinces() async {
   List<String> _provinces = [];
 
   try {
-    var _provincesUrl =
+    String _provincesUrl =
         "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/provinces";
     final Response _response =
         await Dio().get(_provincesUrl).timeout(Duration(seconds: timeOut));

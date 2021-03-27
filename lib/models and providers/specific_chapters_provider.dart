@@ -15,10 +15,11 @@ class SpecificChapters with ChangeNotifier {
     // notifyListeners(); // tries to call 'build' during disposing widget, hence avoided
   }
 
-  Future<void> fetchAndSetSpecificChapters(
+  Future<dynamic> fetchAndSetSpecificChapters(
       int topicId, String provinceName) async {
+    Future<dynamic> _error;
     try {
-      var _specificChaptersUrl =
+      String _specificChaptersUrl =
           "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/$topicId/$provinceName/chapters";
       final Response _response = await Dio()
           .get(_specificChaptersUrl)
@@ -37,12 +38,14 @@ class SpecificChapters with ChangeNotifier {
               });
           _specificChapters = _loadedChapters;
           notifyListeners();
+          throw ("NoError");
         }
       } else {
         throw ("Error loading data: ${_response.statusCode}");
       }
     } catch (e) {
-      throw e;
+      _error = Future.error(e.toString());
     }
+    return _error;
   }
 }

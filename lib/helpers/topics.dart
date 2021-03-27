@@ -8,7 +8,7 @@ Future<dynamic> fetchTopics() async {
   List<Topic> _topics = [];
 
   try {
-    var _topicsUrl =
+    String _topicsUrl =
         "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/topics";
     final Response _response =
         await Dio().get(_topicsUrl).timeout(Duration(seconds: timeOut));
