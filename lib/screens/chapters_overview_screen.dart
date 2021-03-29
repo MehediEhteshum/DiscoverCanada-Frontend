@@ -73,14 +73,14 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
 
     return Scaffold(
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: const CircularProgressIndicator(),
             )
           : (_error == "NoError")
               ? CustomScrollView(
                   slivers: <Widget>[
                     SliverAppBar(
-                      title: Text(
+                      title: const Text(
                         "Chapters",
                         softWrap: true,
                       ),
@@ -101,23 +101,22 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
                                 (chapter) => Card(
                                   color: Colors.blue,
                                   shadowColor: Colors.grey,
-                                  elevation: 8, // fixed dim
-                                  margin: const EdgeInsets.all(10), // fixed dim
+                                  elevation: cardElevation, // fixed dim
+                                  margin: cardMargin, // fixed dim
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(15), // fixed dim
+                                    borderRadius: cardBorderRadius, // fixed dim
                                   ),
                                   child: Container(
                                     alignment: Alignment.center,
-                                    padding: EdgeInsets.all(15),
+                                    padding: const EdgeInsets.all(15),
                                     child: AutoSizeText(
                                       "${chapter.title}",
                                       softWrap: true,
                                       textAlign: TextAlign.center,
                                       maxLines: 4,
                                       maxFontSize: fontSize1,
-                                      minFontSize: 15,
-                                      style: TextStyle(
+                                      minFontSize: fontSize1 * 0.75,
+                                      style: const TextStyle(
                                         fontSize: fontSize1,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -129,23 +128,6 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
                         );
                       },
                     ),
-
-                    // SliverToBoxAdapter(
-                    //   child: Column(
-                    //     children: <Widget>[
-                    //       Consumer<SpecificChapters>(
-                    //         builder: (ctx, specificChapters, _) {
-                    //           return Text(
-                    //             "${specificChapters.chaptersList[0].title}",
-                    //             softWrap: true,
-                    //             style: TextStyle(fontSize: fontSize1),
-                    //           );
-                    //         },
-                    //       ),
-                    //       const SizedBox(height: 2000)
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 )
               : Retry(refreshWidget: _refreshWidget),

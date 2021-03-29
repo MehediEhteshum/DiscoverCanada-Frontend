@@ -42,15 +42,15 @@ class TopicCard extends StatelessWidget {
 
     return Card(
       shadowColor: Colors.grey,
-      elevation: 8, // fixed dim
-      margin: const EdgeInsets.all(10), // fixed dim
+      elevation: cardElevation, // fixed dim
+      margin: cardMargin, // fixed dim
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15), // fixed dim
+        borderRadius: cardBorderRadius, // fixed dim
       ),
       child: Stack(
         children: <Widget>[
           ClipRRect(
-            borderRadius: BorderRadius.circular(15), // fixed dim
+            borderRadius: cardBorderRadius, // fixed dim
             child: Image.network(
               '${FlutterConfig.get('BASE_URL')}/${topic.imageUrl}',
               height:

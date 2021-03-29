@@ -6,10 +6,13 @@ const double errorIconSize = 50;
 const Color errorIconColor = Colors.red;
 const double fontSize1 = 20;
 const double fontSize2 = 25;
+const double cardElevation = 8;
+const EdgeInsets cardMargin = EdgeInsets.all(10);
 const List<int> topicIdsForAllProvincesOpt = [4];
 
 double screenWidth = 400;
 double unitWidthFactor = screenWidth / 30; // unit width variable
+BorderRadius cardBorderRadius = BorderRadius.circular(15);
 
 const Widget ErrorTitle = Text(
   "ERROR: Content not found",
