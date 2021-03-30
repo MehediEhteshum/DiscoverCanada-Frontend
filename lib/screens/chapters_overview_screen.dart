@@ -1,10 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
 import '../widgets/selection_info.dart';
-import '../models and providers/specific_chapters_provider.dart';
+import '../helpers/specific_chapters.dart';
 import '../widgets/retry.dart';
 
 class ChaptersOverviewScreen extends StatefulWidget {
@@ -23,44 +22,23 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
   void didChangeDependencies() {
     if (_isInit) {
       // runs once at init
-      final int _topicId = fetchParams()["topicId"];
-      final String _provinceName = fetchParams()["provinceName"];
-      Provider.of<SpecificChapters>(context)
-          .fetchAndSetSpecificChapters(_topicId, _provinceName)
-          .catchError((error) {
-        setState(() {
-          _error = error;
-          _isLoading = false;
-        });
-      }); // need to listen it
+      _refreshWidget();
     }
     _isInit = false;
     super.didChangeDependencies();
-  }
-
-  Map<String, dynamic> fetchParams() {
-    final int _topicId = selectedTopic.id;
-    final String _provinceName = selectedProvince;
-    return {
-      "topicId": _topicId,
-      "provinceName": _provinceName,
-    };
   }
 
   Future<void> _refreshWidget() async {
     setState(() {
       _isLoading = true; // start loading screen again
     });
-    final int _topicId = fetchParams()["topicId"];
-    final String _provinceName = fetchParams()["provinceName"];
-    Provider.of<SpecificChapters>(context, listen: false)
-        .fetchAndSetSpecificChapters(_topicId, _provinceName)
+    await fetchAndSetSpecificChapters(selectedTopic.id, selectedProvince)
         .catchError((error) {
       setState(() {
         _error = error;
         _isLoading = false;
       });
-    }); // need to ignore listen here
+    });
   }
 
   @override
@@ -87,42 +65,38 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
                         background: const SelectionInfo(),
                       ),
                     ),
-                    Consumer<SpecificChapters>(
-                      builder: (ctx, specificChapters, _) {
-                        return SliverGrid.count(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1.3,
-                          children: specificChapters.chaptersList
-                              .map(
-                                (chapter) => Card(
-                                  color: Colors.blue,
-                                  shadowColor: Colors.grey,
-                                  elevation: cardElevation, // fixed dim
-                                  margin: cardMargin, // fixed dim
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: cardBorderRadius, // fixed dim
-                                  ),
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.all(15),
-                                    child: AutoSizeText(
-                                      "${chapter.title}",
-                                      softWrap: true,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 4,
-                                      maxFontSize: fontSize1,
-                                      minFontSize: fontSize1 * 0.75,
-                                      style: const TextStyle(
-                                        fontSize: fontSize1,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                    SliverGrid.count(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1.3,
+                      children: specificChapters
+                          .map(
+                            (chapter) => Card(
+                              color: Colors.blue,
+                              shadowColor: Colors.grey,
+                              elevation: cardElevation, // fixed dim
+                              margin: cardMargin, // fixed dim
+                              shape: RoundedRectangleBorder(
+                                borderRadius: cardBorderRadius, // fixed dim
+                              ),
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(15),
+                                child: AutoSizeText(
+                                  "${chapter.title}",
+                                  softWrap: true,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 4,
+                                  maxFontSize: fontSize1,
+                                  minFontSize: fontSize1 * 0.75,
+                                  style: const TextStyle(
+                                    fontSize: fontSize1,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              )
-                              .toList(),
-                        );
-                      },
+                              ),
+                            ),
+                          )
+                          .toList(),
                     ),
                   ],
                 )
@@ -134,7 +108,7 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
   void deactivate() {
     _isLoading = true;
     _isInit = true;
-    Provider.of<SpecificChapters>(context, listen: false).clearChapters();
+    clearChapters();
     super.deactivate();
   }
 }

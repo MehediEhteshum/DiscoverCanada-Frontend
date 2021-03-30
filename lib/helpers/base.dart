@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models and providers/topic.dart';
+import '../models and providers/chapter.dart';
 
 // const values
 const int timeOut = 3; // seconds
@@ -13,12 +14,13 @@ const double cardElevation = 8;
 const EdgeInsets cardMargin = EdgeInsets.all(10);
 const List<int> topicIdsForAllProvincesOpt = [4];
 
-// global variables
+// global variables initialized
 double screenWidth = 400;
 double unitWidthFactor = screenWidth / 30; // unit width variable
 BorderRadius cardBorderRadius = BorderRadius.circular(15);
+List<Chapter> specificChapters = [];
 
-// global variables initialized
+// global variables declared
 Topic selectedTopic;
 String selectedProvince;
 
