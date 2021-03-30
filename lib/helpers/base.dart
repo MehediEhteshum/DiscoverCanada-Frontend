@@ -20,6 +20,7 @@ BorderRadius cardBorderRadius = BorderRadius.circular(15);
 
 // global variables initialized
 Topic selectedTopic;
+String selectedProvince;
 
 const Widget ErrorTitle = Text(
   "ERROR: Content not found",

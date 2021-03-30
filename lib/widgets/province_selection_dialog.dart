@@ -1,10 +1,8 @@
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
 import '../screens/chapters_overview_screen.dart';
-import '../models and providers/selected_province_provider.dart';
 
 class ProvinceSelectionDialog extends StatefulWidget {
   const ProvinceSelectionDialog({
@@ -105,8 +103,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
             softWrap: true,
           ),
           onPressed: () {
-            Provider.of<SelectedProvince>(context, listen: false)
-                .selectProvince(_selectedProvinceName);
+            selectedProvince = _selectedProvinceName;
             Navigator.of(context)
                 .popAndPushNamed(ChaptersOverviewScreen.routeName);
           },

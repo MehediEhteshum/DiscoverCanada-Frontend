@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../helpers/base.dart';
 import '../widgets/selection_info.dart';
 import '../models and providers/specific_chapters_provider.dart';
-import '../models and providers/selected_province_provider.dart';
 import '../widgets/retry.dart';
 
 class ChaptersOverviewScreen extends StatefulWidget {
@@ -41,8 +40,7 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
 
   Map<String, dynamic> fetchParams() {
     final int _topicId = selectedTopic.id;
-    final String _provinceName =
-        Provider.of<SelectedProvince>(context, listen: false).provinceName;
+    final String _provinceName = selectedProvince;
     return {
       "topicId": _topicId,
       "provinceName": _provinceName,

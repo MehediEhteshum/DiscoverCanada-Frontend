@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
 import './loader_province_selection_dialog.dart';
 import '../models and providers/topic.dart';
 import '../screens/chapters_overview_screen.dart';
-import '../models and providers/selected_province_provider.dart';
 
 class TopicCard extends StatelessWidget {
   const TopicCard({
@@ -28,8 +26,7 @@ class TopicCard extends StatelessWidget {
       );
     } else {
       // when topic doesn't require province selection
-      Provider.of<SelectedProvince>(context, listen: false)
-          .selectProvince("All Provinces");
+      selectedProvince = "All Provinces";
       Navigator.of(context).pushNamed(ChaptersOverviewScreen.routeName);
     }
   }

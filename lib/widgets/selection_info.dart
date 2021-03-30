@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
-import '../models and providers/selected_province_provider.dart';
 
 class SelectionInfo extends StatelessWidget {
   const SelectionInfo({
@@ -41,18 +39,14 @@ class SelectionInfo extends StatelessWidget {
                       unitWidthFactor * 1.75, // proportional to screen width
                 ),
               ),
-              Consumer<SelectedProvince>(
-                builder: (ctx, selectedProvince, _) {
-                  return Text(
-                    "${selectedProvince.provinceName}",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize:
-                          unitWidthFactor * 1.3, // proportional to screen width
-                    ),
-                  );
-                },
-              )
+              Text(
+                "$selectedProvince",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize:
+                      unitWidthFactor * 1.3, // proportional to screen width
+                ),
+              ),
             ],
           ),
         ),
