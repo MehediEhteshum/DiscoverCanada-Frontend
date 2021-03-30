@@ -3,7 +3,6 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
-import '../models and providers/selected_topic_provider.dart';
 import '../models and providers/selected_province_provider.dart';
 
 class SelectionInfo extends StatelessWidget {
@@ -19,15 +18,11 @@ class SelectionInfo extends StatelessWidget {
 
     return Stack(
       children: <Widget>[
-        Consumer<SelectedTopic>(
-          builder: (ctx, selectedTopic, _) {
-            return Image.network(
-              '${FlutterConfig.get('BASE_URL')}/${selectedTopic.topicImageUrl}',
-              height: double.infinity,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            );
-          },
+        Image.network(
+          '${FlutterConfig.get('BASE_URL')}/${selectedTopic.imageUrl}',
+          height: double.infinity,
+          width: double.infinity,
+          fit: BoxFit.cover,
         ),
         Container(
           padding: EdgeInsets.fromLTRB(20, _statusBarHeight + _appBarHeight, 20,
@@ -37,18 +32,14 @@ class SelectionInfo extends StatelessWidget {
           child: Column(
             children: [
               const Spacer(),
-              Consumer<SelectedTopic>(
-                builder: (ctx, selectedTopic, _) {
-                  return Text(
-                    "${selectedTopic.topicTitle}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: unitWidthFactor *
-                          1.75, // proportional to screen width
-                    ),
-                  );
-                },
+              Text(
+                "${selectedTopic.title}",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize:
+                      unitWidthFactor * 1.75, // proportional to screen width
+                ),
               ),
               Consumer<SelectedProvince>(
                 builder: (ctx, selectedProvince, _) {

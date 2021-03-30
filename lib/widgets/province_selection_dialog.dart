@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
 import '../screens/chapters_overview_screen.dart';
-import '../models and providers/selected_topic_provider.dart';
 import '../models and providers/selected_province_provider.dart';
 
 class ProvinceSelectionDialog extends StatefulWidget {
@@ -43,16 +42,12 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Consumer<SelectedTopic>(
-            builder: (ctx, selectedTopic, _) {
-              return Text(
-                "${selectedTopic.topicTitle}",
-                softWrap: true,
-                style: const TextStyle(
-                  fontSize: fontSize2, // fixed dim
-                ),
-              );
-            },
+          Text(
+            "${selectedTopic.title}",
+            softWrap: true,
+            style: const TextStyle(
+              fontSize: fontSize2, // fixed dim
+            ),
           ),
           const SizedBox(height: 15), // fixed dim
           const Text(

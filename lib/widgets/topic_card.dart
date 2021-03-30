@@ -3,7 +3,6 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
-import '../models and providers/selected_topic_provider.dart';
 import './loader_province_selection_dialog.dart';
 import '../models and providers/topic.dart';
 import '../screens/chapters_overview_screen.dart';
@@ -18,8 +17,8 @@ class TopicCard extends StatelessWidget {
   final Topic topic;
 
   void _tapTopic(BuildContext context) {
-    Provider.of<SelectedTopic>(context, listen: false).selectTopic(topic);
-    if (topic.provinceDependent) {
+    selectedTopic = topic;
+    if (selectedTopic.provinceDependent) {
       // when topic requires province selection
       showDialog(
         context: context,

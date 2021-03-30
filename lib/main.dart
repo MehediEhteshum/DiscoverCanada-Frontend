@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'screens/chapters_overview_screen.dart';
 import 'screens/topics_overview_screen.dart';
-import './models and providers/selected_topic_provider.dart';
 import './models and providers/selected_province_provider.dart';
 import './models and providers/specific_chapters_provider.dart';
 import './models and providers/internet_connectivity_provider.dart';
@@ -22,9 +21,6 @@ class MyApp extends StatelessWidget {
     print("Memeory leaks? build main");
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (ctx) => SelectedTopic(),
-        ),
         ChangeNotifierProvider(
           create: (ctx) => SelectedProvince(),
         ),

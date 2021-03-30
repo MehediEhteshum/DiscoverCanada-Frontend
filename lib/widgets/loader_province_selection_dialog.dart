@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
 import './province_selection_dialog.dart';
 import 'error_message_dialog.dart';
 import '../helpers/provinces.dart';
-import '../models and providers/selected_topic_provider.dart';
 
 class LoaderProvinceSelectionDialog extends StatefulWidget {
   const LoaderProvinceSelectionDialog({
@@ -30,8 +28,7 @@ class _LoaderProvinceSelectionDialogState
   @override
   Widget build(BuildContext context) {
     print("Memeory leaks? build _LoaderProvinceSelectionDialogState");
-    int _selectedTopicId =
-        Provider.of<SelectedTopic>(context, listen: false).topicId;
+    int _selectedTopicId = selectedTopic.id;
 
     return Center(
       child: FutureBuilder<dynamic>(
