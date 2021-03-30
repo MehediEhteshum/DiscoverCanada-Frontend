@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:connectivity/connectivity.dart';
@@ -17,28 +15,19 @@ class NoInternetMessage extends StatefulWidget {
 }
 
 class _NoInternetMessageState extends State<NoInternetMessage> {
-  var _subscription;
+  var _connectivitySubscription;
+  bool _isOnline = true;
 
   @override
   void didChangeDependencies() {
-    _subscription = Connectivity()
+    _connectivitySubscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult connectivityResult) async {
-      if (connectivityResult == ConnectivityResult.wifi ||
-          connectivityResult == ConnectivityResult.mobile) {
-        try {
-          final result = await InternetAddress.lookup('google.com');
-          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-            print("Internet On");
-          } else {
-            print("Internet Off");
-          }
-        } catch (_) {
-          print("Internet Off");
-        }
-      } else {
-        print("Internet Off");
-      }
+      Provider.of<InternetConnectivity>(context, listen: false)
+          .checkAndSetStatus(connectivityResult);
+    });
+    setState(() {
+      _isOnline = Provider.of<InternetConnectivity>(context).isOnline;
     });
     super.didChangeDependencies();
   }
@@ -47,25 +36,28 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
   Widget build(BuildContext context) {
     print("Memeory leaks? build _NoInternetMessageState");
 
-    return Container(
-      child: Text(
-        "has Internet:",
-        softWrap: true,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: fontSize1 * 0.75,
-        ),
-      ),
-      color: Colors.red,
-      width: double.maxFinite,
-      padding: EdgeInsets.all(5),
-    );
+    return _isOnline
+        ? Container() // online
+        : Container(
+            child: const Text(
+              "No Internet Connection",
+              softWrap: true,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: fontSize1 * 0.75,
+              ),
+            ),
+            color: Colors.red,
+            width: double.maxFinite,
+            height: 25,
+            padding: const EdgeInsets.all(5),
+          ); // offline
   }
 
   @override
   dispose() {
-    _subscription.cancel();
+    _connectivitySubscription.cancel();
     super.dispose();
   }
 }
