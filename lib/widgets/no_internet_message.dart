@@ -50,8 +50,8 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
             ),
             color: Colors.red,
             width: double.maxFinite,
-            height: 25,
-            padding: const EdgeInsets.all(5),
+            height: 25, // fixed
+            padding: const EdgeInsets.all(5), // fixed
           ); // offline
   }
 

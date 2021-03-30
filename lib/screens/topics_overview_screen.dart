@@ -37,8 +37,8 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
         bottom: PreferredSize(
           child: NoInternetMessage(),
           preferredSize: Size.lerp(
-            Size(double.maxFinite, 25), // offline
-            const Size(0, 0), // online
+            Size(double.maxFinite, 25), // fixed // offline
+            const Size(0, 0), // fixed // online
             _isOnline ? 1 : 0,
           ),
         ),
