@@ -16,7 +16,7 @@ class TopicCard extends StatelessWidget {
 
   void _tapTopic(BuildContext context) {
     selectedTopic = topic;
-    if (selectedTopic.provinceDependent) {
+    if (selectedTopic.isProvinceDependent) {
       // when topic requires province selection
       showDialog(
         context: context,

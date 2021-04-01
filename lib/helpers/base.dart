@@ -18,6 +18,7 @@ const List<int> topicIdsForAllProvincesOpt = [4];
 double screenWidth = 400;
 double unitWidthFactor = screenWidth / 30; // unit width variable
 BorderRadius cardBorderRadius = BorderRadius.circular(15);
+List<Topic> topics = [];
 List<Chapter> specificChapters = [];
 
 // global variables declared

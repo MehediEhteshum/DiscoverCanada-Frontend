@@ -5,8 +5,7 @@ import '../models and providers/topic.dart';
 import './base.dart';
 
 Future<dynamic> fetchTopics() async {
-  List<Topic> _topics = [];
-
+  Future<dynamic> _error;
   try {
     String _topicsUrl =
         "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/topics";
@@ -14,6 +13,7 @@ Future<dynamic> fetchTopics() async {
         await Dio().get(_topicsUrl).timeout(Duration(seconds: timeOut));
     if (_response.statusCode == successCode) {
       final _extractedData = _response.data;
+      final List<Topic> _topics = [];
       if (_extractedData["data"] != null) {
         _extractedData["data"].forEach((_topicObj) => {
               _topics.add(
@@ -21,18 +21,19 @@ Future<dynamic> fetchTopics() async {
                   id: _topicObj["id"],
                   title: _topicObj["title"],
                   imageUrl: _topicObj["image_url"],
-                  provinceDependent: (_topicObj["province_dependent"] ==
+                  isProvinceDependent: (_topicObj["is_province_dependent"] ==
                       1), // converting 0, 1 to bool
                 ),
               ),
             });
+        topics = [..._topics];
+        throw ("NoError");
       }
     } else {
       throw ("Error loading data: ${_response.statusCode}");
     }
   } catch (e) {
-    return Future.error(e.toString());
+    _error = Future.error(e.toString());
   }
-
-  return [..._topics];
+  return _error;
 }

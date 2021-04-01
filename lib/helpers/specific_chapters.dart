@@ -29,7 +29,7 @@ Future<dynamic> fetchAndSetSpecificChapters(
                 ),
               ),
             });
-        specificChapters = _loadedChapters;
+        specificChapters = [..._loadedChapters];
         throw ("NoError");
       }
     } else {
