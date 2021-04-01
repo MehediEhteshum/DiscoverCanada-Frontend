@@ -1,10 +1,10 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../helpers/base.dart';
 import '../widgets/selection_info.dart';
 import '../helpers/specific_chapters.dart';
 import '../widgets/retry.dart';
+import '../widgets/chapter_card.dart';
 
 class ChaptersOverviewScreen extends StatefulWidget {
   static const routeName = "/chapters";
@@ -70,30 +70,8 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
                       childAspectRatio: 1.3,
                       children: specificChapters
                           .map(
-                            (chapter) => Card(
-                              color: Colors.blue,
-                              shadowColor: Colors.grey,
-                              elevation: cardElevation, // fixed dim
-                              margin: cardMargin, // fixed dim
-                              shape: RoundedRectangleBorder(
-                                borderRadius: cardBorderRadius, // fixed dim
-                              ),
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.all(15),
-                                child: AutoSizeText(
-                                  "${chapter.title}",
-                                  softWrap: true,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 4,
-                                  maxFontSize: fontSize1,
-                                  minFontSize: fontSize1 * 0.75,
-                                  style: const TextStyle(
-                                    fontSize: fontSize1,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                            (chapter) => ChapterCard(
+                              chapter: chapter,
                             ),
                           )
                           .toList(),
