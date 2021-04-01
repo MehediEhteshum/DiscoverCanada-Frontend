@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
-import '../widgets/loader_topic_list.dart';
+import '../helpers/topics.dart';
+import '../widgets/topic_card.dart';
 import '../widgets/no_internet_message.dart';
 import '../models and providers/internet_connectivity_provider.dart';
+import '../widgets/retry.dart';
 
 class TopicsOverviewScreen extends StatefulWidget {
   @override
@@ -13,13 +15,33 @@ class TopicsOverviewScreen extends StatefulWidget {
 
 class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
   bool _isOnline = true;
+  static bool _isLoading = true;
+  static bool _isInit = true;
+  static String _error;
 
   @override
   void didChangeDependencies() {
     setState(() {
       _isOnline = Provider.of<InternetConnectivity>(context).isOnline;
     });
+    if (_isInit) {
+      // runs once at init
+      _refreshWidget();
+    }
+    _isInit = false;
     super.didChangeDependencies();
+  }
+
+  Future<void> _refreshWidget() async {
+    setState(() {
+      _isLoading = true; // start loading screen again
+    });
+    await fetchTopics().catchError((error) {
+      setState(() {
+        _error = error;
+        _isLoading = false;
+      });
+    });
   }
 
   @override
@@ -43,7 +65,23 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
           ),
         ),
       ),
-      body: const LoaderTopicList(),
+      body: _isLoading
+          ? const Center(
+              child: const CircularProgressIndicator(),
+            )
+          : (_error == "NoError")
+              ? Center(
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(vertical: 10), // fixed dim
+                    itemCount: topics.length,
+                    itemBuilder: (BuildContext _, int index) {
+                      return TopicCard(
+                        topic: topics[index],
+                      );
+                    },
+                  ),
+                )
+              : Retry(refreshWidget: _refreshWidget),
     );
   }
 }

@@ -23,7 +23,7 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
     _connectivitySubscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult connectivityResult) async {
-      Provider.of<InternetConnectivity>(context, listen: false)
+      await Provider.of<InternetConnectivity>(context, listen: false)
           .checkAndSetStatus(connectivityResult);
     });
     setState(() {

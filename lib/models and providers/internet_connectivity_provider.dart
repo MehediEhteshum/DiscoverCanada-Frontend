@@ -8,7 +8,7 @@ class InternetConnectivity with ChangeNotifier {
 
   bool get isOnline => _hasInternet;
 
-  void checkAndSetStatus(ConnectivityResult connectivityResult) async {
+  Future<void> checkAndSetStatus(ConnectivityResult connectivityResult) async {
     if (connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile) {
       try {
