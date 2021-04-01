@@ -28,7 +28,6 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
           .then((ConnectivityResult connectivityResult) async {
         await Provider.of<InternetConnectivity>(context, listen: false)
             .checkAndSetStatus(connectivityResult);
-        print("no inernet msg1 $_isOnline");
       });
     }
     _isInit = false;
@@ -37,7 +36,6 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
         .listen((ConnectivityResult connectivityResult) async {
       await Provider.of<InternetConnectivity>(context, listen: false)
           .checkAndSetStatus(connectivityResult);
-      print("no inernet msg2 $_isOnline");
     });
     setState(() {
       _isOnline = Provider.of<InternetConnectivity>(context).isOnline;

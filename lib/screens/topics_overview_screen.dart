@@ -23,6 +23,7 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
   void didChangeDependencies() {
     setState(() {
       _isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+      _refreshWidget(); // as soon as online/offline, it refreshes widget
     });
     if (_isInit) {
       // runs once at init
@@ -36,12 +37,12 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
     setState(() {
       _isLoading = true; // start loading screen again
     });
-    print(_isOnline);
     if (_isOnline) {
       // fetch from online
       await fetchTopics().catchError((error) {
         setState(() {
           _error = error;
+          print(_error);
           _isLoading = false;
         });
       });
