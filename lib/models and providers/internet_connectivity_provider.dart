@@ -3,7 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
 class InternetConnectivity with ChangeNotifier {
-  bool _hasInternet = true;
+  bool _hasInternet = false;
   // String _internetType;
 
   bool get isOnline => _hasInternet;

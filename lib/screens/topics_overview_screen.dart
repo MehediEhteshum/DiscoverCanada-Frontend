@@ -14,14 +14,16 @@ class TopicsOverviewScreen extends StatefulWidget {
 }
 
 class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
-  bool _isOnline = true;
+  bool _isOnline = false;
   static bool _isLoading = true;
   static bool _isInit = true;
   static String _error;
 
   @override
   void didChangeDependencies() {
+    print("setState out");
     setState(() {
+      print("setState in");
       _isOnline = Provider.of<InternetConnectivity>(context).isOnline;
       _refreshWidget(); // as soon as online/offline, it refreshes widget
     });
@@ -42,7 +44,6 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
       await fetchTopics().catchError((error) {
         setState(() {
           _error = error;
-          print(_error);
           _isLoading = false;
         });
       });
