@@ -36,12 +36,22 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
     setState(() {
       _isLoading = true; // start loading screen again
     });
-    await fetchTopics().catchError((error) {
+    print(_isOnline);
+    if (_isOnline) {
+      // fetch from online
+      await fetchTopics().catchError((error) {
+        setState(() {
+          _error = error;
+          _isLoading = false;
+        });
+      });
+    } else {
+      // fetch from device
       setState(() {
-        _error = error;
+        _error = "NoInternet";
         _isLoading = false;
       });
-    });
+    }
   }
 
   @override

@@ -17,14 +17,27 @@ class NoInternetMessage extends StatefulWidget {
 class _NoInternetMessageState extends State<NoInternetMessage> {
   var _connectivitySubscription;
   bool _isOnline = true;
+  static bool _isInit = true;
 
   @override
   void didChangeDependencies() {
+    if (_isInit) {
+      // runs once at init
+      Connectivity()
+          .checkConnectivity()
+          .then((ConnectivityResult connectivityResult) async {
+        await Provider.of<InternetConnectivity>(context, listen: false)
+            .checkAndSetStatus(connectivityResult);
+        print("no inernet msg1 $_isOnline");
+      });
+    }
+    _isInit = false;
     _connectivitySubscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult connectivityResult) async {
       await Provider.of<InternetConnectivity>(context, listen: false)
           .checkAndSetStatus(connectivityResult);
+      print("no inernet msg2 $_isOnline");
     });
     setState(() {
       _isOnline = Provider.of<InternetConnectivity>(context).isOnline;
