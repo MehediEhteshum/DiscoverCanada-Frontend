@@ -14,24 +14,16 @@ class TopicsOverviewScreen extends StatefulWidget {
 }
 
 class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
-  bool _isOnline = false;
+  static bool _isOnline = false;
   static bool _isLoading = true;
-  static bool _isInit = true;
   static String _error;
 
   @override
   void didChangeDependencies() {
-    print("setState out");
     setState(() {
-      print("setState in");
       _isOnline = Provider.of<InternetConnectivity>(context).isOnline;
       _refreshWidget(); // as soon as online/offline, it refreshes widget
     });
-    if (_isInit) {
-      // runs once at init
-      _refreshWidget();
-    }
-    _isInit = false;
     super.didChangeDependencies();
   }
 
@@ -72,7 +64,7 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
           ? const Center(
               child: const CircularProgressIndicator(),
             )
-          : (_error == "NoError")
+          : (_error == "NoError" && topics.length > 0)
               ? Center(
                   child: ListView.builder(
                     padding: EdgeInsets.symmetric(vertical: 10), // fixed dim
