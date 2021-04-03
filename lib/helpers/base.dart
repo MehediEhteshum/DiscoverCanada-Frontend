@@ -13,6 +13,7 @@ const double fontSize2 = 25;
 const double cardElevation = 8;
 const EdgeInsets cardMargin = EdgeInsets.all(10);
 const List<int> topicIdsForAllProvincesOpt = [4];
+const String noInternetImage = "assets/images/noInternet.jpg";
 
 // global variables initialized
 double screenWidth = 400;
@@ -20,6 +21,7 @@ double unitWidthFactor = screenWidth / 30; // unit width variable
 BorderRadius cardBorderRadius = BorderRadius.circular(15);
 List<Topic> topics = [];
 List<Chapter> specificChapters = [];
+bool isOnline = false;
 
 // global variables declared
 Topic selectedTopic;

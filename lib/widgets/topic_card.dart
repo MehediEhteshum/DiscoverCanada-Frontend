@@ -47,13 +47,23 @@ class TopicCard extends StatelessWidget {
         children: <Widget>[
           ClipRRect(
             borderRadius: cardBorderRadius, // fixed dim
-            child: Image.network(
-              '${FlutterConfig.get('BASE_URL')}/${topic.imageUrl}',
-              height:
-                  cardHeight, // proportional to screen width, dictating card height
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+            child: isOnline
+                ? Image.network(
+                    // network image when online
+                    '${FlutterConfig.get('BASE_URL')}/${topic.imageUrl}',
+                    height:
+                        cardHeight, // proportional to screen width, dictating card height
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    // asset image when offline
+                    noInternetImage,
+                    height:
+                        cardHeight, // proportional to screen width, dictating card height
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
           ),
           Positioned(
             bottom: 15, // fixed dim
