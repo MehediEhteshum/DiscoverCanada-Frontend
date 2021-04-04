@@ -33,7 +33,7 @@ Future<dynamic> fetchTopics(bool isOnline) async {
           throw ("Error loading data: ${response.statusCode}");
         }
       } catch (e) {
-        return e;
+        error = Future.error(e.toString());
       }
     } else {
       // if offline, fetch from device
