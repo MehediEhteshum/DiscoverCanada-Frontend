@@ -22,12 +22,14 @@ Future<dynamic> fetchTopics(bool isOnline) async {
             await Dio().get(topicsUrl).timeout(Duration(seconds: timeOut));
         if (response.statusCode == successCode) {
           final dynamic extractedData = response.data;
-          if (extractedData["data"] != null) {
+          if (extractedData["data"].length > 0) {
             await _storeTopicsData(topicsBox, extractedData["data"]);
             final List<Topic> _topics =
                 _createTopicsList(extractedData["data"]);
             topics = [..._topics]; // assigning to global variable
             throw ("NoError");
+          } else {
+            throw ("EmptyData");
           }
         } else {
           throw ("Error loading data: ${response.statusCode}");

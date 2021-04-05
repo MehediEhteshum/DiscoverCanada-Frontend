@@ -20,6 +20,7 @@ double screenWidth = 400;
 double unitWidthFactor = screenWidth / 30; // unit width variable
 BorderRadius cardBorderRadius = BorderRadius.circular(15);
 List<Topic> topics = [];
+List<String> provinces = [];
 List<Chapter> specificChapters = [];
 bool isOnline = false;
 

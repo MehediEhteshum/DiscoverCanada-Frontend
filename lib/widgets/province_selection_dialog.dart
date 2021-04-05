@@ -7,10 +7,7 @@ import '../screens/chapters_overview_screen.dart';
 class ProvinceSelectionDialog extends StatefulWidget {
   const ProvinceSelectionDialog({
     Key key,
-    @required this.provinces,
   }) : super(key: key);
-
-  final List<dynamic> provinces;
 
   @override
   _ProvinceSelectionDialogState createState() =>
@@ -23,7 +20,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
 
   @override
   void initState() {
-    _selectedProvinceName = widget.provinces[0]; // default
+    _selectedProvinceName = provinces[0]; // default
     super.initState();
   }
 
@@ -33,8 +30,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
     double _provinceListHeight =
         screenWidth * 9 / 10; // proportional to screen width
     double _percItemsVisible = (_provinceListHeight / 57) /
-        widget
-            .provinces.length; // each RadioListTile height is approx. 57 pixels
+        provinces.length; // each RadioListTile height is approx. 57 pixels
 
     return AlertDialog(
       title: Column(
@@ -70,19 +66,19 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
           controller: _provinceScrollontroller,
           child: ListView.builder(
             controller: _provinceScrollontroller,
-            itemCount: widget.provinces.length,
+            itemCount: provinces.length,
             itemBuilder: (BuildContext _, int index) {
               return RadioListTile(
                 title: Text(
-                  widget.provinces[index],
+                  provinces[index],
                   softWrap: true,
                   style: const TextStyle(
                     fontSize: fontSize1 * 0.85, // fixed dim
                   ),
                 ),
-                value: widget.provinces[index],
+                value: provinces[index],
                 groupValue: _selectedProvinceName,
-                selected: _selectedProvinceName == widget.provinces[index],
+                selected: _selectedProvinceName == provinces[index],
                 onChanged: (value) {
                   setState(() {
                     _selectedProvinceName = value;
