@@ -16,15 +16,23 @@ class SelectionInfo extends StatelessWidget {
 
     return Stack(
       children: <Widget>[
-        Image.network(
-          '${FlutterConfig.get('BASE_URL')}/${selectedTopic.imageUrl}',
-          height: double.infinity,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        ),
+        isOnline
+            ? Image.network(
+                '${FlutterConfig.get('BASE_URL')}/${selectedTopic.imageUrl}',
+                height: double.infinity,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              )
+            : Image.asset(
+                // asset image when offline
+                noInternetImage,
+                height: double.infinity,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
         Container(
           padding: EdgeInsets.fromLTRB(20, _statusBarHeight + _appBarHeight, 20,
-              _statusBarHeight), // variable
+              _statusBarHeight * 1.25), // variable
           color: Colors.black54,
           width: double.maxFinite,
           child: Column(

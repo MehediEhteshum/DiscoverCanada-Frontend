@@ -15,6 +15,7 @@ class Retry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("Memeory leaks? build Retry");
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20), // fixed dim
       child: RefreshIndicator(

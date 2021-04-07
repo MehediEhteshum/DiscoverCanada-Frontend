@@ -5,10 +5,6 @@ import 'package:hive/hive.dart';
 import '../models and providers/topic.dart';
 import './base.dart';
 
-Future<Box> Function() _openTopicsBox = () async {
-  return await Hive.openBox("topics");
-};
-
 Future<dynamic> fetchTopics(bool isOnline) async {
   Future<dynamic> error;
 
@@ -50,6 +46,10 @@ Future<dynamic> fetchTopics(bool isOnline) async {
 
   return error;
 }
+
+Future<Box> Function() _openTopicsBox = () async {
+  return await Hive.openBox("topics");
+};
 
 Future<void> _storeTopicsData(Box topicsBox, dynamic data) async {
   await topicsBox.clear(); // clear previous data
