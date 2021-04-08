@@ -21,7 +21,7 @@ Future<dynamic> fetchProvinces(bool isOnline) async {
             await Dio().get(provincesUrl).timeout(Duration(seconds: timeOut));
         if (response.statusCode == successCode) {
           final dynamic extractedData = response.data;
-          if (extractedData["data"].length > 0) {
+          if (extractedData["data"] != null) {
             await _storeProvincesData(provincesBox, extractedData["data"]);
             final List<String> _provinces =
                 _createProvincesList(extractedData["data"]);
@@ -38,10 +38,14 @@ Future<dynamic> fetchProvinces(bool isOnline) async {
       }
     } else {
       // if offline, fetch from device
-      dynamic provincesData = provincesBox.toMap().values.toList();
-      final List<String> _provinces = _createProvincesList(provincesData);
-      provinces = [..._provinces]; // assigning to global variable
-      throw ("NoError");
+      dynamic provincesData = provincesBox.toMap()[0];
+      if (provincesData != null) {
+        final List<String> _provinces = _createProvincesList(provincesData);
+        provinces = [..._provinces]; // assigning to global variable
+        throw ("NoError");
+      } else {
+        throw ("EmptyData");
+      }
     }
   }).catchError((e) {
     error = Future.error(e.toString());
@@ -51,10 +55,7 @@ Future<dynamic> fetchProvinces(bool isOnline) async {
 }
 
 Future<void> _storeProvincesData(Box provincesBox, dynamic data) async {
-  await provincesBox.clear(); // clear previous data
-  data.forEach((provinceObj) => {
-        provincesBox.add(provinceObj),
-      });
+  await provincesBox.put(0, data);
 }
 
 List<String> _createProvincesList(dynamic data) {

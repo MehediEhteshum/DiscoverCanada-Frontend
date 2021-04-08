@@ -18,7 +18,7 @@ Future<dynamic> fetchTopics(bool isOnline) async {
             await Dio().get(topicsUrl).timeout(Duration(seconds: timeOut));
         if (response.statusCode == successCode) {
           final dynamic extractedData = response.data;
-          if (extractedData["data"].length > 0) {
+          if (extractedData["data"] != null) {
             await _storeTopicsData(topicsBox, extractedData["data"]);
             final List<Topic> _topics =
                 _createTopicsList(extractedData["data"]);
@@ -35,10 +35,14 @@ Future<dynamic> fetchTopics(bool isOnline) async {
       }
     } else {
       // if offline, fetch from device
-      dynamic topicsData = topicsBox.toMap().values.toList();
-      final List<Topic> _topics = _createTopicsList(topicsData);
-      topics = [..._topics]; // assigning to global variable
-      throw ("NoError");
+      dynamic topicsData = topicsBox.toMap()[0];
+      if (topicsData != null) {
+        final List<Topic> _topics = _createTopicsList(topicsData);
+        topics = [..._topics]; // assigning to global variable
+        throw ("NoError");
+      } else {
+        throw ("EmptyData");
+      }
     }
   }).catchError((e) {
     error = Future.error(e.toString());
@@ -52,10 +56,7 @@ Future<Box> Function() _openTopicsBox = () async {
 };
 
 Future<void> _storeTopicsData(Box topicsBox, dynamic data) async {
-  await topicsBox.clear(); // clear previous data
-  data.forEach((topicObj) => {
-        topicsBox.add(topicObj),
-      });
+  await topicsBox.put(0, data);
 }
 
 List<Topic> _createTopicsList(dynamic data) {

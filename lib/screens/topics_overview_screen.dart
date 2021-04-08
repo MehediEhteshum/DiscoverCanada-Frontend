@@ -63,7 +63,7 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
           ? const Center(
               child: const CircularProgressIndicator(),
             )
-          : (_error == "NoError" && topics.length > 0)
+          : (_error == "NoError")
               ? Center(
                   child: ListView.builder(
                     padding: EdgeInsets.symmetric(vertical: 10), // fixed dim
