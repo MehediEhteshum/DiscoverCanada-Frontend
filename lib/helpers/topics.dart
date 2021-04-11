@@ -35,7 +35,7 @@ Future<dynamic> fetchTopics(bool isOnline) async {
       }
     } else {
       // if offline, fetch from device
-      dynamic topicsData = topicsBox.toMap()[0];
+      dynamic topicsData = topicsBox.values.elementAt(0);
       if (topicsData != null) {
         final List<Topic> _topics = _createTopicsList(topicsData);
         topics = [..._topics]; // assigning to global variable
@@ -56,7 +56,8 @@ Future<Box> Function() _openTopicsBox = () async {
 };
 
 Future<void> _storeTopicsData(Box topicsBox, dynamic data) async {
-  await topicsBox.put(0, data);
+  // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
+  await topicsBox.put(0, data); // storing at default key
 }
 
 List<Topic> _createTopicsList(dynamic data) {

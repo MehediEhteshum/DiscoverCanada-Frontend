@@ -38,7 +38,7 @@ Future<dynamic> fetchProvinces(bool isOnline) async {
       }
     } else {
       // if offline, fetch from device
-      dynamic provincesData = provincesBox.toMap()[0];
+      dynamic provincesData = provincesBox.values.elementAt(0);
       if (provincesData != null) {
         final List<String> _provinces = _createProvincesList(provincesData);
         provinces = [..._provinces]; // assigning to global variable
@@ -55,7 +55,8 @@ Future<dynamic> fetchProvinces(bool isOnline) async {
 }
 
 Future<void> _storeProvincesData(Box provincesBox, dynamic data) async {
-  await provincesBox.put(0, data);
+  // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
+  await provincesBox.put(0, data); // storing at default key
 }
 
 List<String> _createProvincesList(dynamic data) {

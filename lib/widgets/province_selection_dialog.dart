@@ -16,7 +16,7 @@ class ProvinceSelectionDialog extends StatefulWidget {
 
 class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
   final ScrollController _provinceScrollontroller = ScrollController();
-  String _selectedProvinceName;
+  static String _selectedProvinceName;
 
   @override
   void initState() {

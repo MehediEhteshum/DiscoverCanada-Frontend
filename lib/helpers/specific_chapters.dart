@@ -38,7 +38,8 @@ Future<dynamic> fetchAndSetSpecificChapters(
       }
     } else {
       // if offline, fetch from device
-      dynamic chaptersData = chaptersBox.toMap()[topicId][provinceName];
+      dynamic chaptersData =
+          chaptersBox.values.elementAt(topicId - 1)[provinceName];
       if (chaptersData != null) {
         final List<Chapter> chapters = _createChaptersList(chaptersData);
         specificChapters = [...chapters]; // assigning to global variable
@@ -60,15 +61,19 @@ Future<Box> Function() _openChaptersBox = () async {
 
 Future<void> _storeChaptersData(
     Box chaptersBox, dynamic data, int topicId, String provinceName) async {
-  if (!chaptersBox.containsKey(topicId)) {
-    // if key doesn't exist, create the key
-    await chaptersBox.put(topicId, {});
+  // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
+  dynamic updatedData = {provinceName: data};
+  if (chaptersBox.containsKey(topicId)) {
+    // if key exists, update the current data
+    var currentData = await chaptersBox.values.elementAt(topicId - 1);
+    await currentData.update(
+      provinceName,
+      (data) => data,
+      ifAbsent: () => data,
+    );
+    updatedData = await chaptersBox.values.elementAt(topicId - 1);
   }
-  await chaptersBox.toMap()[topicId].update(
-        provinceName,
-        (data) => data,
-        ifAbsent: () => data,
-      );
+  await chaptersBox.put(topicId, updatedData);
 }
 
 List<Chapter> _createChaptersList(dynamic data) {

@@ -15,8 +15,8 @@ class NoInternetMessage extends StatefulWidget {
 }
 
 class _NoInternetMessageState extends State<NoInternetMessage> {
-  var _connectivitySubscription;
-  bool _isOnline = false;
+  static var _connectivitySubscription;
+  static bool _isOnline = false;
   static bool _isInit = true;
 
   @override

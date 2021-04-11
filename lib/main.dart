@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/chapters_overview_screen.dart';
@@ -13,8 +11,8 @@ import './models and providers/internet_connectivity_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterConfig.loadEnvVariables();
-  Directory _docDir = await getApplicationDocumentsDirectory();
-  Hive.init(_docDir.path);
+  // initializes Hive with getApplicationDocumentsDirectory
+  await Hive.initFlutter();
   runApp(MyApp());
 }
 
