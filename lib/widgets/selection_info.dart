@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../helpers/base.dart';
 
@@ -16,9 +18,21 @@ class SelectionInfo extends StatelessWidget {
 
     return Stack(
       children: <Widget>[
+        Shimmer.fromColors(
+          child: Container(
+            color: Colors.white,
+            height: double.infinity,
+            width: double.infinity,
+          ),
+          baseColor: Colors.grey[300],
+          highlightColor: Colors.grey[100],
+          loop: 5,
+        ),
         isOnline
-            ? Image.network(
-                '${FlutterConfig.get('BASE_URL')}/${selectedTopic.imageUrl}',
+            ? FadeInImage.memoryNetwork(
+                placeholder: kTransparentImage,
+                image:
+                    '${FlutterConfig.get('BASE_URL')}/${selectedTopic.imageUrl}',
                 height: double.infinity,
                 width: double.infinity,
                 fit: BoxFit.cover,

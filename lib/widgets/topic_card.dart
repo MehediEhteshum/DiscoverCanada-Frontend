@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../helpers/base.dart';
 import './loader_province_selection_dialog.dart';
@@ -47,23 +49,39 @@ class TopicCard extends StatelessWidget {
         children: <Widget>[
           ClipRRect(
             borderRadius: cardBorderRadius, // fixed dim
-            child: isOnline
-                ? Image.network(
-                    // network image when online
-                    '${FlutterConfig.get('BASE_URL')}/${topic.imageUrl}',
+            child: Stack(
+              children: <Widget>[
+                Shimmer.fromColors(
+                  child: Container(
+                    color: Colors.white,
                     height:
                         cardHeight, // proportional to screen width, dictating card height
                     width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
-                : Image.asset(
-                    // asset image when offline
-                    noInternetImage,
-                    height:
-                        cardHeight, // proportional to screen width, dictating card height
-                    width: double.infinity,
-                    fit: BoxFit.cover,
                   ),
+                  baseColor: Colors.grey[300],
+                  highlightColor: Colors.grey[100],
+                  loop: 5,
+                ),
+                isOnline
+                    ? FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image:
+                            '${FlutterConfig.get('BASE_URL')}/${topic.imageUrl}',
+                        height:
+                            cardHeight, // proportional to screen width, dictating card height
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        // asset image when offline
+                        noInternetImage,
+                        height:
+                            cardHeight, // proportional to screen width, dictating card height
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+              ],
+            ),
           ),
           Positioned(
             bottom: 15, // fixed dim
