@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
 import '../helpers/topics.dart';
+import '../helpers/manage_file.dart';
+import '../models and providers/internet_connectivity_provider.dart';
 import '../widgets/topic_card.dart';
 import '../widgets/no_internet_message.dart';
-import '../models and providers/internet_connectivity_provider.dart';
 import '../widgets/retry.dart';
 
 class TopicsOverviewScreen extends StatefulWidget {
@@ -16,6 +17,12 @@ class TopicsOverviewScreen extends StatefulWidget {
 class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
   static bool _isLoading = true;
   static String _error;
+
+  @override
+  void initState() {
+    createDirPath("images");
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
