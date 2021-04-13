@@ -37,9 +37,10 @@ class SelectionInfo extends StatelessWidget {
                 width: double.infinity,
                 fit: BoxFit.cover,
               )
-            : Image.asset(
+            : FadeInImage(
                 // asset image when offline
-                noInternetImage,
+                placeholder: MemoryImage(kTransparentImage),
+                image: AssetImage(noInternetImage),
                 height: double.infinity,
                 width: double.infinity,
                 fit: BoxFit.cover,

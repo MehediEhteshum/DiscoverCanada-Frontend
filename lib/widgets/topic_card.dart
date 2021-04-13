@@ -72,9 +72,10 @@ class TopicCard extends StatelessWidget {
                         width: double.infinity,
                         fit: BoxFit.cover,
                       )
-                    : Image.asset(
+                    : FadeInImage(
                         // asset image when offline
-                        noInternetImage,
+                        placeholder: MemoryImage(kTransparentImage),
+                        image: AssetImage(noInternetImage),
                         height:
                             cardHeight, // proportional to screen width, dictating card height
                         width: double.infinity,
