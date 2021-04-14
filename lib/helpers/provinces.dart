@@ -34,11 +34,13 @@ Future<dynamic> fetchProvinces(bool isOnline) async {
           throw ("Error loading data: ${response.statusCode}");
         }
       } catch (e) {
+        print("provinces1 $e");
         error = Future.error(e.toString());
       }
     } else {
       // if offline, fetch from device
-      dynamic provincesData = provincesBox.values.elementAt(0);
+      dynamic provincesData =
+          provincesBox.containsKey(0) ? provincesBox.values.elementAt(0) : null;
       if (provincesData != null) {
         final List<String> _provinces = _createProvincesList(provincesData);
         provinces = [..._provinces]; // assigning to global variable
@@ -48,6 +50,7 @@ Future<dynamic> fetchProvinces(bool isOnline) async {
       }
     }
   }).catchError((e) {
+    print("provinces2 $e");
     error = Future.error(e.toString());
   });
 

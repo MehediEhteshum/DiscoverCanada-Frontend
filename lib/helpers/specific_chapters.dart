@@ -34,12 +34,14 @@ Future<dynamic> fetchAndSetSpecificChapters(
           throw ("Error loading data: ${response.statusCode}");
         }
       } catch (e) {
+        print("specific_chapters1 $e");
         error = Future.error(e.toString());
       }
     } else {
       // if offline, fetch from device
-      dynamic chaptersData =
-          chaptersBox.values.elementAt(topicId - 1)[provinceName];
+      dynamic chaptersData = chaptersBox.containsKey(topicId)
+          ? chaptersBox.values.elementAt(topicId - 1)
+          : null;
       if (chaptersData != null) {
         final List<Chapter> chapters = _createChaptersList(chaptersData);
         specificChapters = [...chapters]; // assigning to global variable
@@ -49,6 +51,7 @@ Future<dynamic> fetchAndSetSpecificChapters(
       }
     }
   }).catchError((e) {
+    print("specific_chapters2 $e");
     error = Future.error(e.toString());
   });
 

@@ -23,6 +23,7 @@ List<Topic> topics = [];
 List<String> provinces = [];
 List<Chapter> specificChapters = [];
 bool isOnline = false;
+List<String> topicImagePathsList = [];
 
 // global variables declared
 Topic selectedTopic;

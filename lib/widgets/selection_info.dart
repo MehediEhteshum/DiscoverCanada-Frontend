@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:shimmer/shimmer.dart';
@@ -37,14 +39,26 @@ class SelectionInfo extends StatelessWidget {
                 width: double.infinity,
                 fit: BoxFit.cover,
               )
-            : FadeInImage(
-                // asset image when offline
-                placeholder: MemoryImage(kTransparentImage),
-                image: AssetImage(noInternetImage),
-                height: double.infinity,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+            : topicImagePathsList.asMap().containsKey(selectedTopic.id - 1)
+                ? FadeInImage(
+                    // asset image when offline
+                    placeholder: MemoryImage(kTransparentImage),
+                    image: FileImage(
+                        File(topicImagePathsList[selectedTopic.id - 1])),
+                    height: double
+                        .infinity, // proportional to screen width, dictating card height
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                : FadeInImage(
+                    // asset image when offline
+                    placeholder: MemoryImage(kTransparentImage),
+                    image: AssetImage(noInternetImage),
+                    height: double
+                        .infinity, // proportional to screen width, dictating card height
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
         Container(
           padding: EdgeInsets.fromLTRB(20, _statusBarHeight + _appBarHeight, 20,
               _statusBarHeight * 1.25), // variable

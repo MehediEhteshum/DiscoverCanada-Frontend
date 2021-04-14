@@ -37,9 +37,9 @@ Future<dynamic> fetchTopics(bool isOnline) async {
       }
     } else {
       // if offline, fetch from device
-      dynamic topicsData = topicsBox.containsKey(0)
-          ? topicsBox.values.elementAt(0)
-          : []; // to avoid Retry page during installation when 0 key is not available
+      createTopicImagesPathsList();
+      dynamic topicsData =
+          topicsBox.containsKey(0) ? topicsBox.values.elementAt(0) : null;
       if (topicsData != null) {
         final List<Topic> _topics = _createTopicsList(topicsData);
         topics = [..._topics]; // assigning to global variable
@@ -61,7 +61,7 @@ Future<Box> Function() _openTopicsBox = () async {
 };
 
 Future<void> _storeTopicsData(Box topicsBox, dynamic data) async {
-  // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
+  // Hive learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
   await topicsBox.put(0, data); // storing at default key
   await saveTopicImages(data);
 }
