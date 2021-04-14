@@ -35,8 +35,7 @@ Future<dynamic> fetchProvinces(bool isOnline) async {
       }
     } else {
       // if offline, fetch from device
-      dynamic provincesData =
-          provincesBox.containsKey(0) ? provincesBox.values.elementAt(0) : null;
+      dynamic provincesData = provincesBox.get(0);
       if (provincesData != null) {
         final List<String> _provinces = _createProvincesList(provincesData);
         provinces = [..._provinces]; // assigning to global variable

@@ -38,8 +38,7 @@ Future<dynamic> fetchTopics(bool isOnline) async {
     } else {
       // if offline, fetch from device
       createTopicImagesPathsList();
-      dynamic topicsData =
-          topicsBox.containsKey(0) ? topicsBox.values.elementAt(0) : null;
+      dynamic topicsData = topicsBox.get(0);
       if (topicsData != null) {
         final List<Topic> _topics = _createTopicsList(topicsData);
         topics = [..._topics]; // assigning to global variable

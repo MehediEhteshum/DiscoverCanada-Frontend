@@ -53,9 +53,7 @@ Future<void> saveTopicImages(dynamic data) async {
 
 Future<void> createTopicImagesPathsList() async {
   await _openTopicImagePathsBox().then((Box topicImagePathsBox) async {
-    topicImagePathsList = topicImagePathsBox.containsKey(0)
-        ? topicImagePathsBox.values.elementAt(0)
-        : [];
+    topicImagePathsList = topicImagePathsBox.get(0);
   });
 }
 
