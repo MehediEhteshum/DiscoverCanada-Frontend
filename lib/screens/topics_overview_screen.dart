@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
 import '../helpers/topics.dart';
-import '../helpers/manage_file.dart';
+import '../helpers/manage_files.dart';
 import '../models and providers/internet_connectivity_provider.dart';
 import '../widgets/topic_card.dart';
 import '../widgets/no_internet_message.dart';

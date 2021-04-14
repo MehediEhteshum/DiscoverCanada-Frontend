@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:hive/hive.dart';
 
+import '../helpers/manage_files.dart';
 import '../models and providers/topic.dart';
 import './base.dart';
 
@@ -31,11 +32,14 @@ Future<dynamic> fetchTopics(bool isOnline) async {
           throw ("Error loading data: ${response.statusCode}");
         }
       } catch (e) {
+        print("topics1 $e");
         error = Future.error(e.toString());
       }
     } else {
       // if offline, fetch from device
-      dynamic topicsData = topicsBox.values.elementAt(0);
+      dynamic topicsData = topicsBox.containsKey(0)
+          ? topicsBox.values.elementAt(0)
+          : []; // to avoid Retry page during installation when 0 key is not available
       if (topicsData != null) {
         final List<Topic> _topics = _createTopicsList(topicsData);
         topics = [..._topics]; // assigning to global variable
@@ -45,6 +49,7 @@ Future<dynamic> fetchTopics(bool isOnline) async {
       }
     }
   }).catchError((e) {
+    print("topics2 $e");
     error = Future.error(e.toString());
   });
 
@@ -58,6 +63,7 @@ Future<Box> Function() _openTopicsBox = () async {
 Future<void> _storeTopicsData(Box topicsBox, dynamic data) async {
   // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
   await topicsBox.put(0, data); // storing at default key
+  await saveTopicImages(data);
 }
 
 List<Topic> _createTopicsList(dynamic data) {
