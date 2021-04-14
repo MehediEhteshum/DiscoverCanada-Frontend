@@ -45,8 +45,7 @@ class SelectionInfo extends StatelessWidget {
                     placeholder: MemoryImage(kTransparentImage),
                     image: FileImage(
                         File(topicImagePathsList[selectedTopic.id - 1])),
-                    height: double
-                        .infinity, // proportional to screen width, dictating card height
+                    height: double.infinity,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   )
@@ -54,8 +53,7 @@ class SelectionInfo extends StatelessWidget {
                     // asset image when offline
                     placeholder: MemoryImage(kTransparentImage),
                     image: AssetImage(noInternetImage),
-                    height: double
-                        .infinity, // proportional to screen width, dictating card height
+                    height: double.infinity,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),

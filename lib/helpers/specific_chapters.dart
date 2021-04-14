@@ -40,7 +40,7 @@ Future<dynamic> fetchAndSetSpecificChapters(
     } else {
       // if offline, fetch from device
       dynamic chaptersData = chaptersBox.containsKey(topicId)
-          ? chaptersBox.values.elementAt(topicId - 1)
+          ? chaptersBox.get(topicId)[provinceName]
           : null;
       if (chaptersData != null) {
         final List<Chapter> chapters = _createChaptersList(chaptersData);
@@ -68,13 +68,13 @@ Future<void> _storeChaptersData(
   dynamic updatedData = {provinceName: data};
   if (chaptersBox.containsKey(topicId)) {
     // if key exists, update the current data
-    var currentData = await chaptersBox.values.elementAt(topicId - 1);
+    var currentData = await chaptersBox.get(topicId);
     await currentData.update(
       provinceName,
       (data) => data,
       ifAbsent: () => data,
     );
-    updatedData = await chaptersBox.values.elementAt(topicId - 1);
+    updatedData = await chaptersBox.get(topicId);
   }
   await chaptersBox.put(topicId, updatedData);
 }

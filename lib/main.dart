@@ -13,6 +13,11 @@ void main() async {
   await FlutterConfig.loadEnvVariables();
   // initializes Hive with getApplicationDocumentsDirectory
   await Hive.initFlutter();
+  // Hive Learning: open alll the boxes before running app
+  await Hive.openBox("topics");
+  await Hive.openBox("provinces");
+  await Hive.openBox("topicImagePaths");
+  await Hive.openBox("chapters");
   runApp(MyApp());
 }
 

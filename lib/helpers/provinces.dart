@@ -4,10 +4,6 @@ import 'package:hive/hive.dart';
 
 import './base.dart';
 
-Future<Box> Function() _openProvincesBox = () async {
-  return await Hive.openBox("provinces");
-};
-
 Future<dynamic> fetchProvinces(bool isOnline) async {
   Future<dynamic> error;
 
@@ -56,6 +52,10 @@ Future<dynamic> fetchProvinces(bool isOnline) async {
 
   return error;
 }
+
+Future<Box> Function() _openProvincesBox = () async {
+  return await Hive.openBox("provinces");
+};
 
 Future<void> _storeProvincesData(Box provincesBox, dynamic data) async {
   // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
