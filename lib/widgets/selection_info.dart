@@ -30,7 +30,7 @@ class SelectionInfo extends StatelessWidget {
           highlightColor: Colors.grey[100],
           loop: 5,
         ),
-        isOnline
+        isOnline == 1
             ? FadeInImage.memoryNetwork(
                 placeholder: kTransparentImage,
                 image:

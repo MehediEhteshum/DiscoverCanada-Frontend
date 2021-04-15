@@ -16,7 +16,7 @@ class NoInternetMessage extends StatefulWidget {
 
 class _NoInternetMessageState extends State<NoInternetMessage> {
   static var _connectivitySubscription;
-  static bool _isOnline = false;
+  static int _isOnline = 2; // basically it is bool(0, 1), 2 during app start-up
   static bool _isInit = true;
 
   @override
@@ -47,7 +47,7 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
   Widget build(BuildContext context) {
     print("Memeory leaks? build _NoInternetMessageState");
 
-    return _isOnline
+    return _isOnline == 1
         ? Container() // online
         : Container(
             child: const Text(

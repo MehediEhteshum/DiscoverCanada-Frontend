@@ -6,11 +6,11 @@ import '../helpers/manage_files.dart';
 import '../models and providers/topic.dart';
 import './base.dart';
 
-Future<dynamic> fetchTopics(bool isOnline) async {
+Future<dynamic> fetchTopics(int isOnline) async {
   Future<dynamic> error;
 
   await _openTopicsBox().then((Box topicsBox) async {
-    if (isOnline) {
+    if (isOnline == 1) {
       // if online, fetch from internet
       try {
         String topicsUrl =
@@ -35,6 +35,10 @@ Future<dynamic> fetchTopics(bool isOnline) async {
         print("topics1 $e");
         error = Future.error(e.toString());
       }
+    } else if (isOnline == 2) {
+      // during app start-up, isOnline = null
+      topics = []; // assigning temp value to global variable
+      throw ("NoError");
     } else {
       // if offline, fetch from device
       createTopicImagesPathsList();

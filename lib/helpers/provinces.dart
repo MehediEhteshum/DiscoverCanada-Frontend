@@ -4,11 +4,11 @@ import 'package:hive/hive.dart';
 
 import './base.dart';
 
-Future<dynamic> fetchProvinces(bool isOnline) async {
+Future<dynamic> fetchProvinces(int isOnline) async {
   Future<dynamic> error;
 
   await _openProvincesBox().then((Box provincesBox) async {
-    if (isOnline) {
+    if (isOnline == 1) {
       // if online, fetch from internet
       try {
         String provincesUrl =

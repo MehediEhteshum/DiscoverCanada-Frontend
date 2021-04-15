@@ -6,11 +6,11 @@ import '../models and providers/chapter.dart';
 import 'base.dart';
 
 Future<dynamic> fetchAndSetSpecificChapters(
-    bool isOnline, int topicId, String provinceName) async {
+    int isOnline, int topicId, String provinceName) async {
   Future<dynamic> error;
 
   await _openChaptersBox().then((Box chaptersBox) async {
-    if (isOnline) {
+    if (isOnline == 1) {
       // if online, fetch from internet
       try {
         String specificChaptersUrl =

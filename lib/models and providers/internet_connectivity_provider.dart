@@ -3,10 +3,9 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
 class InternetConnectivity with ChangeNotifier {
-  bool _hasInternet = false;
-  // String _internetType;
+  int _hasInternet = 2; // basically it is bool(0, 1), 2 during app start-up
 
-  bool get isOnline => _hasInternet;
+  int get isOnline => _hasInternet;
 
   Future<void> checkAndSetStatus(ConnectivityResult connectivityResult) async {
     if (connectivityResult == ConnectivityResult.wifi ||
@@ -14,15 +13,16 @@ class InternetConnectivity with ChangeNotifier {
       try {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          _hasInternet = true;
+          _hasInternet = 1;
         } else {
-          _hasInternet = false;
+          _hasInternet = 0;
         }
-      } catch (_) {
-        _hasInternet = false;
+      } catch (e) {
+        print("internet_connectivity_provider1 $e");
+        _hasInternet = 0;
       }
     } else {
-      _hasInternet = false;
+      _hasInternet = 0;
     }
     notifyListeners();
   }

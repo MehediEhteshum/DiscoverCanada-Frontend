@@ -22,8 +22,8 @@ BorderRadius cardBorderRadius = BorderRadius.circular(15);
 List<Topic> topics = [];
 List<String> provinces = [];
 List<Chapter> specificChapters = [];
-bool isOnline = false;
 List<String> topicImagePathsList = [];
+int isOnline = 2; // basically it is bool(0, 1), 2 during app start-up
 
 // global variables declared
 Topic selectedTopic;

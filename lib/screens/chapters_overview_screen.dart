@@ -70,7 +70,7 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
                       preferredSize: Size.lerp(
                         Size(double.maxFinite, 25), // fixed // offline
                         const Size(0, 0), // fixed // online
-                        isOnline ? 1 : 0,
+                        isOnline == 1 ? 1 : 0,
                       ),
                     ),
                   ),

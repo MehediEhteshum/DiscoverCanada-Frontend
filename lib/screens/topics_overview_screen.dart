@@ -62,7 +62,9 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
           preferredSize: Size.lerp(
             Size(double.maxFinite, 25), // fixed // offline
             const Size(0, 0), // fixed // online
-            isOnline ? 1 : 0,
+            isOnline == 0 // offline
+                ? 0
+                : 1, // isOnline is 2 at app start-up, 1 when online, 0 when offline
           ),
         ),
       ),
