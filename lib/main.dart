@@ -14,11 +14,15 @@ void main() async {
   // initializes Hive with getApplicationDocumentsDirectory
   await Hive.initFlutter();
   // Hive Learning: open all the boxes before running app
+  await openAllHiveBoxes();
+  runApp(MyApp());
+}
+
+Future<void> openAllHiveBoxes() async {
   await Hive.openBox("topics");
   await Hive.openBox("provinces");
-  await Hive.openBox("topicImagePaths");
+  await Hive.openBox("topicImageInfo");
   await Hive.openBox("chapters");
-  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
