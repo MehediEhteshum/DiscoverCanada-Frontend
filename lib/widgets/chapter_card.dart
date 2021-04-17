@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import '../helpers/base.dart';
 import '../models and providers/chapter.dart';
+import '../screens/chapter_screen.dart';
 
 class ChapterCard extends StatelessWidget {
   const ChapterCard({
@@ -12,21 +13,9 @@ class ChapterCard extends StatelessWidget {
 
   final Chapter chapter;
 
-  void _tapChapter() {
-    // selectedTopic = topic;
-    // if (selectedTopic.isProvinceDependent) {
-    //   // when topic requires province selection
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return LoaderProvinceSelectionDialog();
-    //     },
-    //   );
-    // } else {
-    //   // when topic doesn't require province selection
-    //   selectedProvince = "All Provinces";
-    //   Navigator.of(context).pushNamed(ChaptersOverviewScreen.routeName);
-    // }
+  void _tapChapter(BuildContext context) {
+    selectedChapter = chapter;
+    Navigator.of(context).pushNamed(ChapterScreen.routeName);
   }
 
   @override
@@ -61,7 +50,7 @@ class ChapterCard extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => _tapChapter(),
+                onTap: () => _tapChapter(context),
               ),
             ),
           ),

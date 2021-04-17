@@ -28,6 +28,7 @@ int isOnline = 2; // basically it is bool(0, 1), 2 during app start-up
 // global variables declared
 Topic selectedTopic;
 String selectedProvince;
+Chapter selectedChapter;
 
 const Widget ErrorTitle = Text(
   "ERROR: Content not found",

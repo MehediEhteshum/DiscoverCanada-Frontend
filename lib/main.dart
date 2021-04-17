@@ -4,8 +4,9 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/chapters_overview_screen.dart';
-import 'screens/topics_overview_screen.dart';
+import './screens/chapters_overview_screen.dart';
+import './screens/topics_overview_screen.dart';
+import './screens/chapter_screen.dart';
 import './models and providers/internet_connectivity_provider.dart';
 
 void main() async {
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         routes: {
           "/": (ctx) => TopicsOverviewScreen(),
           ChaptersOverviewScreen.routeName: (ctx) => ChaptersOverviewScreen(),
+          ChapterScreen.routeName: (ctx) => ChapterScreen(),
         },
       ),
     );
