@@ -1,14 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 import '../helpers/base.dart';
-import './loader_province_selection_dialog.dart';
 import '../models and providers/topic.dart';
 import '../screens/chapters_overview_screen.dart';
+import './topic_image.dart';
+import './loader_province_selection_dialog.dart';
 
 class TopicCard extends StatelessWidget {
   const TopicCard({
@@ -64,36 +61,11 @@ class TopicCard extends StatelessWidget {
                   highlightColor: Colors.grey[100],
                   loop: 5,
                 ),
-                isOnline == 1
-                    ? FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image:
-                            '${FlutterConfig.get('BASE_URL')}/${topic.imageUrl}',
-                        height:
-                            cardHeight, // proportional to screen width, dictating card height
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      )
-                    : topicImagePathsList.asMap().containsKey(topic.id - 1)
-                        ? FadeInImage(
-                            // asset image when offline
-                            placeholder: MemoryImage(kTransparentImage),
-                            image: FileImage(
-                                File(topicImagePathsList[topic.id - 1])),
-                            height:
-                                cardHeight, // proportional to screen width, dictating card height
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          )
-                        : FadeInImage(
-                            // asset image when offline
-                            placeholder: MemoryImage(kTransparentImage),
-                            image: AssetImage(noInternetImage),
-                            height:
-                                cardHeight, // proportional to screen width, dictating card height
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
+                TopicImage(
+                  topic: topic,
+                  imageHeight: cardHeight,
+                  // proportional to screen width, dictating card height
+                ),
               ],
             ),
           ),

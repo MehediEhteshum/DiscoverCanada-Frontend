@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 import '../helpers/base.dart';
+import './topic_image.dart';
 
 class SelectionInfo extends StatelessWidget {
   const SelectionInfo({
@@ -30,33 +27,9 @@ class SelectionInfo extends StatelessWidget {
           highlightColor: Colors.grey[100],
           loop: 5,
         ),
-        isOnline == 1
-            ? FadeInImage.memoryNetwork(
-                placeholder: kTransparentImage,
-                image:
-                    '${FlutterConfig.get('BASE_URL')}/${selectedTopic.imageUrl}',
-                height: double.infinity,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              )
-            : topicImagePathsList.asMap().containsKey(selectedTopic.id - 1)
-                ? FadeInImage(
-                    // asset image when offline
-                    placeholder: MemoryImage(kTransparentImage),
-                    image: FileImage(
-                        File(topicImagePathsList[selectedTopic.id - 1])),
-                    height: double.infinity,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
-                : FadeInImage(
-                    // asset image when offline
-                    placeholder: MemoryImage(kTransparentImage),
-                    image: AssetImage(noInternetImage),
-                    height: double.infinity,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+        TopicImage(
+          topic: selectedTopic,
+        ),
         Container(
           padding: EdgeInsets.fromLTRB(20, _statusBarHeight + _appBarHeight, 20,
               _statusBarHeight * 1.25), // variable
