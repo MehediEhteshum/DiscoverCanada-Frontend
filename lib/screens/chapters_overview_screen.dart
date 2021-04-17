@@ -48,49 +48,50 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
     print("Memeory leaks? build ChaptersOverviewScreen");
 
     return Scaffold(
-        body: _isLoading
-            ? const Center(
-                child: const CircularProgressIndicator(),
-              )
-            : CustomScrollView(
-                slivers: <Widget>[
-                  SliverAppBar(
-                    title: const Text(
-                      "Chapters",
-                      softWrap: true,
-                    ),
-                    floating: true,
-                    expandedHeight: screenWidth *
-                        0.4, // proportional to screen width = AppBar kToolbarHeight + Topic title w/ extra 1 line + Province name + Bottom padding statusbarHeight
-                    flexibleSpace: const FlexibleSpaceBar(
-                      background: const SelectionInfo(),
-                    ),
-                    bottom: PreferredSize(
-                      child: NoInternetMessage(),
-                      preferredSize: Size.lerp(
-                        Size(double.maxFinite, 25), // fixed // offline
-                        const Size(0, 0), // fixed // online
-                        isOnline == 1 ? 1 : 0,
-                      ),
+      body: _isLoading
+          ? const Center(
+              child: const CircularProgressIndicator(),
+            )
+          : CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  title: const Text(
+                    "Chapters",
+                    softWrap: true,
+                  ),
+                  floating: true,
+                  expandedHeight: screenWidth *
+                      0.4, // proportional to screen width = AppBar kToolbarHeight + Topic title w/ extra 1 line + Province name + Bottom padding statusbarHeight
+                  flexibleSpace: const FlexibleSpaceBar(
+                    background: const SelectionInfo(),
+                  ),
+                  bottom: PreferredSize(
+                    child: NoInternetMessage(),
+                    preferredSize: Size.lerp(
+                      Size(double.maxFinite, 25), // fixed // offline
+                      const Size(0, 0), // fixed // online
+                      isOnline == 1 ? 1 : 0,
                     ),
                   ),
-                  (_error == "NoError")
-                      ? SliverGrid.count(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1.3,
-                          children: specificChapters
-                              .map(
-                                (chapter) => ChapterCard(
-                                  chapter: chapter,
-                                ),
-                              )
-                              .toList(),
-                        )
-                      : SliverFillRemaining(
-                          child: Retry(refreshWidget: _refreshWidget),
-                        ),
-                ],
-              ));
+                ),
+                (_error == "NoError")
+                    ? SliverGrid.count(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.3,
+                        children: specificChapters
+                            .map(
+                              (chapter) => ChapterCard(
+                                chapter: chapter,
+                              ),
+                            )
+                            .toList(),
+                      )
+                    : SliverFillRemaining(
+                        child: Retry(refreshWidget: _refreshWidget),
+                      ),
+              ],
+            ),
+    );
   }
 
   @override

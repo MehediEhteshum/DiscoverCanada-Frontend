@@ -12,6 +12,23 @@ class ChapterCard extends StatelessWidget {
 
   final Chapter chapter;
 
+  void _tapChapter() {
+    // selectedTopic = topic;
+    // if (selectedTopic.isProvinceDependent) {
+    //   // when topic requires province selection
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return LoaderProvinceSelectionDialog();
+    //     },
+    //   );
+    // } else {
+    //   // when topic doesn't require province selection
+    //   selectedProvince = "All Provinces";
+    //   Navigator.of(context).pushNamed(ChaptersOverviewScreen.routeName);
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -22,21 +39,33 @@ class ChapterCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: cardBorderRadius, // fixed dim
       ),
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(15),
-        child: AutoSizeText(
-          "${chapter.title}",
-          softWrap: true,
-          textAlign: TextAlign.center,
-          maxLines: 4,
-          maxFontSize: fontSize1,
-          minFontSize: fontSize1 * 0.75,
-          style: const TextStyle(
-            fontSize: fontSize1,
-            fontWeight: FontWeight.bold,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(15),
+            child: AutoSizeText(
+              "${chapter.title}",
+              softWrap: true,
+              textAlign: TextAlign.center,
+              maxLines: 4,
+              maxFontSize: fontSize1,
+              minFontSize: fontSize1 * 0.75,
+              style: const TextStyle(
+                fontSize: fontSize1,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        ),
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => _tapChapter(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
