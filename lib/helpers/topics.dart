@@ -41,7 +41,7 @@ Future<dynamic> fetchTopics(int isOnline) async {
       throw ("NoError");
     } else {
       // if offline, fetch from device
-      createTopicImagesPathsList();
+      getTopicImagesPathsList();
       dynamic topicsData = topicsBox.get(0);
       if (topicsData != null) {
         final List<Topic> _topics = _createTopicsList(topicsData);
