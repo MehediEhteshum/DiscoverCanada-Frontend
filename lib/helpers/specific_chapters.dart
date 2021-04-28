@@ -84,8 +84,9 @@ List<Chapter> _createChaptersList(dynamic data) {
   data.forEach((chapterObj) => {
         chapters.add(
           Chapter(
-            id: chapterObj["id"],
             title: chapterObj["title"],
+            pdfUrl: chapterObj["pdf_url"],
+            webUrl: chapterObj["web_url"],
           ),
         ),
       });
