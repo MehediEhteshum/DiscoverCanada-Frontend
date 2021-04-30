@@ -26,6 +26,7 @@ List<String> topicImagePathsList = [];
 int isOnline = 2; // basically it is bool(0, 1), 2 during app start-up
 
 // global variables declared
+double statusbarHeight;
 Topic selectedTopic;
 String selectedProvince;
 Chapter selectedChapter;

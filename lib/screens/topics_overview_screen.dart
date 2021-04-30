@@ -50,6 +50,7 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
     print("Memeory leaks? build TopicsOverviewScreen");
 
     screenWidth = MediaQuery.of(context).size.width;
+    statusbarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
       appBar: AppBar(
