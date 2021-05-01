@@ -19,9 +19,14 @@ class TopicImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Memeory leaks? build LoadTopicCardImage");
+    bool _inDevice = topics != null &&
+            topicImagePathsList !=
+                null // avoiding nullError of calling '.length'
+        ? topicImagePathsList.length == topics.length
+        : false;
+    print("Memeory leaks? build TopicImage");
 
-    return isOnline == 1 && topicImagePathsList.length != topics.length
+    return isOnline == 1 && !_inDevice
         // if images saved successfully, loading them from device
         ? FadeInImage.memoryNetwork(
             placeholder: kTransparentImage,

@@ -27,6 +27,7 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
   @override
   void initState() {
     createDirPath("images");
+    // _refreshWidget(); // used for refresh widget and fetch items
     super.initState();
   }
 

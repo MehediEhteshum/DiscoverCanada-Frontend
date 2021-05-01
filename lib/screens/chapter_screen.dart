@@ -20,14 +20,14 @@ class ChapterScreen extends StatefulWidget {
 class _ChapterScreenState extends State<ChapterScreen> {
   static bool _isLoading = false;
   static String _error = "NoError";
-  bool _containsPdf = (selectedChapter.pdfUrl != null);
+  bool _hasPdf = (selectedChapter.pdfUrl != null);
   int _allPagesCount;
   PdfController _pdfController;
   TextEditingController _inputController;
 
   @override
   void initState() {
-    if (_containsPdf) {
+    if (_hasPdf) {
       _pdfController = PdfController(
           document: PdfDocument.openAsset('assets/pdfs/sample.pdf'));
       _inputController = TextEditingController(text: "1");
@@ -91,7 +91,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                 ),
                 (_error == "NoError")
                     ? SliverFillRemaining(
-                        child: _containsPdf
+                        child: _hasPdf
                             ? Stack(
                                 children: <Widget>[
                                   PdfView(
@@ -266,7 +266,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
 
   @override
   void dispose() {
-    if (_containsPdf) {
+    if (_hasPdf) {
       _pdfController.dispose();
     }
     super.dispose();
