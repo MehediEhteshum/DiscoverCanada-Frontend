@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +18,9 @@ class TopicsOverviewScreen extends StatefulWidget {
 }
 
 class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
+  final Connectivity _connectivity = Connectivity();
+  static StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  static bool _isInit = true;
   static bool _isLoading = true;
   static String _error;
 
@@ -26,6 +32,21 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
 
   @override
   void didChangeDependencies() {
+    if (_isInit) {
+      // runs once at init
+      _connectivity.checkConnectivity().then(
+        (ConnectivityResult connectivityResult) async {
+          await Provider.of<InternetConnectivity>(context, listen: false)
+              .updateConnectionStatus(connectivityResult);
+        },
+      );
+    }
+    _isInit = false;
+    _connectivitySubscription = _connectivity.onConnectivityChanged
+        .listen((ConnectivityResult connectivityResult) async {
+      await Provider.of<InternetConnectivity>(context, listen: false)
+          .updateConnectionStatus(connectivityResult);
+    });
     setState(() {
       isOnline = Provider.of<InternetConnectivity>(context).isOnline;
       _refreshWidget(); // as soon as online/offline, it refreshes widget
@@ -87,5 +108,12 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
                 )
               : Retry(refreshWidget: _refreshWidget),
     );
+  }
+
+  @override
+  dispose() {
+    print("dispose connectivity");
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 }

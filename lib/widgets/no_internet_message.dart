@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:connectivity/connectivity.dart';
 
 import '../helpers/base.dart';
 import '../models and providers/internet_connectivity_provider.dart';
@@ -17,30 +14,10 @@ class NoInternetMessage extends StatefulWidget {
 }
 
 class _NoInternetMessageState extends State<NoInternetMessage> {
-  final _connectivity = Connectivity();
-  static StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  static int _isOnline = 2; // basically it is bool(0, 1), 2 during app start-up
-  static bool _isInit = true;
-
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      // runs once at init
-      _connectivity.checkConnectivity().then(
-        (ConnectivityResult connectivityResult) async {
-          await Provider.of<InternetConnectivity>(context, listen: false)
-              .checkAndSetStatus(connectivityResult);
-        },
-      );
-    }
-    _isInit = false;
-    _connectivitySubscription = _connectivity.onConnectivityChanged
-        .listen((ConnectivityResult connectivityResult) async {
-      await Provider.of<InternetConnectivity>(context, listen: false)
-          .checkAndSetStatus(connectivityResult);
-    });
     setState(() {
-      _isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+      isOnline = Provider.of<InternetConnectivity>(context).isOnline;
     });
     super.didChangeDependencies();
   }
@@ -49,7 +26,7 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
   Widget build(BuildContext context) {
     print("Memeory leaks? build _NoInternetMessageState");
 
-    return _isOnline == 1
+    return isOnline == 1
         ? Container() // online
         : Container(
             child: const Text(
@@ -66,11 +43,5 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
             height: 25, // fixed
             padding: const EdgeInsets.all(5), // fixed
           ); // offline
-  }
-
-  @override
-  dispose() {
-    _connectivitySubscription.cancel();
-    super.dispose();
   }
 }
