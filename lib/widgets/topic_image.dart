@@ -21,12 +21,12 @@ class TopicImage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("Memeory leaks? build LoadTopicCardImage");
 
-    return isOnline == 1
+    return isOnline == 1 && topicImagePathsList.length != topics.length
+        // if images saved successfully, loading them from device
         ? FadeInImage.memoryNetwork(
             placeholder: kTransparentImage,
             image: '${FlutterConfig.get('BASE_URL')}/${topic.imageUrl}',
-            height:
-                imageHeight,
+            height: imageHeight,
             width: double.infinity,
             fit: BoxFit.cover,
           )
@@ -35,8 +35,7 @@ class TopicImage extends StatelessWidget {
                 // asset image when offline
                 placeholder: MemoryImage(kTransparentImage),
                 image: FileImage(File(topicImagePathsList[topic.id - 1])),
-                height:
-                    imageHeight,
+                height: imageHeight,
                 width: double.infinity,
                 fit: BoxFit.cover,
               )
@@ -44,8 +43,7 @@ class TopicImage extends StatelessWidget {
                 // asset image when offline
                 placeholder: MemoryImage(kTransparentImage),
                 image: AssetImage(noInternetImage),
-                height:
-                    imageHeight,
+                height: imageHeight,
                 width: double.infinity,
                 fit: BoxFit.cover,
               );

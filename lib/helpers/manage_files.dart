@@ -102,7 +102,7 @@ Future<bool> _isNewTopicImage(String path, int objId) async {
   }
 }
 
-Future<void> getTopicImagesPathsList() async {
+Future<void> setTopicImagesPathsList() async {
   await _openTopicImageInfoBox().then((Box topicImageInfoBox) async {
     topicImagePathsList = topicImageInfoBox.get(0);
   });
