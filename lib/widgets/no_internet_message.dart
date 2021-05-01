@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:connectivity/connectivity.dart';
@@ -15,7 +17,8 @@ class NoInternetMessage extends StatefulWidget {
 }
 
 class _NoInternetMessageState extends State<NoInternetMessage> {
-  static var _connectivitySubscription;
+  final _connectivity = Connectivity();
+  static StreamSubscription<ConnectivityResult> _connectivitySubscription;
   static int _isOnline = 2; // basically it is bool(0, 1), 2 during app start-up
   static bool _isInit = true;
 
@@ -23,7 +26,7 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
   void didChangeDependencies() {
     if (_isInit) {
       // runs once at init
-      Connectivity().checkConnectivity().then(
+      _connectivity.checkConnectivity().then(
         (ConnectivityResult connectivityResult) async {
           await Provider.of<InternetConnectivity>(context, listen: false)
               .checkAndSetStatus(connectivityResult);
@@ -31,8 +34,7 @@ class _NoInternetMessageState extends State<NoInternetMessage> {
       );
     }
     _isInit = false;
-    _connectivitySubscription = Connectivity()
-        .onConnectivityChanged
+    _connectivitySubscription = _connectivity.onConnectivityChanged
         .listen((ConnectivityResult connectivityResult) async {
       await Provider.of<InternetConnectivity>(context, listen: false)
           .checkAndSetStatus(connectivityResult);
