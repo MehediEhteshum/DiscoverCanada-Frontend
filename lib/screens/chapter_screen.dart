@@ -24,6 +24,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
   int _allPagesCount;
   PdfController _pdfController;
   TextEditingController _inputController;
+  static int _isTwice = 0;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
           document: PdfDocument.openAsset('assets/pdfs/sample.pdf'));
       _inputController = TextEditingController(text: "1");
     }
+    _refreshWidget(); // used for refresh widget and fetch items
     super.initState();
   }
 
@@ -41,6 +43,13 @@ class _ChapterScreenState extends State<ChapterScreen> {
       isOnline = Provider.of<InternetConnectivity>(context).isOnline;
       _refreshWidget(); // as soon as online/offline, it refreshes widget
     });
+    if (isOnline == 1) {
+      _refreshWidget(); // as soon as online, it refreshes widget
+    } else if (isOnline == 0 && _isTwice < 2) {
+      // runs once at init
+      _refreshWidget(); // for offline, allows refresh twice
+      _isTwice += 1;
+    }
     super.didChangeDependencies();
   }
 
