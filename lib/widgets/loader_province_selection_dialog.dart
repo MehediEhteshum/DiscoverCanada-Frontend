@@ -21,26 +21,13 @@ class _LoaderProvinceSelectionDialogState
     extends State<LoaderProvinceSelectionDialog> {
   static bool _isLoading = true;
   static String _error;
-  static int _isTwice = 0;
-
-  @override
-  void initState() {
-    _refreshWidget(); // used for refresh widget and fetch items
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
     setState(() {
       isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+      _refreshWidget(); // as soon as online/offline, it refreshes widget
     });
-    if (isOnline == 1) {
-      _refreshWidget(); // as soon as online, it refreshes widget
-    } else if (isOnline == 0 && _isTwice < 2) {
-      // runs once at init
-      _refreshWidget(); // for offline, allows refresh twice
-      _isTwice += 1;
-    }
     super.didChangeDependencies();
   }
 
