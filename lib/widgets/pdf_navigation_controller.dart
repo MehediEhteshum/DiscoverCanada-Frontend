@@ -87,6 +87,8 @@ class PdfNavigationController extends StatelessWidget {
                                   ? _allPagesCount
                                   : pageNumber;
                           _pdfController.jumpToPage(pageNumber);
+                          _inputController.text =
+                              "$pageNumber"; // when page is changed using input, or input == current page number
                         },
                       ),
                     ),

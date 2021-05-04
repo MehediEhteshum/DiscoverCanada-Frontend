@@ -91,9 +91,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                 ),
                 (_error == "NoError")
                     ? SliverFillRemaining(
-                        child: _hasPdf
-                            ? PdfViewStack()
-                            : ComingSoonMessage(),
+                        child: _hasPdf ? PdfViewStack() : ComingSoonMessage(),
                       )
                     : SliverFillRemaining(
                         child: Retry(refreshWidget: _refreshWidget),

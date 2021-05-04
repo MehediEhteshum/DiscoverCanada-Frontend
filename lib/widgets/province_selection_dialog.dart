@@ -15,7 +15,7 @@ class ProvinceSelectionDialog extends StatefulWidget {
 }
 
 class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
-  final ScrollController _provinceScrollontroller = ScrollController();
+  final ScrollController _provinceScrollController = ScrollController();
   static String _selectedProvinceName;
 
   @override
@@ -63,9 +63,9 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
               _percItemsVisible, // proportional to screen width
           backgroundColor: Colors.grey,
           alwaysVisibleScrollThumb: true,
-          controller: _provinceScrollontroller,
+          controller: _provinceScrollController,
           child: ListView.builder(
-            controller: _provinceScrollontroller,
+            controller: _provinceScrollController,
             itemCount: provinces.length,
             itemBuilder: (BuildContext _, int index) {
               return RadioListTile(
@@ -106,5 +106,11 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _provinceScrollController.dispose();
+    super.dispose();
   }
 }

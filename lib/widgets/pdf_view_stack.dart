@@ -48,7 +48,7 @@ class _PdfViewStackState extends State<PdfViewStack> {
           },
           onPageChanged: (pageNumber) {
             setState(() {
-              _inputController.text = "$pageNumber";
+              _inputController.text = "$pageNumber"; // when page is changed using button
             });
           },
         ),
@@ -64,6 +64,7 @@ class _PdfViewStackState extends State<PdfViewStack> {
   @override
   void dispose() {
     _pdfController.dispose();
+    _inputController.dispose();
     super.dispose();
   }
 }
