@@ -13,6 +13,7 @@ const double fontSize2 = 25;
 const double cardElevation = 8;
 const EdgeInsets cardMargin = EdgeInsets.all(10);
 const List<int> topicIdsForAllProvincesOpt = [4];
+const List<int> topicIdsContainPdf = [3];
 const String noInternetImage = "assets/images/noInternet.png";
 
 // global variables initialized

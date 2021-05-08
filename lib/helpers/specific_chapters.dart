@@ -3,7 +3,8 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:hive/hive.dart';
 
 import '../models and providers/chapter.dart';
-import 'base.dart';
+import './base.dart';
+import './manage_pdf_files.dart';
 
 Future<dynamic> fetchAndSetSpecificChapters(
     int isOnline, int topicId, String provinceName) async {
@@ -77,6 +78,10 @@ Future<void> _storeChaptersData(
     updatedData = await chaptersBox.get(topicId);
   }
   await chaptersBox.put(topicId, updatedData);
+  if (topicIdsContainPdf.contains(topicId)) {
+    // only when topicIdContainsPdf
+    await savePdfs(data);
+  }
 }
 
 List<Chapter> _createChaptersList(dynamic data) {

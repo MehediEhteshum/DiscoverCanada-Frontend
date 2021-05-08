@@ -8,6 +8,7 @@ import '../widgets/retry.dart';
 import '../widgets/chapter_card.dart';
 import '../models and providers/internet_connectivity_provider.dart';
 import '../widgets/no_internet_message.dart';
+import '../helpers/manage_files.dart';
 
 class ChaptersOverviewScreen extends StatefulWidget {
   static const routeName = "/chapters";
@@ -20,9 +21,13 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
   static bool _isLoading = true;
   static String _error;
   static int _isTwice = 0;
+  final int _selectedTopicId = selectedTopic.id;
 
   @override
   void initState() {
+    if (topicIdsContainPdf.contains(_selectedTopicId)) {
+      createDirPath("pdfs");
+    }
     _refreshWidget(); // used for refresh widget and fetch items
     super.initState();
   }
@@ -47,7 +52,7 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
       _isLoading = true; // start loading screen again
     });
     await fetchAndSetSpecificChapters(
-            isOnline, selectedTopic.id, selectedProvince)
+            isOnline, _selectedTopicId, selectedProvince)
         .catchError((error) {
       setState(() {
         _error = error;

@@ -21,6 +21,7 @@ class _LoaderProvinceSelectionDialogState
     extends State<LoaderProvinceSelectionDialog> {
   static bool _isLoading = true;
   static String _error;
+  final int _selectedTopicId = selectedTopic.id;
 
   @override
   void didChangeDependencies() {
@@ -47,7 +48,6 @@ class _LoaderProvinceSelectionDialogState
   Widget build(BuildContext context) {
     print("Memeory leaks? build _LoaderProvinceSelectionDialogState");
 
-    int _selectedTopicId = selectedTopic.id;
     if (topicIdsForAllProvincesOpt.contains(_selectedTopicId)) {
       // adding "All Provinces" option only when necessary
       provinces = ["All Provinces", ...provinces];

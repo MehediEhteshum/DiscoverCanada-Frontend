@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:hive/hive.dart';
 
-import '../helpers/manage_files.dart';
+import 'manage_image_files.dart';
 import '../models and providers/topic.dart';
 import './base.dart';
 

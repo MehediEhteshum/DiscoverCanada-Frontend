@@ -19,11 +19,13 @@ class ChapterScreen extends StatefulWidget {
 class _ChapterScreenState extends State<ChapterScreen> {
   static bool _isLoading = false;
   static String _error = "NoError";
-  bool _hasPdf = (selectedChapter.pdfUrl != null);
+  String pdfUrl = selectedChapter.pdfUrl;
+  bool _hasPdf;
   static int _isTwice = 0;
 
   @override
   void initState() {
+    _hasPdf = (pdfUrl != null);
     _refreshWidget(); // used for refresh widget and fetch items
     super.initState();
   }
