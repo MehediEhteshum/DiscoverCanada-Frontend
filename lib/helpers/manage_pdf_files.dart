@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:hive/hive.dart';
 
 import 'base.dart';
@@ -11,64 +10,76 @@ Future<void> savePdfs(dynamic data) async {
   String folderPath = appDocDir.path + "/" + "pdfs" + "/";
   data.forEach((obj) async {
     try {
-      String pdfUrl = obj["pdf_url"] ?? "";
-      bool isNewFile = await _isNewFile(pdfUrl);
+      int objId = data.indexOf(obj); // index of each chapter
+      String pdfUrl = obj["pdf_url"] ?? ""; // if null, then ""
+      bool isNewFile = await _isNewFile(pdfUrl, objId);
       if (isNewFile) {
         // new file, so store in device
         String fileName = obj["title"] + ".pdf";
         String filePath = folderPath + fileName;
         File file = File(filePath);
         await _openPdfInfoBox().then((Box pdfInfoBox) async {
-          print("primary ${pdfInfoBox.get(0)}");
+          Map boxData;
           if (!pdfInfoBox.containsKey(0)) {
-            // 0 key not exists
-            await pdfInfoBox.put(0, {});
+            // 0 key not exists. so newFilePath
+            await pdfInfoBox.put(0, {
+              selectedTopic.id: {
+                selectedProvince: [filePath]
+              }
+            });
           } else {
             // 0 key exists
+            boxData = await pdfInfoBox.get(0); // get boxData
             if (!pdfInfoBox.get(0).containsKey(selectedTopic.id)) {
-              // topic key not exists
-              Map currentData = await pdfInfoBox.get(0);
-              currentData.putIfAbsent(selectedTopic.id, () => {});
-              Map updatedData = await pdfInfoBox.get(0);
+              // topic key not exists. so newFilePath
+              boxData.putIfAbsent(
+                  selectedTopic.id,
+                  () => {
+                        selectedProvince: [filePath]
+                      }); // update boxData
               // Hive learning: need to put again for data persistence on app restart
-              await pdfInfoBox.put(0, updatedData);
+              await pdfInfoBox.put(0, boxData); // put boxData
             } else {
               // topic key exists
               if (!pdfInfoBox
                   .get(0)[selectedTopic.id]
                   .containsKey(selectedProvince)) {
-                // province key not exists
-                Map currentData = await pdfInfoBox.get(0)[selectedTopic.id];
-                currentData.putIfAbsent(selectedProvince, () => {});
-                Map updatedData = await pdfInfoBox.get(0);
+                // province key not exists. so newFilePath
+                boxData[selectedTopic.id].putIfAbsent(
+                    selectedProvince, () => [filePath]); // update boxData
                 // Hive learning: need to put again for data persistence on app restart
-                await pdfInfoBox.put(0, updatedData);
+                await pdfInfoBox.put(0, boxData); // put boxData
+              } else {
+                // province key exists. store newFilePath or replace oldFilePath
+                List<String> filePathsList =
+                    pdfInfoBox.get(0)[selectedTopic.id][selectedProvince];
+                if (filePathsList.isEmpty ||
+                    !filePathsList.asMap().containsKey(objId)) {
+                  // pathsList empty or no such key yet. so newFilePath
+                  filePathsList.add(filePath);
+                } else {
+                  // pathsList not empty and key exists. replace oldFilePath
+                  filePathsList.replaceRange(objId, objId + 1, [filePath]);
+                }
+                boxData = await pdfInfoBox.get(0); // get boxData
+                await boxData[selectedTopic.id].update(
+                  selectedProvince,
+                  (currData) => filePathsList,
+                  ifAbsent: () => filePathsList,
+                ); // update boxData
+                // Hive learning: need to put again for data persistence on app restart
+                await pdfInfoBox.put(0, boxData); // put boxData
               }
             }
           }
-          print(pdfInfoBox.get(0));
-          // var _filePathsList =
-          //     pdfInfoBox.get(0)[selectedTopic.id][selectedProvince];
-          // int objIndex = data.indexOf(obj);
-          // print("$objIndex _filePathsList $_filePathsList");
-          // if (_filePathsList.isEmpty ||
-          //     !_filePathsList.asMap().containsKey(objIndex)) {
-          //   // pathsList empty or no current key yet
-          //   _filePathsList.add(filePath);
-          // } else {
-          //   // replace old path
-          //   _filePathsList.replaceRange(objIndex, objIndex + 1, [filePath]);
-          // }
-          // print(_filePathsList);
-          // await pdfInfoBox.put(0, _filePathsList);
-          // Hive Learning: avoid generate items to be saved after await i.e. make sure you have data ready before calling Hive method 'put'
-          //         final Response response = await Dio()
-          //             .get(
-          //               imageUrl,
-          //               options: Options(responseType: ResponseType.bytes),
-          //             )
-          //             .timeout(Duration(seconds: timeOut));
-          //         await imageFile.writeAsBytes(response.data);
+          // Hive Learning: get fileData and write file after Hive method 'put' for saving _filePathsList
+          final Response response = await Dio()
+              .get(
+                pdfUrl,
+                options: Options(responseType: ResponseType.bytes),
+              )
+              .timeout(Duration(seconds: timeOut));
+          await file.writeAsBytes(response.data);
         });
       }
     } catch (e) {
@@ -77,7 +88,7 @@ Future<void> savePdfs(dynamic data) async {
   });
 }
 
-Future<bool> _isNewFile(String url) async {
+Future<bool> _isNewFile(String url, int objId) async {
   try {
     final Response testResponse = await Dio()
         .head(
@@ -87,30 +98,71 @@ Future<bool> _isNewFile(String url) async {
         .timeout(Duration(seconds: timeOut));
     String fileId = testResponse.headers.value("etag");
     bool isNewFile = await _openPdfInfoBox().then((Box pdfInfoBox) async {
-      List<String> savedFileIds = pdfInfoBox.get(1);
-      //     if (savedFileIds != null) {
-      //       if (savedFileIds.asMap().containsKey(objId - 1)) {
-      //         bool isNewFile = (fileId != savedFileIds[objId - 1]);
-      //         if (isNewFile) {
-      //           // replace old fileId
-      //           savedFileIds.replaceRange(objId - 1, objId, [fileId]);
-      //           await topicImageInfoBox.put(1, savedFileIds);
-      //         }
-      //         return (isNewFile);
-      //       } else {
-      //         savedFileIds.add(fileId); // as the key i.e. value doesn't exist yet
-      //         await topicImageInfoBox.put(1, savedFileIds);
-      //         return true;
-      //       }
-      //     } else {
-      //       await topicImageInfoBox
-      //           .put(1, [fileId]); // savedFileIds == null means first time
-      //       return true;
-      //     }
-      //   });
-      //   return isNewFile;
+      Map boxData;
+      bool isNewFile;
+      if (!pdfInfoBox.containsKey(1)) {
+        // 1 key not exists. so newFile
+        isNewFile = true;
+        await pdfInfoBox.put(1, {
+          selectedTopic.id: {
+            selectedProvince: [fileId]
+          }
+        });
+      } else {
+        // 1 key exists
+        boxData = await pdfInfoBox.get(1); // get boxData
+        if (!pdfInfoBox.get(1).containsKey(selectedTopic.id)) {
+          // topic key not exists. so newFile
+          isNewFile = true;
+          boxData.putIfAbsent(
+              selectedTopic.id,
+              () => {
+                    selectedProvince: [fileId]
+                  }); // update boxData
+          // Hive learning: need to put again for data persistence on app restart
+          await pdfInfoBox.put(1, boxData); // put boxData
+        } else {
+          // topic key exists
+          if (!pdfInfoBox
+              .get(1)[selectedTopic.id]
+              .containsKey(selectedProvince)) {
+            // province key not exists. so newFile
+            isNewFile = true;
+            boxData[selectedTopic.id].putIfAbsent(
+                selectedProvince, () => [fileId]); // update boxData
+            // Hive learning: need to put again for data persistence on app restart
+            await pdfInfoBox.put(1, boxData); // put boxData
+          } else {
+            // province key exists. check if newFile
+            List<String> fileIdsToUpdate =
+                pdfInfoBox.get(1)[selectedTopic.id][selectedProvince];
+            if (fileIdsToUpdate.isEmpty ||
+                !fileIdsToUpdate.asMap().containsKey(objId)) {
+              // savedFileIds empty or no such key yet. so newFile.
+              isNewFile = true;
+              fileIdsToUpdate.add(fileId);
+            } else {
+              // savedFileIds not empty and key exists. check if newFile.
+              isNewFile = (fileId != fileIdsToUpdate[objId]);
+              if (isNewFile) {
+                // replace old fileId
+                fileIdsToUpdate.replaceRange(objId, objId + 1, [fileId]);
+              }
+            }
+            boxData = await pdfInfoBox.get(1); // get boxData
+            await boxData[selectedTopic.id].update(
+              selectedProvince,
+              (currData) => fileIdsToUpdate,
+              ifAbsent: () => [...fileIdsToUpdate],
+            ); // update boxData
+            // Hive learning: need to put again for data persistence on app restart
+            await pdfInfoBox.put(1, boxData); // put boxData
+          }
+        }
+      }
+      return isNewFile;
     });
-    return true;
+    return isNewFile;
   } catch (e) {
     print("manage_pdf_files2 $e");
     return false;

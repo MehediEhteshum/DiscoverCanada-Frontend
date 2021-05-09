@@ -64,23 +64,22 @@ Future<Box> Function() _openChaptersBox = () async {
 };
 
 Future<void> _storeChaptersData(
-    Box chaptersBox, dynamic data, int topicId, String provinceName) async {
+    Box chaptersBox, dynamic dataToStore, int topicId, String provinceName) async {
   // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
-  dynamic updatedData = {provinceName: data};
+  dynamic boxData = {provinceName: dataToStore};
   if (chaptersBox.containsKey(topicId)) {
     // if key exists, update the current data
-    var currentData = await chaptersBox.get(topicId);
-    await currentData.update(
+    boxData = await chaptersBox.get(topicId); // get boxData
+    await boxData.update(
       provinceName,
-      (data) => data,
-      ifAbsent: () => data,
-    );
-    updatedData = await chaptersBox.get(topicId);
+      (currData) => dataToStore,
+      ifAbsent: () => dataToStore,
+    ); // update boxData
   }
-  await chaptersBox.put(topicId, updatedData);
+  await chaptersBox.put(topicId, boxData); // put boxData
   if (topicIdsContainPdf.contains(topicId)) {
     // only when topicIdContainsPdf
-    await savePdfs(data);
+    await savePdfs(dataToStore);
   }
 }
 

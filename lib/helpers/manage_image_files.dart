@@ -20,18 +20,18 @@ Future<void> saveTopicImages(dynamic data) async {
         String filePath = folderPath + fileName;
         File file = File(filePath);
         await _openTopicImageInfoBox().then((Box topicImageInfoBox) async {
-          List<String> _filePathsList =
+          List<String> filePathsList =
               topicImageInfoBox.containsKey(0) ? topicImageInfoBox.get(0) : [];
-          if (_filePathsList.isEmpty ||
-              !_filePathsList.asMap().containsKey(obj["id"] - 1)) {
-            // pathsList empty or no current key yet
-            _filePathsList.add(filePath);
+          if (filePathsList.isEmpty ||
+              !filePathsList.asMap().containsKey(obj["id"] - 1)) {
+            // pathsList empty or no such key yet
+            filePathsList.add(filePath);
           } else {
-            // replace old path
-            _filePathsList.replaceRange(obj["id"] - 1, obj["id"], [filePath]);
+            // pathsList not empty and key exists. replace old path
+            filePathsList.replaceRange(obj["id"] - 1, obj["id"], [filePath]);
           }
-          await topicImageInfoBox.put(0, _filePathsList);
-          // Hive Learning: avoid generate items to be saved after await i.e. make sure you have data ready before calling Hive method 'put'
+          await topicImageInfoBox.put(0, filePathsList);
+          // Hive Learning: get fileData and write file after Hive method 'put' for saving _filePathsList
           final Response response = await Dio()
               .get(
                 imageUrl,
@@ -60,20 +60,24 @@ Future<bool> _isNewFile(String url, int objId) async {
         await _openTopicImageInfoBox().then((Box topicImageInfoBox) async {
       List<String> savedFileIds = topicImageInfoBox.get(1);
       if (savedFileIds != null) {
+        // savedFileIds not empty
         if (savedFileIds.asMap().containsKey(objId - 1)) {
+          // topic id exists
           bool isNewFile = (fileId != savedFileIds[objId - 1]);
           if (isNewFile) {
             // replace old fileId
             savedFileIds.replaceRange(objId - 1, objId, [fileId]);
             await topicImageInfoBox.put(1, savedFileIds);
           }
-          return (isNewFile);
+          return isNewFile;
         } else {
+          // topic id not exists
           savedFileIds.add(fileId); // as the key i.e. value doesn't exist yet
           await topicImageInfoBox.put(1, savedFileIds);
           return true;
         }
       } else {
+        // savedFileIds empty
         await topicImageInfoBox
             .put(1, [fileId]); // savedFileIds == null means first time
         return true;
