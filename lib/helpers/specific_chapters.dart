@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 
 import '../models and providers/chapter.dart';
 import './base.dart';
-import './manage_pdf_files.dart';
+import './manage_files.dart';
 
 Future<dynamic> fetchAndSetSpecificChapters(
     int isOnline, int topicId, String provinceName) async {
@@ -63,8 +63,8 @@ Future<Box> Function() _openChaptersBox = () async {
   return await Hive.openBox("chapters");
 };
 
-Future<void> _storeChaptersData(
-    Box chaptersBox, dynamic dataToStore, int topicId, String provinceName) async {
+Future<void> _storeChaptersData(Box chaptersBox, dynamic dataToStore,
+    int topicId, String provinceName) async {
   // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
   dynamic boxData = {provinceName: dataToStore};
   if (chaptersBox.containsKey(topicId)) {
@@ -79,7 +79,7 @@ Future<void> _storeChaptersData(
   await chaptersBox.put(topicId, boxData); // put boxData
   if (topicIdsContainPdf.contains(topicId)) {
     // only when topicIdContainsPdf
-    await savePdfs(dataToStore);
+    await saveFiles(dataToStore, "pdfs", fileTypes[1]);
   }
 }
 

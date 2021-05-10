@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:hive/hive.dart';
 
-import 'manage_image_files.dart';
+import './manage_files.dart';
+import './manage_image_files.dart';
 import '../models and providers/topic.dart';
 import './base.dart';
 
@@ -67,7 +68,7 @@ Future<Box> Function() _openTopicsBox = () async {
 Future<void> _storeTopicsData(Box topicsBox, dynamic data) async {
   // Hive learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
   await topicsBox.put(0, data); // storing at default key
-  await saveTopicImages(data);
+  await saveFiles(data, "images", fileTypes[0]);
 }
 
 List<Topic> _createTopicsList(dynamic data) {

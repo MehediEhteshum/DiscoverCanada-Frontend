@@ -15,6 +15,7 @@ const EdgeInsets cardMargin = EdgeInsets.all(10);
 const List<int> topicIdsForAllProvincesOpt = [4];
 const List<int> topicIdsContainPdf = [3];
 const String noInternetImage = "assets/images/noInternet.png";
+const List<String> fileTypes = ["topicImage", "chapterPdf"];
 
 // global variables initialized
 double screenWidth = 400;

@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 import './base.dart';
+import './manage_image_files.dart' as mif;
+import './manage_pdf_files.dart' as mpf;
 
 Directory appDocDir;
 
@@ -23,6 +26,54 @@ Future<void> createDirPath(String dirPathToBeCreated) async {
   }
 }
 
+Future<void> saveFiles(dynamic data, String folderName, String fileType) async {
+  String folderPath = appDocDir.path + "/" + "$folderName" + "/";
+  data.forEach((obj) async {
+    String url;
+    int objId;
+    Function openBox;
+    try {
+      if (fileType == fileTypes[0]) {
+        // topicImage
+        url = FlutterConfig.get('BASE_URL') + obj["image_url"];
+        objId = obj["id"] - 1; // topicIndex = topicId - 1
+        openBox = mif.openTopicImageInfoBox;
+      } else if (fileType == fileTypes[1]) {
+        // chapterPdf
+        url = obj["pdf_url"];
+        objId = data.indexOf(obj); // index of each chapter
+        openBox = mpf.openPdfInfoBox;
+      }
+      bool _isNewFile = await isNewFile(url, objId, openBox, fileType);
+      if (_isNewFile) {
+        // new file, so store in device
+        String fileName;
+        if (fileType == fileTypes[0]) {
+          // topicImage
+          RegExp fileNameRegExp = RegExp(r"\w*\d*\.\w*");
+          fileName = fileNameRegExp.stringMatch(obj["image_url"]);
+        } else if (fileType == fileTypes[1]) {
+          // chapterPdf
+          fileName = obj["title"] + ".pdf";
+        }
+        String filePath = folderPath + fileName;
+        File file = File(filePath);
+        await openBox().then((Box box) async {
+          if (fileType == fileTypes[0]) {
+            // topicImage
+            await mif.saveTopicImage(box, filePath, objId, url, file);
+          } else if (fileType == fileTypes[1]) {
+            // chapterPdf
+            await mpf.saveChapterPdf(box, filePath, objId, url, file);
+          }
+        });
+      }
+    } catch (e) {
+      print("manage_files2 $e");
+    }
+  });
+}
+
 Future<bool> isNewFile(
     String url, int objId, Function openBox, String fileType) async {
   try {
@@ -35,107 +86,18 @@ Future<bool> isNewFile(
     String fileId = testResponse.headers.value("etag");
     bool _isNewFile = await openBox().then((Box box) async {
       bool isNew;
-      if (fileType == "chapterPdf") {
-        isNew = await isNewChapterPdf(box, fileId, objId);
-      } else if (fileType == "topicImage") {
-        isNew = await isNewTopicImage(box, fileId, objId);
+      if (fileType == fileTypes[0]) {
+        // topicImage
+        isNew = await mif.isNewTopicImage(box, fileId, objId);
+      } else if (fileType == fileTypes[1]) {
+        // chapterPdf
+        isNew = await mpf.isNewChapterPdf(box, fileId, objId);
       }
       return isNew;
     });
     return _isNewFile;
   } catch (e) {
-    print("manage_pdf_files2 $e");
+    print("manage_files3 $e");
     return false;
   }
-}
-
-Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
-  Map boxData;
-  bool isNewFile;
-  if (!box.containsKey(1)) {
-    // 1 key not exists. so newFile
-    isNewFile = true;
-    await box.put(1, {
-      selectedTopic.id: {
-        selectedProvince: [fileId]
-      }
-    });
-  } else {
-    // 1 key exists
-    boxData = await box.get(1); // get boxData
-    if (!box.get(1).containsKey(selectedTopic.id)) {
-      // topic key not exists. so newFile
-      isNewFile = true;
-      boxData.putIfAbsent(
-          selectedTopic.id,
-          () => {
-                selectedProvince: [fileId]
-              }); // update boxData
-      // Hive learning: need to put again for data persistence on app restart
-      await box.put(1, boxData); // put boxData
-    } else {
-      // topic key exists
-      if (!box.get(1)[selectedTopic.id].containsKey(selectedProvince)) {
-        // province key not exists. so newFile
-        isNewFile = true;
-        boxData[selectedTopic.id]
-            .putIfAbsent(selectedProvince, () => [fileId]); // update boxData
-        // Hive learning: need to put again for data persistence on app restart
-        await box.put(1, boxData); // put boxData
-      } else {
-        // province key exists. check if newFile
-        List<String> fileIdsToUpdate =
-            box.get(1)[selectedTopic.id][selectedProvince];
-        if (fileIdsToUpdate.isEmpty ||
-            !fileIdsToUpdate.asMap().containsKey(objId)) {
-          // fileIdsToUpdate empty or no such key yet. so newFile.
-          isNewFile = true;
-          fileIdsToUpdate.add(fileId);
-        } else {
-          // fileIdsToUpdate not empty and key exists. check if newFile.
-          isNewFile = (fileId != fileIdsToUpdate[objId]);
-          if (isNewFile) {
-            // replace old fileId
-            fileIdsToUpdate.replaceRange(objId, objId + 1, [fileId]);
-          }
-        }
-        boxData = await box.get(1); // get boxData
-        await boxData[selectedTopic.id].update(
-          selectedProvince,
-          (currData) => fileIdsToUpdate,
-          ifAbsent: () => [...fileIdsToUpdate],
-        ); // update boxData
-        // Hive learning: need to put again for data persistence on app restart
-        await box.put(1, boxData); // put boxData
-      }
-    }
-  }
-  return isNewFile;
-}
-
-Future<bool> isNewTopicImage(Box box, String fileId, int objId) async {
-  bool isNewFile;
-  if (!box.containsKey(1)) {
-    // 1 key not exists. so newFile
-    isNewFile = true;
-    await box.put(1, [fileId]);
-  } else {
-    // 1 key exists. check if newFile
-    List<String> fileIdsToUpdate = box.get(1);
-    if (fileIdsToUpdate.isEmpty ||
-        !fileIdsToUpdate.asMap().containsKey(objId)) {
-      // fileIdsToUpdate empty or no such key yet. so newFile.
-      isNewFile = true;
-      fileIdsToUpdate.add(fileId);
-    } else {
-      // fileIdsToUpdate not empty and key exists. check if newFile.
-      isNewFile = (fileId != fileIdsToUpdate[objId]);
-      if (isNewFile) {
-        // replace old fileId
-        fileIdsToUpdate.replaceRange(objId, objId + 1, [fileId]);
-      }
-    }
-    await box.put(1, fileIdsToUpdate); // put boxData
-  }
-  return isNewFile;
 }
