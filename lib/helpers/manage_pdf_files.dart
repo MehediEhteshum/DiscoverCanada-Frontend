@@ -4,15 +4,16 @@ import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 
 import 'base.dart';
-import 'manage_files.dart';
+import 'manage_files.dart' as mf;
 
 Future<void> savePdfs(dynamic data) async {
-  String folderPath = appDocDir.path + "/" + "pdfs" + "/";
+  String folderPath = mf.appDocDir.path + "/" + "pdfs" + "/";
   data.forEach((obj) async {
     try {
       int objId = data.indexOf(obj); // index of each chapter
       String pdfUrl = obj["pdf_url"] ?? ""; // if null, then ""
-      bool isNewFile = await _isNewFile(pdfUrl, objId);
+      bool isNewFile =
+          await mf.isNewFile(pdfUrl, objId, _openPdfInfoBox, "chapterPdf");
       if (isNewFile) {
         // new file, so store in device
         String fileName = obj["title"] + ".pdf";
@@ -86,87 +87,6 @@ Future<void> savePdfs(dynamic data) async {
       print("manage_pdf_files1 $e");
     }
   });
-}
-
-Future<bool> _isNewFile(String url, int objId) async {
-  try {
-    final Response testResponse = await Dio()
-        .head(
-          url,
-          options: Options(responseType: ResponseType.stream),
-        )
-        .timeout(Duration(seconds: timeOut));
-    String fileId = testResponse.headers.value("etag");
-    bool isNewFile = await _openPdfInfoBox().then((Box pdfInfoBox) async {
-      Map boxData;
-      bool isNewFile;
-      if (!pdfInfoBox.containsKey(1)) {
-        // 1 key not exists. so newFile
-        isNewFile = true;
-        await pdfInfoBox.put(1, {
-          selectedTopic.id: {
-            selectedProvince: [fileId]
-          }
-        });
-      } else {
-        // 1 key exists
-        boxData = await pdfInfoBox.get(1); // get boxData
-        if (!pdfInfoBox.get(1).containsKey(selectedTopic.id)) {
-          // topic key not exists. so newFile
-          isNewFile = true;
-          boxData.putIfAbsent(
-              selectedTopic.id,
-              () => {
-                    selectedProvince: [fileId]
-                  }); // update boxData
-          // Hive learning: need to put again for data persistence on app restart
-          await pdfInfoBox.put(1, boxData); // put boxData
-        } else {
-          // topic key exists
-          if (!pdfInfoBox
-              .get(1)[selectedTopic.id]
-              .containsKey(selectedProvince)) {
-            // province key not exists. so newFile
-            isNewFile = true;
-            boxData[selectedTopic.id].putIfAbsent(
-                selectedProvince, () => [fileId]); // update boxData
-            // Hive learning: need to put again for data persistence on app restart
-            await pdfInfoBox.put(1, boxData); // put boxData
-          } else {
-            // province key exists. check if newFile
-            List<String> fileIdsToUpdate =
-                pdfInfoBox.get(1)[selectedTopic.id][selectedProvince];
-            if (fileIdsToUpdate.isEmpty ||
-                !fileIdsToUpdate.asMap().containsKey(objId)) {
-              // savedFileIds empty or no such key yet. so newFile.
-              isNewFile = true;
-              fileIdsToUpdate.add(fileId);
-            } else {
-              // savedFileIds not empty and key exists. check if newFile.
-              isNewFile = (fileId != fileIdsToUpdate[objId]);
-              if (isNewFile) {
-                // replace old fileId
-                fileIdsToUpdate.replaceRange(objId, objId + 1, [fileId]);
-              }
-            }
-            boxData = await pdfInfoBox.get(1); // get boxData
-            await boxData[selectedTopic.id].update(
-              selectedProvince,
-              (currData) => fileIdsToUpdate,
-              ifAbsent: () => [...fileIdsToUpdate],
-            ); // update boxData
-            // Hive learning: need to put again for data persistence on app restart
-            await pdfInfoBox.put(1, boxData); // put boxData
-          }
-        }
-      }
-      return isNewFile;
-    });
-    return isNewFile;
-  } catch (e) {
-    print("manage_pdf_files2 $e");
-    return false;
-  }
 }
 
 // Future<void> setTopicImagesPathsList() async {

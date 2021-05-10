@@ -5,14 +5,16 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:hive/hive.dart';
 
 import './base.dart';
-import './manage_files.dart';
+import './manage_files.dart' as mf;
 
 Future<void> saveTopicImages(dynamic data) async {
-  String folderPath = appDocDir.path + "/" + "images" + "/";
+  String folderPath = mf.appDocDir.path + "/" + "images" + "/";
   data.forEach((obj) async {
     try {
       String imageUrl = FlutterConfig.get('BASE_URL') + obj["image_url"];
-      bool isNewFile = await _isNewFile(imageUrl, obj["id"]);
+      int objId = obj["id"] - 1; // topicIndex = topicId - 1
+      bool isNewFile = await mf.isNewFile(
+          imageUrl, objId, _openTopicImageInfoBox, "topicImage");
       if (isNewFile) {
         // new file, so store in device
         RegExp fileNameRegExp = RegExp(r"\w*\d*\.\w*");
@@ -23,12 +25,12 @@ Future<void> saveTopicImages(dynamic data) async {
           List<String> filePathsList =
               topicImageInfoBox.containsKey(0) ? topicImageInfoBox.get(0) : [];
           if (filePathsList.isEmpty ||
-              !filePathsList.asMap().containsKey(obj["id"] - 1)) {
+              !filePathsList.asMap().containsKey(objId)) {
             // pathsList empty or no such key yet
             filePathsList.add(filePath);
           } else {
             // pathsList not empty and key exists. replace old path
-            filePathsList.replaceRange(obj["id"] - 1, obj["id"], [filePath]);
+            filePathsList.replaceRange(objId, objId + 1, [filePath]);
           }
           await topicImageInfoBox.put(0, filePathsList);
           // Hive Learning: get fileData and write file after Hive method 'put' for saving _filePathsList
@@ -45,49 +47,6 @@ Future<void> saveTopicImages(dynamic data) async {
       print("manage_image_files1 $e");
     }
   });
-}
-
-Future<bool> _isNewFile(String url, int objId) async {
-  try {
-    final Response testResponse = await Dio()
-        .head(
-          url,
-          options: Options(responseType: ResponseType.stream),
-        )
-        .timeout(Duration(seconds: timeOut));
-    String fileId = testResponse.headers.value("etag");
-    bool isNewFile =
-        await _openTopicImageInfoBox().then((Box topicImageInfoBox) async {
-      List<String> savedFileIds = topicImageInfoBox.get(1);
-      if (savedFileIds != null) {
-        // savedFileIds not empty
-        if (savedFileIds.asMap().containsKey(objId - 1)) {
-          // topic id exists
-          bool isNewFile = (fileId != savedFileIds[objId - 1]);
-          if (isNewFile) {
-            // replace old fileId
-            savedFileIds.replaceRange(objId - 1, objId, [fileId]);
-            await topicImageInfoBox.put(1, savedFileIds);
-          }
-          return isNewFile;
-        } else {
-          // topic id not exists
-          savedFileIds.add(fileId); // as the key i.e. value doesn't exist yet
-          await topicImageInfoBox.put(1, savedFileIds);
-          return true;
-        }
-      } else {
-        // savedFileIds empty
-        await topicImageInfoBox
-            .put(1, [fileId]); // savedFileIds == null means first time
-        return true;
-      }
-    });
-    return isNewFile;
-  } catch (e) {
-    print("manage_image_files2 $e");
-    return false;
-  }
 }
 
 Future<void> setTopicImagesPathsList() async {
