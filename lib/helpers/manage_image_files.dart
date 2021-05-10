@@ -22,17 +22,22 @@ Future<void> saveTopicImages(dynamic data) async {
         String filePath = folderPath + fileName;
         File file = File(filePath);
         await _openTopicImageInfoBox().then((Box topicImageInfoBox) async {
-          List<String> filePathsList =
-              topicImageInfoBox.containsKey(0) ? topicImageInfoBox.get(0) : [];
-          if (filePathsList.isEmpty ||
-              !filePathsList.asMap().containsKey(objId)) {
-            // pathsList empty or no such key yet
-            filePathsList.add(filePath);
+          if (!topicImageInfoBox.containsKey(0)) {
+            // 0 key not exists. so newFilePath
+            await topicImageInfoBox.put(0, [filePath]);
           } else {
-            // pathsList not empty and key exists. replace old path
-            filePathsList.replaceRange(objId, objId + 1, [filePath]);
+            // 0 key exists. store newFilePath or replace oldFilePath
+            List<String> filePathsList = topicImageInfoBox.get(0);
+            if (filePathsList.isEmpty ||
+                !filePathsList.asMap().containsKey(objId)) {
+              // pathsList empty or no such key yet. so newFilePath
+              filePathsList.add(filePath);
+            } else {
+              // pathsList not empty and key exists. replace oldFilePath
+              filePathsList.replaceRange(objId, objId + 1, [filePath]);
+            }
+            await topicImageInfoBox.put(0, filePathsList);
           }
-          await topicImageInfoBox.put(0, filePathsList);
           // Hive Learning: get fileData and write file after Hive method 'put' for saving _filePathsList
           final Response response = await Dio()
               .get(
