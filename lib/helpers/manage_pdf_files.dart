@@ -132,12 +132,14 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
   return isNewFile;
 }
 
-// Future<void> setTopicImagesPathsList() async {
-//   await _openTopicImageInfoBox().then((Box topicImageInfoBox) async {
-//     topicImagePathsList = topicImageInfoBox.get(0);
-//   });
-// }
+Future<void> setChapterPdfPathsList() async {
+  await openChapterPdfInfoBox().then((Box chapterPdfInfoBox) async {
+    chapterPdfPathsList = chapterPdfInfoBox.containsKey(0)
+        ? chapterPdfInfoBox.get(0)[selectedTopic.id][selectedProvince]
+        : [];
+  });
+}
 
-Future<Box> Function() openPdfInfoBox = () async {
-  return await Hive.openBox("pdfInfo");
+Future<Box> Function() openChapterPdfInfoBox = () async {
+  return await Hive.openBox("chapterPdfInfo");
 };

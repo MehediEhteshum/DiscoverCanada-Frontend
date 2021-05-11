@@ -42,7 +42,7 @@ Future<void> saveFiles(dynamic data, String folderName, String fileType) async {
         // chapterPdf
         url = obj["pdf_url"];
         objId = data.indexOf(obj); // index of each chapter
-        openBox = mpf.openPdfInfoBox;
+        openBox = mpf.openChapterPdfInfoBox;
       }
       bool _isNewFile = await isNewFile(url, objId, openBox, fileType);
       if (_isNewFile) {

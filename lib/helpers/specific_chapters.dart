@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import '../models and providers/chapter.dart';
 import './base.dart';
 import './manage_files.dart';
+import './manage_pdf_files.dart';
 
 Future<dynamic> fetchAndSetSpecificChapters(
     int isOnline, int topicId, String provinceName) async {
@@ -24,6 +25,7 @@ Future<dynamic> fetchAndSetSpecificChapters(
           if (extractedData["data"] != null) {
             await _storeChaptersData(
                 chaptersBox, extractedData["data"], topicId, provinceName);
+            setChapterPdfPathsList();
             final List<Chapter> loadedChapters =
                 _createChaptersList(extractedData["data"]);
             specificChapters = [...loadedChapters];
@@ -88,6 +90,7 @@ List<Chapter> _createChaptersList(dynamic data) {
   data.forEach((chapterObj) => {
         chapters.add(
           Chapter(
+            id: data.indexOf(chapterObj),
             title: chapterObj["title"],
             pdfUrl: chapterObj["pdf_url"],
             webUrl: chapterObj["web_url"],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/helpers/base.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 
 import './pdf_navigation_controller.dart';
@@ -20,7 +21,8 @@ class _PdfViewStackState extends State<PdfViewStack> {
   @override
   void initState() {
     _pdfController = PdfController(
-        document: PdfDocument.openAsset('assets/pdfs/sample.pdf'));
+        document:
+            PdfDocument.openFile(chapterPdfPathsList[selectedChapter.id]));
     _inputController = TextEditingController(text: "1");
     super.initState();
   }
@@ -48,7 +50,8 @@ class _PdfViewStackState extends State<PdfViewStack> {
           },
           onPageChanged: (pageNumber) {
             setState(() {
-              _inputController.text = "$pageNumber"; // when page is changed using button
+              _inputController.text =
+                  "$pageNumber"; // when page is changed using button
             });
           },
         ),

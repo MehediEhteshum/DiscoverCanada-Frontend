@@ -22,7 +22,7 @@ Future<dynamic> fetchTopics(int isOnline) async {
           final dynamic extractedData = response.data;
           if (extractedData["data"] != null) {
             await _storeTopicsData(topicsBox, extractedData["data"]);
-            setTopicImagesPathsList();
+            setTopicImagePathsList();
             final List<Topic> _topics =
                 _createTopicsList(extractedData["data"]);
             topics = [..._topics]; // assigning to global variable
@@ -43,7 +43,7 @@ Future<dynamic> fetchTopics(int isOnline) async {
       throw ("NoError");
     } else {
       // if offline, fetch from device
-      setTopicImagesPathsList();
+      setTopicImagePathsList();
       dynamic topicsData = topicsBox.get(0);
       if (topicsData != null) {
         final List<Topic> _topics = _createTopicsList(topicsData);

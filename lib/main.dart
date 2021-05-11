@@ -24,7 +24,7 @@ Future<void> openAllHiveBoxes() async {
   await Hive.openBox("provinces");
   await Hive.openBox("topicImageInfo");
   await Hive.openBox("chapters");
-  await Hive.openBox("pdfInfo");
+  await Hive.openBox("chapterPdfInfo");
 }
 
 class MyApp extends StatelessWidget {

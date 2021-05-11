@@ -59,9 +59,10 @@ Future<bool> isNewTopicImage(Box box, String fileId, int objId) async {
   return isNewFile;
 }
 
-Future<void> setTopicImagesPathsList() async {
+Future<void> setTopicImagePathsList() async {
   await openTopicImageInfoBox().then((Box topicImageInfoBox) async {
-    topicImagePathsList = topicImageInfoBox.get(0);
+    topicImagePathsList =
+        topicImageInfoBox.containsKey(0) ? topicImageInfoBox.get(0) : [];
   });
 }
 
