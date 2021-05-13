@@ -19,9 +19,9 @@ class TopicImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _inDevice = topics != null &&
-            topicImagePathsList !=
-                null // avoiding nullError of calling '.length'
+    bool _inDevice = topics.isNotEmpty &&
+            topicImagePathsList
+                .isNotEmpty // avoiding Error of calling '.length'
         ? topicImagePathsList.length == topics.length
         : false;
     print("Memeory leaks? build TopicImage");
