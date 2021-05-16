@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 
 import 'base.dart';
@@ -7,6 +8,7 @@ import 'base.dart';
 Future<void> saveChapterPdf(
     Box box, String filePath, int objId, String url, File file) async {
   Map boxData;
+  // filePaths are saved at key 0
   if (!box.containsKey(0)) {
     // 0 key not exists. so newFilePath
     await box.put(0, {
@@ -58,18 +60,17 @@ Future<void> saveChapterPdf(
     }
   }
   // Hive Learning: get fileData and write file after Hive method 'put' for saving _filePathsList
-  // final Response response = await Dio()
-  //     .get(
-  //       url,
-  //       options: Options(responseType: ResponseType.bytes),
-  //     )
-  //     .timeout(Duration(seconds: timeOut));
-  // await file.writeAsBytes(response.data);
+  final Response response = await Dio().get(
+    url,
+    options: Options(responseType: ResponseType.bytes),
+  );
+  await file.writeAsBytes(response.data); // save the newFile
 }
 
 Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
   Map boxData;
   bool isNewFile;
+  // etags are saved at key 1
   if (!box.containsKey(1)) {
     // 1 key not exists. so newFile
     isNewFile = true;

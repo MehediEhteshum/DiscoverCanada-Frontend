@@ -7,7 +7,7 @@ import '../widgets/retry.dart';
 import '../widgets/no_internet_message.dart';
 import '../widgets/coming_soon_message.dart';
 import '../models and providers/internet_connectivity_provider.dart';
-import '../widgets/pdf_view_builder.dart';
+import '../widgets/pdf_view_stack.dart';
 
 class ChapterScreen extends StatefulWidget {
   static const routeName = "/chapter";
@@ -93,7 +93,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                 ),
                 (_error == "NoError")
                     ? SliverFillRemaining(
-                        child: _hasPdf ? PdfViewBuilder() : ComingSoonMessage(),
+                        child: _hasPdf ? PdfViewStack() : ComingSoonMessage(),
                       )
                     : SliverFillRemaining(
                         child: Retry(refreshWidget: _refreshWidget),

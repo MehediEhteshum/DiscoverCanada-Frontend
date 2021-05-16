@@ -7,6 +7,7 @@ import './base.dart';
 
 Future<void> saveTopicImage(
     Box box, String filePath, int objId, String url, File file) async {
+  // filePaths are saved at key 0
   if (!box.containsKey(0)) {
     // 0 key not exists. so newFilePath
     await box.put(0, [filePath]);
@@ -27,13 +28,13 @@ Future<void> saveTopicImage(
       .get(
         url,
         options: Options(responseType: ResponseType.bytes),
-      )
-      .timeout(Duration(seconds: timeOut));
-  await file.writeAsBytes(response.data);
+      );
+  await file.writeAsBytes(response.data); // save the newFile
 }
 
 Future<bool> isNewTopicImage(Box box, String fileId, int objId) async {
   bool isNewFile;
+  // etags are saved at key 1
   if (!box.containsKey(1)) {
     // 1 key not exists. so newFile
     isNewFile = true;

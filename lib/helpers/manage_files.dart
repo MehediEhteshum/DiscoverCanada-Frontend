@@ -81,8 +81,7 @@ Future<bool> isNewFile(
         .head(
           url,
           options: Options(responseType: ResponseType.stream),
-        )
-        .timeout(Duration(seconds: timeOut));
+        );
     String fileId = testResponse.headers.value("etag");
     bool _isNewFile = await openBox().then((Box box) async {
       bool isNew;

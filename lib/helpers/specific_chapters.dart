@@ -18,8 +18,7 @@ Future<dynamic> fetchAndSetSpecificChapters(
         String specificChaptersUrl =
             "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/$topicId/$provinceName/chapters";
         final Response response = await Dio()
-            .get(specificChaptersUrl)
-            .timeout(Duration(seconds: timeOut));
+            .get(specificChaptersUrl);
         if (response.statusCode == successCode) {
           final extractedData = response.data;
           if (extractedData["data"] != null) {
@@ -67,6 +66,10 @@ Future<Box> Function() _openChaptersBox = () async {
 
 Future<void> _storeChaptersData(Box chaptersBox, dynamic dataToStore,
     int topicId, String provinceName) async {
+  if (topicIdsContainPdf.contains(topicId)) {
+    // only when topicIdContainsPdf
+    await saveFiles(dataToStore, "pdfs", fileTypes[1]);
+  }
   // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
   dynamic boxData = {provinceName: dataToStore};
   if (chaptersBox.containsKey(topicId)) {
@@ -79,10 +82,6 @@ Future<void> _storeChaptersData(Box chaptersBox, dynamic dataToStore,
     ); // update boxData
   }
   await chaptersBox.put(topicId, boxData); // put boxData
-  if (topicIdsContainPdf.contains(topicId)) {
-    // only when topicIdContainsPdf
-    await saveFiles(dataToStore, "pdfs", fileTypes[1]);
-  }
 }
 
 List<Chapter> _createChaptersList(dynamic data) {

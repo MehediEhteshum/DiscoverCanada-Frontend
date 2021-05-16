@@ -14,7 +14,7 @@ Future<dynamic> fetchProvinces(int isOnline) async {
         String provincesUrl =
             "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/provinces";
         final Response response =
-            await Dio().get(provincesUrl).timeout(Duration(seconds: timeOut));
+            await Dio().get(provincesUrl);
         if (response.statusCode == successCode) {
           final dynamic extractedData = response.data;
           if (extractedData["data"] != null) {
