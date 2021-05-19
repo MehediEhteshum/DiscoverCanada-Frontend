@@ -33,7 +33,7 @@ class PdfNavigationController extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: const ImageIcon(
-                AssetImage("assets/images/double_up_arrow.png"),
+                const AssetImage("assets/images/double_up_arrow.png"),
               ),
               iconSize: 30,
               padding: const EdgeInsets.all(0),
@@ -47,7 +47,7 @@ class PdfNavigationController extends StatelessWidget {
             ),
             IconButton(
               icon: const ImageIcon(
-                AssetImage("assets/images/up_arrow.png"),
+                const AssetImage("assets/images/up_arrow.png"),
               ),
               iconSize: 30,
               padding: const EdgeInsets.all(0),
@@ -59,7 +59,7 @@ class PdfNavigationController extends StatelessWidget {
               },
             ),
             Container(
-              padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+              padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
               child: Row(
                 children: <Widget>[
                   ConstrainedBox(
@@ -68,7 +68,9 @@ class PdfNavigationController extends StatelessWidget {
                       child: TextFormField(
                         controller: _inputController,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: fontSize1),
+                        style: const TextStyle(
+                          fontSize: fontSize1,
+                        ),
                         decoration: const InputDecoration(
                           border: const OutlineInputBorder(),
                           isDense: true, // Added this
@@ -102,7 +104,7 @@ class PdfNavigationController extends StatelessWidget {
             ),
             IconButton(
               icon: const ImageIcon(
-                AssetImage("assets/images/down_arrow.png"),
+                const AssetImage("assets/images/down_arrow.png"),
               ),
               iconSize: 30,
               padding: const EdgeInsets.all(0),
@@ -114,8 +116,8 @@ class PdfNavigationController extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: ImageIcon(
-                AssetImage("assets/images/double_down_arrow.png"),
+              icon: const ImageIcon(
+                const AssetImage("assets/images/double_down_arrow.png"),
               ),
               iconSize: 30,
               padding: const EdgeInsets.all(0),

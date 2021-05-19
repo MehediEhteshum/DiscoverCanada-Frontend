@@ -69,7 +69,7 @@ Future<void> saveFiles(dynamic data, String folderName, String fileType) async {
         });
       }
     } catch (e) {
-      print("manage_files2 $e");
+      print("manage_files2 $fileType $e");
     }
   });
 }
@@ -77,11 +77,10 @@ Future<void> saveFiles(dynamic data, String folderName, String fileType) async {
 Future<bool> isNewFile(
     String url, int objId, Function openBox, String fileType) async {
   try {
-    final Response testResponse = await Dio()
-        .head(
-          url,
-          options: Options(responseType: ResponseType.stream),
-        );
+    final Response testResponse = await Dio().head(
+      url,
+      options: Options(responseType: ResponseType.stream),
+    );
     String fileId = testResponse.headers.value("etag");
     bool _isNewFile = await openBox().then((Box box) async {
       bool isNew;
@@ -96,7 +95,7 @@ Future<bool> isNewFile(
     });
     return _isNewFile;
   } catch (e) {
-    print("manage_files3 $e");
+    print("manage_files3 $fileType $e");
     return false;
   }
 }

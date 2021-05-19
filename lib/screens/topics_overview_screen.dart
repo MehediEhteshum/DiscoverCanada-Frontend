@@ -20,12 +20,14 @@ class TopicsOverviewScreen extends StatefulWidget {
 class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
   final Connectivity _connectivity = Connectivity();
   static StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  static int _isTwice = 0;
-  static bool _isLoading = true;
+  static int _isTwice;
+  static bool _isLoading;
   static String _error;
 
   @override
   void initState() {
+    _isTwice = 0;
+    _isLoading = true;
     createDirPath("images");
     _connectivity.checkConnectivity().then(
       (ConnectivityResult connectivityResult) async {
@@ -115,7 +117,6 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
 
   @override
   dispose() {
-    print("dispose connectivity");
     _connectivitySubscription.cancel();
     super.dispose();
   }

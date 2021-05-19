@@ -18,13 +18,16 @@ class ChaptersOverviewScreen extends StatefulWidget {
 }
 
 class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
-  static bool _isLoading = true;
+  static bool _isLoading;
   static String _error;
-  static int _isTwice = 0;
-  final int _selectedTopicId = selectedTopic.id;
+  static int _isTwice;
+  static int _selectedTopicId;
 
   @override
   void initState() {
+    _isLoading = true;
+    _isTwice = 0;
+    _selectedTopicId = selectedTopic.id;
     if (topicIdsContainPdf.contains(_selectedTopicId)) {
       createDirPath("pdfs");
     }
