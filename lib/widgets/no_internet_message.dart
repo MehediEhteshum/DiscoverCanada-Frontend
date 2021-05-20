@@ -16,9 +16,11 @@ class NoInternetMessage extends StatefulWidget {
 class _NoInternetMessageState extends State<NoInternetMessage> {
   @override
   void didChangeDependencies() {
-    setState(() {
-      isOnline = Provider.of<InternetConnectivity>(context).isOnline;
-    });
+    if (mounted) {
+      setState(() {
+        isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+      });
+    }
     super.didChangeDependencies();
   }
 

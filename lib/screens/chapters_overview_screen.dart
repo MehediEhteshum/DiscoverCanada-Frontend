@@ -37,9 +37,11 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
 
   @override
   void didChangeDependencies() {
-    setState(() {
-      isOnline = Provider.of<InternetConnectivity>(context).isOnline;
-    });
+    if (mounted) {
+      setState(() {
+        isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+      });
+    }
     if (isOnline == 1) {
       _refreshWidget(); // as soon as online, it refreshes widget
     } else if (isOnline == 0 && _isTwice < 2) {

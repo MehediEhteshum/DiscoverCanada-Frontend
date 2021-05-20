@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 
 import '../helpers/base.dart';
 import '../helpers/manage_files.dart';
-import '../helpers/manage_pdf_files.dart';
 import './pdf_navigation_controller.dart';
 import '../models and providers/internet_connectivity_provider.dart';
 
@@ -37,7 +36,7 @@ class _PdfViewStackState extends State<PdfViewStack> {
   void initState() {
     _selectedChapterId = selectedChapter.id;
     _pdfUrl = selectedChapter.pdfUrl;
-    _pathExists = chapterPdfPathsList != null
+    _pathExists = chapterPdfPathsList != null // avoiding nullError
         ? chapterPdfPathsList.asMap().containsKey(_selectedChapterId)
         : false;
     if (!_pathExists) {
@@ -57,10 +56,11 @@ class _PdfViewStackState extends State<PdfViewStack> {
 
   @override
   void didChangeDependencies() {
-    setChapterPdfPathsList();
-    setState(() {
-      isOnline = Provider.of<InternetConnectivity>(context).isOnline;
-    });
+    if (mounted) {
+      setState(() {
+        isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+      });
+    }
     if (!_fileExists && isOnline == 1) {
       // fetch and save file from network when online
       Dio()
