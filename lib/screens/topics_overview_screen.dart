@@ -46,11 +46,9 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
       await Provider.of<InternetConnectivity>(context, listen: false)
           .updateConnectionStatus(connectivityResult);
     });
-    if (mounted) {
-      setState(() {
-        isOnline = Provider.of<InternetConnectivity>(context).isOnline;
-      });
-    }
+    _setStateIfMounted(() {
+      isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+    });
     if (isOnline == 1) {
       _refreshWidget(); // as soon as online, it refreshes widget
     } else if (isOnline == 0 && _isTwice < 2) {
@@ -59,6 +57,10 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
       _isTwice += 1;
     }
     super.didChangeDependencies();
+  }
+
+  void _setStateIfMounted(Function f) {
+    if (mounted) setState(f);
   }
 
   Future<void> _refreshWidget() async {

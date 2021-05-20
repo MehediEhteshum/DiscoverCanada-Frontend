@@ -28,12 +28,14 @@ class _ChapterScreenState extends State<ChapterScreen> {
 
   @override
   void didChangeDependencies() {
-    if (mounted) {
-      setState(() {
-        isOnline = Provider.of<InternetConnectivity>(context).isOnline;
-      });
-    }
+    _setStateIfMounted(() {
+      isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+    });
     super.didChangeDependencies();
+  }
+
+  void _setStateIfMounted(Function f) {
+    if (mounted) setState(f);
   }
 
   @override

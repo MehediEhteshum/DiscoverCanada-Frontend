@@ -39,11 +39,9 @@ class _TopicImageState extends State<TopicImage> {
 
   @override
   void didChangeDependencies() {
-    if (mounted) {
-      setState(() {
-        isOnline = Provider.of<InternetConnectivity>(context).isOnline;
-      });
-    }
+    _setStateIfMounted(() {
+      isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+    });
     if (!_fileExists && isOnline == 1) {
       // fetch and save file from network when online
       _imageUrl = widget.topic.imageUrl;
@@ -56,16 +54,18 @@ class _TopicImageState extends State<TopicImage> {
         _filePath = getFilePath(fileTypes[0], widget.topic);
         File _file = File(_filePath);
         _file.writeAsBytes(response.data).then((file) {
-          if (mounted) {
-            setState(() {
-              _filePath = file.path;
-              _fileExists = File(_filePath).existsSync(); // state
-            });
-          }
+          _setStateIfMounted(() {
+            _filePath = file.path;
+            _fileExists = File(_filePath).existsSync(); // state
+          });
         });
       });
     }
     super.didChangeDependencies();
+  }
+
+  void _setStateIfMounted(Function f) {
+    if (mounted) setState(f);
   }
 
   @override

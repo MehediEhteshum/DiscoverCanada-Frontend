@@ -25,13 +25,15 @@ class _LoaderProvinceSelectionDialogState
 
   @override
   void didChangeDependencies() {
-    if (mounted) {
-      setState(() {
-        isOnline = Provider.of<InternetConnectivity>(context).isOnline;
-        _refreshWidget(); // as soon as online/offline, it refreshes widget
-      });
-    }
+    _setStateIfMounted(() {
+      isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+      _refreshWidget(); // as soon as online/offline, it refreshes widget
+    });
     super.didChangeDependencies();
+  }
+
+  void _setStateIfMounted(Function f) {
+    if (mounted) setState(f);
   }
 
   Future<void> _refreshWidget() async {

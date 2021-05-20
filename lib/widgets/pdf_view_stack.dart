@@ -39,11 +39,9 @@ class _PdfViewStackState extends State<PdfViewStack> {
 
   @override
   void didChangeDependencies() {
-    if (mounted) {
-      setState(() {
-        isOnline = Provider.of<InternetConnectivity>(context).isOnline;
-      });
-    }
+    setStateIfMounted(() {
+      isOnline = Provider.of<InternetConnectivity>(context).isOnline;
+    });
     if (!_fileExists && isOnline == 1) {
       // fetch and save file from network when online
       _pdfUrl = selectedChapter.pdfUrl;
@@ -55,15 +53,13 @@ class _PdfViewStackState extends State<PdfViewStack> {
           .then((response) {
         File _file = File(_filePath);
         _file.writeAsBytes(response.data).then((file) {
-          if (mounted) {
-            setState(() {
-              _fileExists = File(_filePath).existsSync(); // state
-              if (_fileExists) {
-                _pdfController.document = PdfDocument.openFile(_filePath);
-                // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
-              }
-            });
-          }
+          setStateIfMounted(() {
+            _fileExists = File(_filePath).existsSync(); // state
+            if (_fileExists) {
+              _pdfController.document = PdfDocument.openFile(_filePath);
+              // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
+            }
+          });
         });
       });
     }
@@ -73,6 +69,10 @@ class _PdfViewStackState extends State<PdfViewStack> {
       // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
     }
     super.didChangeDependencies();
+  }
+
+  void setStateIfMounted(Function f) {
+    if (mounted) setState(f);
   }
 
   @override
