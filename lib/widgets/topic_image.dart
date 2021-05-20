@@ -26,35 +26,13 @@ class TopicImage extends StatefulWidget {
 }
 
 class _TopicImageState extends State<TopicImage> {
-  static bool _pathExists;
   static bool _fileExists;
-  static Topic _topic;
-  static int _topicId;
   static String _imageUrl;
-  static String _folderPath;
-  static String _fileName;
   static String _filePath;
-  static RegExp _fileNameRegExp;
 
   @override
   void initState() {
-    _topic = widget.topic;
-    _topicId = _topic.id - 1; // topic index = topicId - 1
-    _imageUrl = _topic.imageUrl;
-    _pathExists = topicImagePathsList.isNotEmpty
-        // avoiding Error of calling '.length' on []
-        ? topicImagePathsList.asMap().containsKey(_topicId)
-        : false;
-    if (!_pathExists) {
-      // topicImagePathsList is empty or not ready at this point. hence, again generate filePath manually;
-      _folderPath = appDocDir.path + "/" + "images" + "/";
-      _fileNameRegExp = RegExp(r"\w*\d*\.\w*");
-      _fileName = _fileNameRegExp.stringMatch(_imageUrl);
-      _filePath = _folderPath + _fileName;
-    } else {
-      // topicImagePathsList is ready or contains path
-      _filePath = topicImagePathsList[_topicId];
-    }
+    _filePath = getFilePath(fileTypes[0], widget.topic);
     _fileExists = File(_filePath).existsSync();
     super.initState();
   }
@@ -68,29 +46,14 @@ class _TopicImageState extends State<TopicImage> {
     }
     if (!_fileExists && isOnline == 1) {
       // fetch and save file from network when online
+      _imageUrl = widget.topic.imageUrl;
       Dio()
           .get(
         FlutterConfig.get('BASE_URL') + _imageUrl,
         options: Options(responseType: ResponseType.bytes),
       )
           .then((response) {
-        _topic = widget.topic;
-        _topicId = _topic.id - 1; // topic index = topicId - 1
-        _imageUrl = _topic.imageUrl;
-        _pathExists = topicImagePathsList.isNotEmpty
-            // avoiding Error of calling '.length' on []
-            ? topicImagePathsList.asMap().containsKey(_topicId)
-            : false;
-        if (!_pathExists) {
-          // topicImagePathsList is empty or not ready at this point. hence, again generate filePath manually;
-          _folderPath = appDocDir.path + "/" + "images" + "/";
-          _fileNameRegExp = RegExp(r"\w*\d*\.\w*");
-          _fileName = _fileNameRegExp.stringMatch(_imageUrl);
-          _filePath = _folderPath + _fileName;
-        } else {
-          // topicImagePathsList is ready or contains path
-          _filePath = topicImagePathsList[_topicId];
-        }
+        _filePath = getFilePath(fileTypes[0], widget.topic);
         File _file = File(_filePath);
         _file.writeAsBytes(response.data).then((file) {
           if (mounted) {
@@ -107,25 +70,7 @@ class _TopicImageState extends State<TopicImage> {
 
   @override
   Widget build(BuildContext context) {
-    _topic = widget.topic;
-    _topicId = _topic.id - 1; // topic index = topicId - 1
-    _imageUrl = _topic.imageUrl;
-    _pathExists = topicImagePathsList.isNotEmpty
-        // avoiding Error of calling '.length' on []
-        ? topicImagePathsList.asMap().containsKey(_topicId)
-        : false;
-    if (!_pathExists) {
-      // topicImagePathsList is empty or not ready at this point. hence, again generate filePath manually;
-      _folderPath = appDocDir.path + "/" + "images" + "/";
-      _fileNameRegExp = RegExp(r"\w*\d*\.\w*");
-      _fileName = _fileNameRegExp.stringMatch(_imageUrl);
-      _filePath = _folderPath + _fileName;
-    } else {
-      // topicImagePathsList is ready or contains path
-      _filePath = topicImagePathsList[_topicId];
-    }
-    // _fileExists = File(_filePath).existsSync();
-
+    _filePath = getFilePath(fileTypes[0], widget.topic);
     print("Memeory leaks? build _TopicImageState");
 
     return _fileExists

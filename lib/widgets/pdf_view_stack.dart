@@ -23,31 +23,14 @@ class _PdfViewStackState extends State<PdfViewStack> {
   final PdfController _pdfController = PdfController(document: null);
   final TextEditingController _inputController = TextEditingController();
   // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
-  static bool _pathExists;
   static bool _fileExists;
   static int _allPagesCount;
-  static int _selectedChapterId;
   static String _pdfUrl;
-  static String _folderPath;
-  static String _fileName;
   static String _filePath;
 
   @override
   void initState() {
-    _selectedChapterId = selectedChapter.id;
-    _pdfUrl = selectedChapter.pdfUrl;
-    _pathExists = chapterPdfPathsList != null // avoiding nullError
-        ? chapterPdfPathsList.asMap().containsKey(_selectedChapterId)
-        : false;
-    if (!_pathExists) {
-      // chapterPdfPathsList is empty or not ready at this point. hence, again generate filePath manually;
-      _folderPath = appDocDir.path + "/" + "pdfs" + "/";
-      _fileName = selectedChapter.title + ".pdf";
-      _filePath = _folderPath + _fileName;
-    } else {
-      // chapterPdfPathsList is ready or contains path
-      _filePath = chapterPdfPathsList[_selectedChapterId];
-    }
+    _filePath = getFilePath(fileTypes[1]);
     _fileExists = File(_filePath).existsSync();
     _inputController.text = "1";
     // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
@@ -63,6 +46,7 @@ class _PdfViewStackState extends State<PdfViewStack> {
     }
     if (!_fileExists && isOnline == 1) {
       // fetch and save file from network when online
+      _pdfUrl = selectedChapter.pdfUrl;
       Dio()
           .get(
         _pdfUrl,
