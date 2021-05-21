@@ -24,6 +24,10 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
     super.initState();
   }
 
+  void _setStateIfMounted(Function f) {
+    if (mounted) setState(f);
+  }
+
   @override
   Widget build(BuildContext context) {
     print("Memeory leaks? build _ProvinceSelectionDialogState");
@@ -80,7 +84,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
                 groupValue: _selectedProvinceName,
                 selected: _selectedProvinceName == provinces[index],
                 onChanged: (value) {
-                  setState(() {
+                  _setStateIfMounted(() {
                     _selectedProvinceName = value;
                   });
                 },

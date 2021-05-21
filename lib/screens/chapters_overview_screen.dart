@@ -55,13 +55,13 @@ class _ChaptersOverviewScreenState extends State<ChaptersOverviewScreen> {
   }
 
   Future<void> _refreshWidget() async {
-    setState(() {
+    _setStateIfMounted(() {
       _isLoading = true; // start loading screen again
     });
     await fetchAndSetSpecificChapters(
             isOnline, _selectedTopicId, selectedProvince)
         .catchError((error) {
-      setState(() {
+      _setStateIfMounted(() {
         _error = error;
         _isLoading = false;
       });

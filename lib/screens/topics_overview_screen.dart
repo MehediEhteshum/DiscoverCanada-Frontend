@@ -64,11 +64,11 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
   }
 
   Future<void> _refreshWidget() async {
-    setState(() {
+    _setStateIfMounted(() {
       _isLoading = true; // start loading screen again
     });
     await fetchTopics(isOnline).catchError((error) {
-      setState(() {
+      _setStateIfMounted(() {
         _error = error;
         _isLoading = false;
       });

@@ -17,14 +17,16 @@ Future<dynamic> fetchAndSetSpecificChapters(
       try {
         String specificChaptersUrl =
             "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/$topicId/$provinceName/chapters";
-        final Response response = await Dio()
-            .get(specificChaptersUrl);
+        final Response response = await Dio().get(specificChaptersUrl);
         if (response.statusCode == successCode) {
           final extractedData = response.data;
           if (extractedData["data"] != null) {
             await _storeChaptersData(
                 chaptersBox, extractedData["data"], topicId, provinceName);
-            setChapterPdfPathsList();
+            if (topicIdsContainPdf.contains(topicId)) {
+              // only when topicIdContainsPdf
+              setChapterPdfPathsList();
+            }
             final List<Chapter> loadedChapters =
                 _createChaptersList(extractedData["data"]);
             specificChapters = [...loadedChapters];

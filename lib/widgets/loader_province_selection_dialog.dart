@@ -37,11 +37,11 @@ class _LoaderProvinceSelectionDialogState
   }
 
   Future<void> _refreshWidget() async {
-    setState(() {
+    _setStateIfMounted(() {
       _isLoading = true; // start loading screen again
     });
     await fetchProvinces(isOnline).catchError((error) {
-      setState(() {
+      _setStateIfMounted(() {
         _error = error;
         _isLoading = false;
       });

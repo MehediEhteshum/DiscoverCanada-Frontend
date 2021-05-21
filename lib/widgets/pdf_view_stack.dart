@@ -93,12 +93,12 @@ class _PdfViewStackState extends State<PdfViewStack> {
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
                 onDocumentLoaded: (document) {
-                  setState(() {
+                  setStateIfMounted(() {
                     _allPagesCount = document.pagesCount;
                   });
                 },
                 onPageChanged: (pageNumber) {
-                  setState(() {
+                  setStateIfMounted(() {
                     _inputController.text =
                         "$pageNumber"; // when page is changed using button
                   });
@@ -111,24 +111,35 @@ class _PdfViewStackState extends State<PdfViewStack> {
               ),
             ],
           )
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const CircularProgressIndicator(),
-              const SizedBox(
-                height: 30,
-              ),
-              const Text(
-                "Make sure you have internet access",
-                softWrap: true,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: fontSize1,
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
+        : Container(
+            padding: EdgeInsets.all(30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const CircularProgressIndicator(),
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
-            ],
+                const Text(
+                  "Make sure you have internet access.",
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: fontSize1,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  "Please wait. Download may take several minutes to finish.",
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: fontSize1,
+                  ),
+                ),
+              ],
+            ),
           );
   }
 
