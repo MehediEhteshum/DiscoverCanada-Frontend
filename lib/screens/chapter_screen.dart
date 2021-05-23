@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../helpers/base.dart';
 import '../widgets/no_internet_message.dart';
 import '../widgets/coming_soon_message.dart';
 import '../models and providers/internet_connectivity_provider.dart';
 import '../widgets/pdf_view_stack.dart';
+import '../widgets/web_view_stack.dart';
 
 class ChapterScreen extends StatefulWidget {
   static const routeName = "/chapter";
@@ -64,9 +64,8 @@ class _ChapterScreenState extends State<ChapterScreen> {
       body: _hasPdfUrl
           ? const PdfViewStack()
           : _hasWebUrl
-              ? WebView(
-                  initialUrl: _webUrl,
-                  javascriptMode: JavascriptMode.unrestricted,
+              ? WebViewStack(
+                  webUrl: _webUrl,
                 )
               : ComingSoonMessage(),
     );
