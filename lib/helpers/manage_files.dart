@@ -45,7 +45,10 @@ Future<void> saveFiles(dynamic data, String folderName, String fileType) async {
         objId = data.indexOf(obj); // index of each chapter
         openBox = mpf.openChapterPdfInfoBox;
       }
-      bool _isNewFile = await isNewFile(url, objId, openBox, fileType);
+      // make sure pdf_url != null
+      bool _isNewFile = (url != null)
+          ? await isNewFile(url, objId, openBox, fileType)
+          : false;
       if (_isNewFile) {
         // new file, so store in device
         String fileName;
@@ -63,8 +66,8 @@ Future<void> saveFiles(dynamic data, String folderName, String fileType) async {
           if (fileType == fileTypes[0]) {
             // topicImage
             await mif.saveTopicImage(box, filePath, objId, url, file);
-          } else if (fileType == fileTypes[1]) {
-            // chapterPdf
+          } else if (fileType == fileTypes[1] && url != null) {
+            // chapterPdf. make sure pdf_url != null
             await mpf.saveChapterPdf(box, filePath, objId, url, file);
           }
         });

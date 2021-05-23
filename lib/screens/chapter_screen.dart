@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../helpers/base.dart';
 import '../widgets/selection_info.dart';
@@ -16,13 +17,17 @@ class ChapterScreen extends StatefulWidget {
 }
 
 class _ChapterScreenState extends State<ChapterScreen> {
-  static String pdfUrl;
-  static bool _hasPdf;
+  static String _pdfUrl;
+  static String _webUrl;
+  static bool _hasPdfUrl;
+  static bool _hasWebUrl;
 
   @override
   void initState() {
-    pdfUrl = selectedChapter.pdfUrl;
-    _hasPdf = (pdfUrl != null);
+    _pdfUrl = selectedChapter.pdfUrl;
+    _webUrl = selectedChapter.webUrl;
+    _hasPdfUrl = (_pdfUrl != null);
+    _hasWebUrl = (_webUrl != null);
     super.initState();
   }
 
@@ -44,6 +49,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
 
     return Scaffold(
       body: CustomScrollView(
+        physics: NeverScrollableScrollPhysics(),
         slivers: <Widget>[
           SliverAppBar(
             title: Text(
@@ -51,8 +57,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
               softWrap: true,
             ),
             pinned: true,
-            expandedHeight: screenWidth *
-                0.4, // proportional to screen width = AppBar kToolbarHeight + Chapter title w/ extra 1 line + Province name + Bottom padding statusbarHeight
+            expandedHeight: 0,
             flexibleSpace: const FlexibleSpaceBar(
               background: const SelectionInfo(),
             ),
@@ -66,7 +71,14 @@ class _ChapterScreenState extends State<ChapterScreen> {
             ),
           ),
           SliverFillRemaining(
-            child: _hasPdf ? const PdfViewStack() : ComingSoonMessage(),
+            child: _hasPdfUrl
+                ? const PdfViewStack()
+                : _hasWebUrl
+                    ? WebView(
+                        initialUrl: _webUrl,
+                        javascriptMode: JavascriptMode.unrestricted,
+                      )
+                    : ComingSoonMessage(),
           )
         ],
       ),
