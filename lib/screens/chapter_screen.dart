@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../helpers/base.dart';
-import '../widgets/selection_info.dart';
 import '../widgets/no_internet_message.dart';
 import '../widgets/coming_soon_message.dart';
 import '../models and providers/internet_connectivity_provider.dart';
@@ -48,40 +47,28 @@ class _ChapterScreenState extends State<ChapterScreen> {
     print("Memeory leaks? build _ChapterScreenState");
 
     return Scaffold(
-      body: CustomScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        slivers: <Widget>[
-          SliverAppBar(
-            title: Text(
-              "${selectedChapter.title}",
-              softWrap: true,
-            ),
-            pinned: true,
-            expandedHeight: 0,
-            flexibleSpace: const FlexibleSpaceBar(
-              background: const SelectionInfo(),
-            ),
-            bottom: PreferredSize(
-              child: const NoInternetMessage(),
-              preferredSize: Size.lerp(
-                Size(double.maxFinite, 25), // fixed // offline
-                const Size(0, 0), // fixed // online
-                isOnline == 1 ? 1 : 0,
-              ),
-            ),
+      appBar: AppBar(
+        title: Text(
+          "${selectedChapter.title}",
+          softWrap: true,
+        ),
+        bottom: PreferredSize(
+          child: NoInternetMessage(),
+          preferredSize: Size.lerp(
+            Size(double.maxFinite, 25), // fixed // offline
+            const Size(0, 0), // fixed // online
+            isOnline == 1 ? 1 : 0,
           ),
-          SliverFillRemaining(
-            child: _hasPdfUrl
-                ? const PdfViewStack()
-                : _hasWebUrl
-                    ? WebView(
-                        initialUrl: _webUrl,
-                        javascriptMode: JavascriptMode.unrestricted,
-                      )
-                    : ComingSoonMessage(),
-          )
-        ],
+        ),
       ),
+      body: _hasPdfUrl
+          ? const PdfViewStack()
+          : _hasWebUrl
+              ? WebView(
+                  initialUrl: _webUrl,
+                  javascriptMode: JavascriptMode.unrestricted,
+                )
+              : ComingSoonMessage(),
     );
   }
 }
