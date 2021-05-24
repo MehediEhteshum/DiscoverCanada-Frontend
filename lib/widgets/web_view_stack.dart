@@ -32,16 +32,14 @@ class _WebViewStackState extends State<WebViewStack> {
 
     return Stack(
       children: <Widget>[
-        InteractiveViewer(
-          child: WebView(
-            initialUrl: widget.webUrl,
-            javascriptMode: JavascriptMode.unrestricted,
-            onPageFinished: (finish) {
-              _setStateIfMounted(() {
-                _isLoadingWebUrl = false;
-              });
-            },
-          ),
+        WebView(
+          initialUrl: widget.webUrl,
+          javascriptMode: JavascriptMode.unrestricted,
+          onPageFinished: (finish) {
+            _setStateIfMounted(() {
+              _isLoadingWebUrl = false;
+            });
+          },
         ),
         _isLoadingWebUrl
             ? const Center(
