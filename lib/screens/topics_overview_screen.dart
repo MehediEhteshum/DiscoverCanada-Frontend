@@ -79,8 +79,10 @@ class _TopicsOverviewScreenState extends State<TopicsOverviewScreen> {
   Widget build(BuildContext context) {
     print("Memeory leaks? build TopicsOverviewScreen");
 
+    screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
-    statusbarHeight = MediaQuery.of(context).padding.top;
+    statusBarHeight = MediaQuery.of(context).padding.top;
+    appBarHeight = kToolbarHeight; // AppBar default height
 
     return Scaffold(
       appBar: AppBar(

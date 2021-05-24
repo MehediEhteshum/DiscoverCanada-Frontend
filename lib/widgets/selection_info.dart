@@ -12,8 +12,6 @@ class SelectionInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("Memeory leaks? build SelectionInfo");
-    final double _statusBarHeight = MediaQuery.of(context).padding.top;
-    final double _appBarHeight = kToolbarHeight; // AppBar default height
 
     return Stack(
       children: <Widget>[
@@ -31,8 +29,8 @@ class SelectionInfo extends StatelessWidget {
           topic: selectedTopic,
         ),
         Container(
-          padding: EdgeInsets.fromLTRB(20, _statusBarHeight + _appBarHeight, 20,
-              _statusBarHeight * 1.25), // variable
+          padding: EdgeInsets.fromLTRB(20, statusBarHeight + appBarHeight, 20,
+              statusBarHeight * 1.25), // variable
           color: Colors.black54,
           width: double.maxFinite,
           child: Column(

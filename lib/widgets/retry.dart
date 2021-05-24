@@ -6,7 +6,10 @@ import '../helpers/base.dart';
 class Retry extends StatelessWidget {
   final Function refreshWidget;
 
-  const Retry({Key key, @required this.refreshWidget}) : super(key: key);
+  const Retry({
+    Key key,
+    @required this.refreshWidget,
+  }) : super(key: key);
 
   void _retry() {
     refreshWidget();

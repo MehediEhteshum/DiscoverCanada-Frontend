@@ -29,7 +29,9 @@ List<String> chapterPdfPathsList = [];
 int isOnline = 2; // basically it is bool(0, 1), 2 during app start-up
 
 // global variables declared
-double statusbarHeight;
+double statusBarHeight;
+double appBarHeight;
+double screenHeight;
 Topic selectedTopic;
 String selectedProvince;
 Chapter selectedChapter;
