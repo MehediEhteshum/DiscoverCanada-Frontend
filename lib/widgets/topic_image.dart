@@ -14,12 +14,14 @@ import '../models and providers/topic.dart';
 class TopicImage extends StatefulWidget {
   const TopicImage({
     Key key,
-    @required this.topic,
-    this.imageHeight = double.infinity,
-  }) : super(key: key);
+    @required Topic topic,
+    double imageHeight = double.infinity,
+  })  : _topic = topic,
+        _imageHeight = imageHeight,
+        super(key: key);
 
-  final Topic topic;
-  final double imageHeight;
+  final Topic _topic;
+  final double _imageHeight;
 
   @override
   _TopicImageState createState() => _TopicImageState();
@@ -29,10 +31,16 @@ class _TopicImageState extends State<TopicImage> {
   static bool _fileExists;
   static String _imageUrl;
   static String _filePath;
+  static int _downloadProgress;
+  static int _dummyTotal;
+  static CancelToken _cancelToken;
 
   @override
   void initState() {
-    _filePath = getFilePath(fileTypes[0], widget.topic);
+    _downloadProgress = 0;
+    _dummyTotal = 3000000;
+    _cancelToken = CancelToken();
+    _filePath = getFilePath(fileTypes[0], widget._topic);
     _fileExists = File(_filePath).existsSync();
     super.initState();
   }
@@ -44,14 +52,50 @@ class _TopicImageState extends State<TopicImage> {
     });
     if (!_fileExists && isOnline == 1) {
       // fetch and save file from network when online
-      _imageUrl = FlutterConfig.get('BASE_URL') + widget.topic.imageUrl;
-      Dio().download(_imageUrl, _filePath).then((_) {
-        _setStateIfMounted(() {
-          _fileExists = File(_filePath).existsSync();
+      _imageUrl = FlutterConfig.get('BASE_URL') + widget._topic.imageUrl;
+      try {
+        Dio()
+            .download(
+          _imageUrl,
+          _filePath,
+          onReceiveProgress: _calculateDownloadProgress,
+          cancelToken: _cancelToken,
+          options: Options(
+              responseType: ResponseType.bytes,
+              headers: {HttpHeaders.acceptEncodingHeader: "*"}),
+        )
+            .then((_) {
+          _setStateIfMounted(() {
+            _fileExists = File(_filePath).existsSync();
+            if (_fileExists) {
+              _downloadProgress = 100;
+            }
+          });
         });
-      });
+      } catch (e) {
+        print("topic_image1 $e");
+      }
+    }
+    if (_fileExists) {
+      _downloadProgress = 100;
     }
     super.didChangeDependencies();
+  }
+
+  void _calculateDownloadProgress(received, total) {
+    if (total != -1) {
+      // 'total' value available
+      _setStateIfMounted(() {
+        _downloadProgress = (received / total * 100).toInt();
+      });
+    } else {
+      // 'total' value unavailable. So, dummy progress
+      _setStateIfMounted(() {
+        _downloadProgress = (_downloadProgress < 99)
+            ? (received / _dummyTotal * 100).toInt()
+            : 99;
+      });
+    }
   }
 
   void _setStateIfMounted(Function f) {
@@ -60,7 +104,7 @@ class _TopicImageState extends State<TopicImage> {
 
   @override
   Widget build(BuildContext context) {
-    _filePath = getFilePath(fileTypes[0], widget.topic);
+    _filePath = getFilePath(fileTypes[0], widget._topic);
     print("Memeory leaks? build _TopicImageState");
 
     return _fileExists
@@ -68,15 +112,24 @@ class _TopicImageState extends State<TopicImage> {
             // load image from file
             placeholder: MemoryImage(kTransparentImage),
             image: FileImage(File(_filePath)),
-            height: widget.imageHeight,
+            height: widget._imageHeight,
             width: double.infinity,
             fit: BoxFit.cover,
           )
         : Image.memory(
             kTransparentImage,
-            height: widget.imageHeight,
+            height: widget._imageHeight,
             width: double.infinity,
             fit: BoxFit.cover,
           );
+  }
+
+  @override
+  void dispose() {
+    if (_downloadProgress < 100) {
+      // download not complete
+      _cancelToken.cancel("Download cancelled. Reason: widget closed.");
+    }
+    super.dispose();
   }
 }

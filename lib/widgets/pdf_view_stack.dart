@@ -42,7 +42,6 @@ class _PdfViewStackState extends State<PdfViewStack> {
     _fileExists = File(_filePath).existsSync();
     _textEditingController.text = "1";
     super.initState();
-    print("init _filePath $_filePath $_fileExists");
   }
 
   @override
@@ -53,54 +52,54 @@ class _PdfViewStackState extends State<PdfViewStack> {
     if (!_fileExists && isOnline == 1) {
       // fetch and save file from network when online
       _pdfUrl = selectedChapter.pdfUrl;
-      print("didcd _pdfUrl $_pdfUrl");
-      Dio()
-          .download(
-        _pdfUrl,
-        _filePath,
-        onReceiveProgress: _calculateDownloadProgress,
-        cancelToken: _cancelToken,
-        options: Options(
-            responseType: ResponseType.bytes,
-            headers: {HttpHeaders.acceptEncodingHeader: "*"}),
-      )
-          .then((_) {
-        _setStateIfMounted(() {
-          _fileExists = File(_filePath).existsSync();
-          if (_fileExists) {
-            // load from file
-            _pdfController.document = PdfDocument.openFile(_filePath);
-            // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
-            _downloadProgress = 100;
-          }
+      try {
+        Dio()
+            .download(
+          _pdfUrl,
+          _filePath,
+          onReceiveProgress: _calculateDownloadProgress,
+          cancelToken: _cancelToken,
+          options: Options(
+              responseType: ResponseType.bytes,
+              headers: {HttpHeaders.acceptEncodingHeader: "*"}),
+        )
+            .then((_) {
+          _setStateIfMounted(() {
+            _fileExists = File(_filePath).existsSync();
+            if (_fileExists) {
+              // load from file
+              _downloadProgress = 100;
+              _pdfController.document = PdfDocument.openFile(_filePath);
+              // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
+            }
+          });
         });
-      });
+      } catch (e) {
+        print("pdf_view_stack1 $e");
+      }
     }
     if (_fileExists) {
       // load from file
+      _downloadProgress = 100;
       _pdfController.document = PdfDocument.openFile(_filePath);
       // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
-      _downloadProgress = 100;
     }
     super.didChangeDependencies();
   }
 
   void _calculateDownloadProgress(received, total) {
-    print("total $total");
     if (total != -1) {
       // 'total' value available
       _setStateIfMounted(() {
         _downloadProgress = (received / total * 100).toInt();
       });
-      print(_downloadProgress);
     } else {
-      // 'total' value unavailable. So, approx. progress
+      // 'total' value unavailable. So, dummy progress
       _setStateIfMounted(() {
         _downloadProgress = (_downloadProgress < 99)
             ? (received / _dummyTotal * 100).toInt()
             : 99;
       });
-      print("$_dummyTotal $received $_downloadProgress");
     }
   }
 
@@ -189,8 +188,7 @@ class _PdfViewStackState extends State<PdfViewStack> {
   void dispose() {
     if (_downloadProgress < 100) {
       // download not complete
-      _cancelToken.cancel("Widget Closed");
-      print("cancel");
+      _cancelToken.cancel("Download cancelled. Reason: widget closed.");
     }
     _pdfController?.dispose(); // null safety
     _textEditingController.dispose();
