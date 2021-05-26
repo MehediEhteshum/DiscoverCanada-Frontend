@@ -27,7 +27,8 @@ Future<void> createDirPath(String dirPathToBeCreated) async {
   }
 }
 
-Future<void> saveFiles(dynamic data, String folderName, String fileType) async {
+Future<void> saveFilePaths(
+    dynamic data, String folderName, String fileType) async {
   String folderPath = appDocDir.path + "/" + "$folderName" + "/";
   data.forEach((obj) async {
     String url;
@@ -60,15 +61,15 @@ Future<void> saveFiles(dynamic data, String folderName, String fileType) async {
           // chapterPdf
           fileName = obj["title"] + ".pdf";
         }
-        String filePath = folderPath + fileName;
-        File file = File(filePath);
+        String filePath =
+            folderPath + fileName; // also check 'getFilePath' function below
         await openBox().then((Box box) async {
           if (fileType == fileTypes[0]) {
             // topicImage
-            await mif.saveTopicImage(box, filePath, objId, url, file);
+            await mif.saveTopicImagePath(box, filePath, objId);
           } else if (fileType == fileTypes[1] && url != null) {
             // chapterPdf. make sure pdf_url != null
-            await mpf.saveChapterPdf(box, filePath, objId, url, file);
+            await mpf.saveChapterPdfPath(box, filePath, objId);
           }
         });
       }
@@ -150,5 +151,5 @@ String getFilePath(String fileType, [Topic topic]) {
             ? chapterPdfPathsList[objId]
             : null;
   }
-  return filePath;
+  return filePath; // also check 'saveFiles' function above
 }

@@ -70,7 +70,7 @@ Future<void> _storeChaptersData(Box chaptersBox, dynamic dataToStore,
     int topicId, String provinceName) async {
   if (topicIdsContainPdf.contains(topicId)) {
     // only when topicIdContainsPdf
-    await saveFiles(dataToStore, "pdfs", fileTypes[1]);
+    await saveFilePaths(dataToStore, "pdfs", fileTypes[1]);
   }
   // learning: for storing data, box method e.g. 'put' needs to be used for data persistence on app restart. method on toMap() doesn't keep data on app restart.
   dynamic boxData = {provinceName: dataToStore};

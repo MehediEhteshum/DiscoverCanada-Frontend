@@ -15,11 +15,12 @@ class ProvinceSelectionDialog extends StatefulWidget {
 }
 
 class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
-  final ScrollController _provinceScrollController = ScrollController();
+  static ScrollController _provinceScrollController;
   static String _selectedProvinceName;
 
   @override
   void initState() {
+    _provinceScrollController = ScrollController();
     _selectedProvinceName = provinces[0]; // default
     super.initState();
   }

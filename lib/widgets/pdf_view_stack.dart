@@ -20,46 +20,59 @@ class PdfViewStack extends StatefulWidget {
 }
 
 class _PdfViewStackState extends State<PdfViewStack> {
-  final PdfController _pdfController = PdfController(document: null);
-  final TextEditingController _inputController = TextEditingController();
-  // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
+  static PdfController _pdfController;
+  static TextEditingController _textEditingController;
   static bool _fileExists;
   static int _allPagesCount;
   static String _pdfUrl;
   static String _filePath;
+  static int _downloadProgress;
+  static int _dummyTotal;
+  static CancelToken _cancelToken;
 
   @override
   void initState() {
+    _pdfController = PdfController(document: null);
+    _textEditingController = TextEditingController();
+    // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
+    _downloadProgress = 0;
+    _dummyTotal = 3500000;
+    _cancelToken = CancelToken();
     _filePath = getFilePath(fileTypes[1]);
     _fileExists = File(_filePath).existsSync();
-    _inputController.text = "1";
-    // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
+    _textEditingController.text = "1";
     super.initState();
+    print("init _filePath $_filePath $_fileExists");
   }
 
   @override
   void didChangeDependencies() {
-    setStateIfMounted(() {
+    _setStateIfMounted(() {
       isOnline = Provider.of<InternetConnectivity>(context).isOnline;
     });
     if (!_fileExists && isOnline == 1) {
       // fetch and save file from network when online
       _pdfUrl = selectedChapter.pdfUrl;
+      print("didcd _pdfUrl $_pdfUrl");
       Dio()
-          .get(
+          .download(
         _pdfUrl,
-        options: Options(responseType: ResponseType.bytes),
+        _filePath,
+        onReceiveProgress: _calculateDownloadProgress,
+        cancelToken: _cancelToken,
+        options: Options(
+            responseType: ResponseType.bytes,
+            headers: {HttpHeaders.acceptEncodingHeader: "*"}),
       )
-          .then((response) {
-        File _file = File(_filePath);
-        _file.writeAsBytes(response.data).then((file) {
-          setStateIfMounted(() {
-            _fileExists = File(_filePath).existsSync(); // state
-            if (_fileExists) {
-              _pdfController.document = PdfDocument.openFile(_filePath);
-              // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
-            }
-          });
+          .then((_) {
+        _setStateIfMounted(() {
+          _fileExists = File(_filePath).existsSync();
+          if (_fileExists) {
+            // load from file
+            _pdfController.document = PdfDocument.openFile(_filePath);
+            // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
+            _downloadProgress = 100;
+          }
         });
       });
     }
@@ -67,11 +80,31 @@ class _PdfViewStackState extends State<PdfViewStack> {
       // load from file
       _pdfController.document = PdfDocument.openFile(_filePath);
       // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
+      _downloadProgress = 100;
     }
     super.didChangeDependencies();
   }
 
-  void setStateIfMounted(Function f) {
+  void _calculateDownloadProgress(received, total) {
+    print("total $total");
+    if (total != -1) {
+      // 'total' value available
+      _setStateIfMounted(() {
+        _downloadProgress = (received / total * 100).toInt();
+      });
+      print(_downloadProgress);
+    } else {
+      // 'total' value unavailable. So, approx. progress
+      _setStateIfMounted(() {
+        _downloadProgress = (_downloadProgress < 99)
+            ? (received / _dummyTotal * 100).toInt()
+            : 99;
+      });
+      print("$_dummyTotal $received $_downloadProgress");
+    }
+  }
+
+  void _setStateIfMounted(Function f) {
     if (mounted) setState(f);
   }
 
@@ -93,20 +126,20 @@ class _PdfViewStackState extends State<PdfViewStack> {
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
                 onDocumentLoaded: (document) {
-                  setStateIfMounted(() {
+                  _setStateIfMounted(() {
                     _allPagesCount = document.pagesCount;
                   });
                 },
                 onPageChanged: (pageNumber) {
-                  setStateIfMounted(() {
-                    _inputController.text =
+                  _setStateIfMounted(() {
+                    _textEditingController.text =
                         "$pageNumber"; // when page is changed using button
                   });
                 },
               ),
               PdfNavigationController(
                 pdfController: _pdfController,
-                inputController: _inputController,
+                textEditingController: _textEditingController,
                 allPagesCount: _allPagesCount,
               ),
             ],
@@ -119,6 +152,15 @@ class _PdfViewStackState extends State<PdfViewStack> {
                 const CircularProgressIndicator(),
                 const SizedBox(
                   height: 30,
+                ),
+                Text(
+                  "$_downloadProgress%",
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: fontSize1,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const Text(
                   "Make sure you have internet access.",
@@ -145,8 +187,13 @@ class _PdfViewStackState extends State<PdfViewStack> {
 
   @override
   void dispose() {
+    if (_downloadProgress < 100) {
+      // download not complete
+      _cancelToken.cancel("Widget Closed");
+      print("cancel");
+    }
     _pdfController?.dispose(); // null safety
-    _inputController.dispose();
+    _textEditingController.dispose();
     super.dispose();
   }
 }

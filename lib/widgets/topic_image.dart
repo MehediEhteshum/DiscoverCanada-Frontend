@@ -44,20 +44,10 @@ class _TopicImageState extends State<TopicImage> {
     });
     if (!_fileExists && isOnline == 1) {
       // fetch and save file from network when online
-      _imageUrl = widget.topic.imageUrl;
-      Dio()
-          .get(
-        FlutterConfig.get('BASE_URL') + _imageUrl,
-        options: Options(responseType: ResponseType.bytes),
-      )
-          .then((response) {
-        _filePath = getFilePath(fileTypes[0], widget.topic);
-        File _file = File(_filePath);
-        _file.writeAsBytes(response.data).then((file) {
-          _setStateIfMounted(() {
-            _filePath = file.path;
-            _fileExists = File(_filePath).existsSync(); // state
-          });
+      _imageUrl = FlutterConfig.get('BASE_URL') + widget.topic.imageUrl;
+      Dio().download(_imageUrl, _filePath).then((_) {
+        _setStateIfMounted(() {
+          _fileExists = File(_filePath).existsSync();
         });
       });
     }

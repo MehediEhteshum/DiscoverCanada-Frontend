@@ -8,15 +8,15 @@ class PdfNavigationController extends StatelessWidget {
   const PdfNavigationController({
     Key key,
     @required PdfController pdfController,
-    @required TextEditingController inputController,
+    @required TextEditingController textEditingController,
     @required int allPagesCount,
   })  : _pdfController = pdfController,
-        _inputController = inputController,
+        _textEditingController = textEditingController,
         _allPagesCount = allPagesCount,
         super(key: key);
 
   final PdfController _pdfController;
-  final TextEditingController _inputController;
+  final TextEditingController _textEditingController;
   final int _allPagesCount;
 
   @override
@@ -66,7 +66,7 @@ class PdfNavigationController extends StatelessWidget {
                     constraints: BoxConstraints(maxWidth: screenWidth * 0.25),
                     child: IntrinsicWidth(
                       child: TextFormField(
-                        controller: _inputController,
+                        controller: _textEditingController,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: fontSize1,
@@ -89,7 +89,7 @@ class PdfNavigationController extends StatelessWidget {
                                   ? _allPagesCount
                                   : pageNumber;
                           _pdfController.jumpToPage(pageNumber);
-                          _inputController.text =
+                          _textEditingController.text =
                               "$pageNumber"; // when page is changed using input, or input == current page number
                         },
                       ),

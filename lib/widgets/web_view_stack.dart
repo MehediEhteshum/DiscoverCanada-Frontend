@@ -4,10 +4,11 @@ import 'package:webview_flutter/webview_flutter.dart';
 class WebViewStack extends StatefulWidget {
   const WebViewStack({
     Key key,
-    @required this.webUrl,
-  }) : super(key: key);
+    @required String webUrl,
+  })  : _webUrl = webUrl,
+        super(key: key);
 
-  final String webUrl;
+  final String _webUrl;
 
   @override
   _WebViewStackState createState() => _WebViewStackState();
@@ -33,7 +34,7 @@ class _WebViewStackState extends State<WebViewStack> {
     return Stack(
       children: <Widget>[
         WebView(
-          initialUrl: widget.webUrl,
+          initialUrl: widget._webUrl,
           javascriptMode: JavascriptMode.unrestricted,
           onPageFinished: (finish) {
             _setStateIfMounted(() {
