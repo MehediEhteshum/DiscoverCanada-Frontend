@@ -5,7 +5,7 @@ import '../helpers/base.dart';
 import '../widgets/no_internet_message.dart';
 import '../widgets/coming_soon_message.dart';
 import '../models and providers/internet_connectivity_provider.dart';
-import '../widgets/pdf_view_stack.dart';
+import '../widgets/pdf_viewer.dart';
 import '../widgets/web_view_stack.dart';
 
 class ChapterScreen extends StatefulWidget {
@@ -62,7 +62,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
         ),
       ),
       body: _hasPdfUrl
-          ? const PdfViewStack()
+          ? const PdfViewer()
           : _hasWebUrl
               ? WebViewStack(
                   webUrl: _webUrl,
