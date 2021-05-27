@@ -26,7 +26,7 @@ class _PdfViewStackState extends State<PdfViewStack> {
   static int _allPagesCount;
   static String _pdfUrl;
   static String _filePath;
-  static int _downloadProgress;
+  static double _downloadProgress;
   static int _dummyTotal;
   static CancelToken _cancelToken;
 
@@ -68,7 +68,7 @@ class _PdfViewStackState extends State<PdfViewStack> {
             _fileExists = File(_filePath).existsSync();
             if (_fileExists) {
               // load from file
-              _downloadProgress = 100;
+              _downloadProgress = 1;
               _pdfController.document = PdfDocument.openFile(_filePath);
               // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
             }
@@ -80,7 +80,7 @@ class _PdfViewStackState extends State<PdfViewStack> {
     }
     if (_fileExists) {
       // load from file
-      _downloadProgress = 100;
+      _downloadProgress = 1;
       _pdfController.document = PdfDocument.openFile(_filePath);
       // Learning: first initialize controllers, then set value only if required to avoid unexpected error i.e. avoid re-initializing controllers.
     }
@@ -91,14 +91,13 @@ class _PdfViewStackState extends State<PdfViewStack> {
     if (total != -1) {
       // 'total' value available
       _setStateIfMounted(() {
-        _downloadProgress = (received / total * 100).toInt();
+        _downloadProgress = received / total;
       });
     } else {
       // 'total' value unavailable. So, dummy progress
       _setStateIfMounted(() {
-        _downloadProgress = (_downloadProgress < 99)
-            ? (received / _dummyTotal * 100).toInt()
-            : 99;
+        _downloadProgress =
+            (_downloadProgress < 0.95) ? received / _dummyTotal : 0.95;
       });
     }
   }
@@ -148,18 +147,13 @@ class _PdfViewStackState extends State<PdfViewStack> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const CircularProgressIndicator(),
+                LinearProgressIndicator(
+                  value: _downloadProgress,
+                  backgroundColor: Colors.grey[300],
+                  color: Colors.black,
+                ),
                 const SizedBox(
                   height: 30,
-                ),
-                Text(
-                  "$_downloadProgress%",
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: fontSize1,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
                 const Text(
                   "Make sure you have internet access.",
@@ -186,7 +180,7 @@ class _PdfViewStackState extends State<PdfViewStack> {
 
   @override
   void dispose() {
-    if (_downloadProgress < 100) {
+    if (_downloadProgress < 1) {
       // download not complete
       _cancelToken.cancel("Download cancelled. Reason: widget closed.");
     }

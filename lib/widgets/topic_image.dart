@@ -31,7 +31,7 @@ class _TopicImageState extends State<TopicImage> {
   static bool _fileExists;
   static String _imageUrl;
   static String _filePath;
-  static int _downloadProgress;
+  static double _downloadProgress;
   static int _dummyTotal;
   static CancelToken _cancelToken;
 
@@ -68,7 +68,7 @@ class _TopicImageState extends State<TopicImage> {
           _setStateIfMounted(() {
             _fileExists = File(_filePath).existsSync();
             if (_fileExists) {
-              _downloadProgress = 100;
+              _downloadProgress = 1;
             }
           });
         });
@@ -77,7 +77,7 @@ class _TopicImageState extends State<TopicImage> {
       }
     }
     if (_fileExists) {
-      _downloadProgress = 100;
+      _downloadProgress = 1;
     }
     super.didChangeDependencies();
   }
@@ -86,14 +86,13 @@ class _TopicImageState extends State<TopicImage> {
     if (total != -1) {
       // 'total' value available
       _setStateIfMounted(() {
-        _downloadProgress = (received / total * 100).toInt();
+        _downloadProgress = received / total;
       });
     } else {
       // 'total' value unavailable. So, dummy progress
       _setStateIfMounted(() {
-        _downloadProgress = (_downloadProgress < 99)
-            ? (received / _dummyTotal * 100).toInt()
-            : 99;
+        _downloadProgress =
+            (_downloadProgress < 0.95) ? received / _dummyTotal : 0.95;
       });
     }
   }
@@ -126,7 +125,7 @@ class _TopicImageState extends State<TopicImage> {
 
   @override
   void dispose() {
-    if (_downloadProgress < 100) {
+    if (_downloadProgress < 1) {
       // download not complete
       _cancelToken.cancel("Download cancelled. Reason: widget closed.");
     }
