@@ -5,10 +5,10 @@ import '../helpers/base.dart';
 class ComingSoonMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
+    return const Center(
+      child: const Text(
         "Coming Soon",
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: fontSize2,
         ),

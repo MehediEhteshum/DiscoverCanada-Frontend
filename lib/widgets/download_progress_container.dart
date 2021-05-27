@@ -30,7 +30,7 @@ class DownloadProgressContainer extends StatelessWidget {
             "Make sure you have internet access.",
             softWrap: true,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: fontSize1,
               color: Colors.red,
               fontWeight: FontWeight.bold,
@@ -40,7 +40,7 @@ class DownloadProgressContainer extends StatelessWidget {
             "Please wait. Download may take several minutes to finish.",
             softWrap: true,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: fontSize1,
             ),
           ),

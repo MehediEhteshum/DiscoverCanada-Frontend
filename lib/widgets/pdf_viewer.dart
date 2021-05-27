@@ -8,6 +8,7 @@ import '../helpers/base.dart';
 import '../helpers/manage_files.dart';
 import '../models and providers/internet_connectivity_provider.dart';
 import './download_progress_container.dart';
+import './download_exit_confirmation_dialog.dart';
 import './pdf_view_stack.dart';
 
 class PdfViewer extends StatefulWidget {
@@ -97,13 +98,28 @@ class _PdfViewerState extends State<PdfViewer> {
 
   @override
   Widget build(BuildContext context) {
-    print("Memeory leaks? build _PdfViewerState");
+    return WillPopScope(
+      onWillPop: _willPop,
+      child: _fileExists
+          ? PdfViewStack(
+              filePath: _filePath,
+            )
+          : DownloadProgressContainer(downloadProgress: _downloadProgress),
+    );
+  }
 
-    return _fileExists
-        ? PdfViewStack(
-            filePath: _filePath,
+  Future<bool> _willPop() async {
+    final value = (_downloadProgress < 1)
+        // download not complete. alert.
+        ? await showDialog<bool>(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) {
+              return const DownloadExitConfirmationDialog();
+            },
           )
-        : DownloadProgressContainer(downloadProgress: _downloadProgress);
+        : true;
+    return value == true;
   }
 
   @override

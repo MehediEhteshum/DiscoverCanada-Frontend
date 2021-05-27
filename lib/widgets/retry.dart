@@ -20,7 +20,7 @@ class Retry extends StatelessWidget {
     print("Memeory leaks? build Retry");
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20), // fixed dim
+      padding: const EdgeInsets.symmetric(horizontal: 20), // fixed dim
       child: RefreshIndicator(
         onRefresh: refreshWidget,
         child: Stack(

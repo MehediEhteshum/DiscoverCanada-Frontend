@@ -11,6 +11,7 @@ class ErrorMessageDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("Memeory leaks? build ErrorMessageDialog");
+
     return AlertDialog(
       title: Column(
         children: <Widget>[
@@ -19,13 +20,13 @@ class ErrorMessageDialog extends StatelessWidget {
           ErrorTitle,
         ],
       ),
-      content: ErrorMessage(),
-      contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 0), // fixed dim
+      content: const ErrorMessage(),
+      contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0), // fixed dim
       actions: <Widget>[
         TextButton(
-          child: Text(
+          child: const Text(
             'Close',
-            style: TextStyle(fontSize: fontSize1), // fixed dim
+            style: const TextStyle(fontSize: fontSize1), // fixed dim
           ),
           onPressed: () {
             Navigator.of(context).pop();

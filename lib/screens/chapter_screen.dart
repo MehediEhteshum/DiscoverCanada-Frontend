@@ -53,7 +53,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
           softWrap: true,
         ),
         bottom: PreferredSize(
-          child: NoInternetMessage(),
+          child: const NoInternetMessage(),
           preferredSize: Size.lerp(
             Size(double.maxFinite, 25), // fixed // offline
             const Size(0, 0), // fixed // online

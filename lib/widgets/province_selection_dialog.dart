@@ -59,7 +59,7 @@ class _ProvinceSelectionDialogState extends State<ProvinceSelectionDialog> {
           ),
         ],
       ),
-      contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0), // fixed dim
+      contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0), // fixed dim
       content: Container(
         width: double.maxFinite,
         height: _provinceListHeight, // proportional to screen width

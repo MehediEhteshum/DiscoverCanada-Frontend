@@ -62,8 +62,8 @@ class _LoaderProvinceSelectionDialogState
             child: const CircularProgressIndicator(),
           )
         : (_error == "NoError")
-            ? Center(
-                child: ProvinceSelectionDialog(),
+            ? const Center(
+                child: const ProvinceSelectionDialog(),
               )
             : const ErrorMessageDialog();
   }

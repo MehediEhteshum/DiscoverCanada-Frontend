@@ -21,8 +21,8 @@ class TopicCard extends StatelessWidget {
       // when topic requires province selection
       showDialog(
         context: context,
-        builder: (context) {
-          return LoaderProvinceSelectionDialog();
+        builder: (_) {
+          return const LoaderProvinceSelectionDialog();
         },
       );
     } else {

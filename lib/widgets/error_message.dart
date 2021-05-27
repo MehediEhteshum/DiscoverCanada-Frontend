@@ -17,7 +17,7 @@ class ErrorMessage extends StatelessWidget {
           'Don\'t give up! :(',
           textAlign: TextAlign.center,
           softWrap: true,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: fontSize1, // fixed dim
           ),
         ),
@@ -25,7 +25,7 @@ class ErrorMessage extends StatelessWidget {
           'Please check your internet connection or try again later.',
           textAlign: TextAlign.center,
           softWrap: true,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: fontSize1, // fixed dim
           ),
         ),
