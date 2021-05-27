@@ -4,7 +4,7 @@ import '../models and providers/topic.dart';
 import '../models and providers/chapter.dart';
 
 // const values
-const int timeOut = 600; // seconds
+const int timeOut = 20; // seconds
 const int successCode = 200; // success statusCode
 const double errorIconSize = 50;
 const Color errorIconColor = Colors.red;

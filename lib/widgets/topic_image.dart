@@ -111,6 +111,14 @@ class _TopicImageState extends State<TopicImage> {
             // load image from file
             placeholder: MemoryImage(kTransparentImage),
             image: FileImage(File(_filePath)),
+            imageErrorBuilder: (_, __, ___) {
+              return Image.asset(
+                noInternetImage,
+                height: widget._imageHeight,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              );
+            },
             height: widget._imageHeight,
             width: double.infinity,
             fit: BoxFit.cover,

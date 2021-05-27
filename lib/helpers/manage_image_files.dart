@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hive/hive.dart';
 
 import './base.dart';
@@ -45,6 +47,17 @@ Future<bool> isNewTopicImage(Box box, String fileId, int objId) async {
       }
     }
     await box.put(1, fileIdsToUpdate); // put boxData
+  }
+  if (isNewFile) {
+    // delete old file
+    final bool pathExists = topicImagePathsList.isNotEmpty
+        // avoiding Error of calling '.length' on []
+        ? topicImagePathsList.asMap().containsKey(objId)
+        : false;
+    if (pathExists) {
+      final String oldFilePath = topicImagePathsList[objId];
+      File(oldFilePath).deleteSync(recursive: true);
+    }
   }
   return isNewFile;
 }

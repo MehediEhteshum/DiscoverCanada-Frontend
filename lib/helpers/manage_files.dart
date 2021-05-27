@@ -82,10 +82,8 @@ Future<void> saveFilePaths(
 Future<bool> isNewFile(
     String url, int objId, Function openBox, String fileType) async {
   try {
-    final Response testResponse = await Dio().head(
-      url,
-      options: Options(responseType: ResponseType.stream),
-    );
+    final Dio dio = Dio();
+    final Response testResponse = await dio.request(url);
     String fileId = testResponse.headers.value("etag");
     bool _isNewFile = await openBox().then((Box box) async {
       bool isNew;
