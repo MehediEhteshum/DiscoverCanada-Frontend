@@ -20,6 +20,7 @@ Future<dynamic> fetchTopics(int isOnline) async {
         if (response.statusCode == successCode) {
           final dynamic extractedData = response.data;
           if (extractedData["data"] != null) {
+            setTopicImagePathsMap();
             await _storeTopicsData(topicsBox, extractedData["data"]);
             setTopicImagePathsMap();
             final List<Topic> _topics =

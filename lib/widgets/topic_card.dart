@@ -59,7 +59,7 @@ class TopicCard extends StatelessWidget {
                   ),
                   baseColor: Colors.grey[300],
                   highlightColor: Colors.grey[100],
-                  loop: 5,
+                  loop: 10,
                 ),
                 TopicImage(
                   topic: topic,

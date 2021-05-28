@@ -8,6 +8,7 @@ import './screens/chapters_overview_screen.dart';
 import './screens/topics_overview_screen.dart';
 import './screens/chapter_screen.dart';
 import './models and providers/internet_connectivity_provider.dart';
+import './helpers/manage_files.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,8 @@ Future<void> openAllHiveBoxes() async {
   await Hive.openBox("topicImageInfo");
   await Hive.openBox("chapters");
   await Hive.openBox("chapterPdfInfo");
+  await Hive.openBox("filePathsToBeDel");
+  await delFilePaths();
 }
 
 class MyApp extends StatelessWidget {

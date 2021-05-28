@@ -151,3 +151,23 @@ String getFilePath(String fileType, [Topic topic]) {
   }
   return filePath; // also check 'saveFiles' function above
 }
+
+Future<Box> Function() openFilePathsToBeDelBox = () async {
+  return await Hive.openBox("filePathsToBeDel");
+};
+
+Future<void> delFilePaths() async {
+  await openFilePathsToBeDelBox().then((Box box) async {
+    if (box.containsKey(0)) {
+      // box not empty
+      List<String> filePathsToBeDel = await box.get(0);
+      if (filePathsToBeDel.length > 0) {
+        // filePathsToBeDel not empty
+        filePathsToBeDel.forEach((filePath) async {
+          await File(filePath).delete(recursive: true);
+        });
+      }
+      await box.clear();
+    }
+  });
+}
