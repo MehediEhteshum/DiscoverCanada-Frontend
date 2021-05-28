@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:hive/hive.dart';
 
 import './base.dart';
@@ -11,16 +9,41 @@ Future<void> saveTopicImagePath(Box box, String filePath, int objId) async {
     await box.put(0, [filePath]);
   } else {
     // 0 key exists. store newFilePath or replace oldFilePath
-    List<String> filePathsList = box.get(0);
+    List<String> filePathsList = await box.get(0);
     if (filePathsList.isEmpty || !filePathsList.asMap().containsKey(objId)) {
       // pathsList empty or no such key yet. so newFilePath
       filePathsList.add(filePath);
     } else {
-      // pathsList not empty and key exists. replace oldFilePath
+      // pathsList not empty and key exists
+      // make sure path is unique, then replace oldFilePath
+      // filePath = generateUniqueFilePath(filePathsList, objId, filePath);
       filePathsList.replaceRange(objId, objId + 1, [filePath]);
     }
     await box.put(0, filePathsList);
   }
+}
+
+String generateUniqueFilePath(
+    List<String> filePathsList, int objId, String filePath) {
+  final String oldFilePath = filePathsList[objId];
+  print("oldFilePath $filePath $oldFilePath $filePathsList $objId");
+  if (filePath == oldFilePath) {
+    // path is not unique
+    final int lastDotId = oldFilePath.lastIndexOf(".");
+    final int lastDashId = oldFilePath.lastIndexOf("-ver");
+    if (lastDashId == -1) {
+      // "-" doesn't exist.
+      filePath = oldFilePath.substring(0, lastDotId) +
+          "-ver0" +
+          oldFilePath.substring(lastDotId);
+    } else {
+      // "-" exists.
+      filePath = oldFilePath.substring(0, lastDashId) +
+          oldFilePath.substring(lastDashId + 5);
+    }
+    print("newFilePath $filePath");
+  }
+  return filePath;
 }
 
 Future<bool> isNewTopicImage(Box box, String fileId, int objId) async {
@@ -48,24 +71,24 @@ Future<bool> isNewTopicImage(Box box, String fileId, int objId) async {
     }
     await box.put(1, fileIdsToUpdate); // put boxData
   }
-  if (isNewFile) {
-    // delete old file
-    final bool pathExists = topicImagePathsList.isNotEmpty
-        // avoiding Error of calling '.length' on []
-        ? topicImagePathsList.asMap().containsKey(objId)
-        : false;
-    if (pathExists) {
-      final String oldFilePath = topicImagePathsList[objId];
-      File(oldFilePath).deleteSync(recursive: true);
-    }
-  }
+  // if (isNewFile) {
+  //   // delete old file
+  //   final bool pathExists = topicImagePathsList.isNotEmpty
+  //       // avoiding Error of calling '.length' on []
+  //       ? topicImagePathsList.asMap().containsKey(objId)
+  //       : false;
+  //   if (pathExists) {
+  //     final String oldFilePath = topicImagePathsList[objId];
+  //     File(oldFilePath).deleteSync(recursive: true);
+  //   }
+  // }
   return isNewFile;
 }
 
 Future<void> setTopicImagePathsList() async {
   await openTopicImageInfoBox().then((Box topicImageInfoBox) async {
     topicImagePathsList =
-        topicImageInfoBox.containsKey(0) ? topicImageInfoBox.get(0) : [];
+        topicImageInfoBox.containsKey(0) ? await topicImageInfoBox.get(0) : [];
   });
 }
 

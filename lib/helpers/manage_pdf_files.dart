@@ -2,8 +2,7 @@ import 'package:hive/hive.dart';
 
 import 'base.dart';
 
-Future<void> saveChapterPdfPath(
-    Box box, String filePath, int objId) async {
+Future<void> saveChapterPdfPath(Box box, String filePath, int objId) async {
   Map boxData;
   // filePaths are saved at key 0
   if (!box.containsKey(0)) {
@@ -16,9 +15,9 @@ Future<void> saveChapterPdfPath(
   } else {
     // 0 key exists
     boxData = await box.get(0); // get boxData
-    if (!box.get(0).containsKey(selectedTopic.id)) {
+    if (!boxData.containsKey(selectedTopic.id)) {
       // topic key not exists. so newFilePath
-      boxData.putIfAbsent(
+      await boxData.putIfAbsent(
           selectedTopic.id,
           () => {
                 selectedProvince: [filePath]
@@ -27,16 +26,16 @@ Future<void> saveChapterPdfPath(
       await box.put(0, boxData); // put boxData
     } else {
       // topic key exists
-      if (!box.get(0)[selectedTopic.id].containsKey(selectedProvince)) {
+      if (!boxData[selectedTopic.id].containsKey(selectedProvince)) {
         // province key not exists. so newFilePath
-        boxData[selectedTopic.id]
+        await boxData[selectedTopic.id]
             .putIfAbsent(selectedProvince, () => [filePath]); // update boxData
         // Hive learning: need to put again for data persistence on app restart
         await box.put(0, boxData); // put boxData
       } else {
         // province key exists. store newFilePath or replace oldFilePath
         List<String> filePathsList =
-            box.get(0)[selectedTopic.id][selectedProvince];
+            boxData[selectedTopic.id][selectedProvince];
         if (filePathsList.isEmpty ||
             !filePathsList.asMap().containsKey(objId)) {
           // pathsList empty or no such key yet. so newFilePath
@@ -45,7 +44,6 @@ Future<void> saveChapterPdfPath(
           // pathsList not empty and key exists. replace oldFilePath
           filePathsList.replaceRange(objId, objId + 1, [filePath]);
         }
-        boxData = await box.get(0); // get boxData
         await boxData[selectedTopic.id].update(
           selectedProvince,
           (currData) => filePathsList,
@@ -73,10 +71,10 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
   } else {
     // 1 key exists
     boxData = await box.get(1); // get boxData
-    if (!box.get(1).containsKey(selectedTopic.id)) {
+    if (!boxData.containsKey(selectedTopic.id)) {
       // topic key not exists. so newFile
       isNewFile = true;
-      boxData.putIfAbsent(
+      await boxData.putIfAbsent(
           selectedTopic.id,
           () => {
                 selectedProvince: [fileId]
@@ -85,17 +83,17 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
       await box.put(1, boxData); // put boxData
     } else {
       // topic key exists
-      if (!box.get(1)[selectedTopic.id].containsKey(selectedProvince)) {
+      if (!boxData[selectedTopic.id].containsKey(selectedProvince)) {
         // province key not exists. so newFile
         isNewFile = true;
-        boxData[selectedTopic.id]
+        await boxData[selectedTopic.id]
             .putIfAbsent(selectedProvince, () => [fileId]); // update boxData
         // Hive learning: need to put again for data persistence on app restart
         await box.put(1, boxData); // put boxData
       } else {
         // province key exists. check if newFile
         List<String> fileIdsToUpdate =
-            box.get(1)[selectedTopic.id][selectedProvince];
+            boxData[selectedTopic.id][selectedProvince];
         if (fileIdsToUpdate.isEmpty ||
             !fileIdsToUpdate.asMap().containsKey(objId)) {
           // fileIdsToUpdate empty or no such key yet. so newFile.
@@ -109,7 +107,6 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
             fileIdsToUpdate.replaceRange(objId, objId + 1, [fileId]);
           }
         }
-        boxData = await box.get(1); // get boxData
         await boxData[selectedTopic.id].update(
           selectedProvince,
           (currData) => fileIdsToUpdate,
@@ -126,7 +123,7 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
 Future<void> setChapterPdfPathsList() async {
   await openChapterPdfInfoBox().then((Box chapterPdfInfoBox) async {
     chapterPdfPathsList = chapterPdfInfoBox.containsKey(0)
-        ? chapterPdfInfoBox.get(0)[selectedTopic.id][selectedProvince]
+        ? await chapterPdfInfoBox.get(0)[selectedTopic.id][selectedProvince]
         : [];
   });
 }
