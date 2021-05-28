@@ -156,7 +156,7 @@ Future<Box> Function() openFilePathsToBeDelBox = () async {
   return await Hive.openBox("filePathsToBeDel");
 };
 
-Future<void> delFilePaths() async {
+Future<void> delFilePathsToBeDel() async {
   await openFilePathsToBeDelBox().then((Box box) async {
     if (box.containsKey(0)) {
       // box not empty

@@ -27,7 +27,7 @@ Future<void> openAllHiveBoxes() async {
   await Hive.openBox("chapters");
   await Hive.openBox("chapterPdfInfo");
   await Hive.openBox("filePathsToBeDel");
-  await delFilePaths();
+  await delFilePathsToBeDel();
 }
 
 class MyApp extends StatelessWidget {
