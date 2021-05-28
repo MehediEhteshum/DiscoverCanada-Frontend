@@ -22,16 +22,12 @@ Future<void> saveChapterPdfPath(Box box, String filePath, int objId) async {
           () => {
                 selectedProvince: [filePath]
               }); // update boxData
-      // Hive learning: need to put again for data persistence on app restart
-      await box.put(0, boxData); // put boxData
     } else {
       // topic key exists
       if (!boxData[selectedTopic.id].containsKey(selectedProvince)) {
         // province key not exists. so newFilePath
         await boxData[selectedTopic.id]
             .putIfAbsent(selectedProvince, () => [filePath]); // update boxData
-        // Hive learning: need to put again for data persistence on app restart
-        await box.put(0, boxData); // put boxData
       } else {
         // province key exists. store newFilePath or replace oldFilePath
         List<String> filePathsList =
@@ -46,13 +42,13 @@ Future<void> saveChapterPdfPath(Box box, String filePath, int objId) async {
         }
         await boxData[selectedTopic.id].update(
           selectedProvince,
-          (currData) => filePathsList,
+          (curr) => filePathsList,
           ifAbsent: () => filePathsList,
         ); // update boxData
-        // Hive learning: need to put again for data persistence on app restart
-        await box.put(0, boxData); // put boxData
       }
-    }
+    } // update boxData
+    // Hive learning: need to put again for data persistence on app restart
+    await box.put(0, boxData); // put boxData
   }
 }
 
@@ -78,9 +74,7 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
           selectedTopic.id,
           () => {
                 selectedProvince: [fileId]
-              }); // update boxData
-      // Hive learning: need to put again for data persistence on app restart
-      await box.put(1, boxData); // put boxData
+              });
     } else {
       // topic key exists
       if (!boxData[selectedTopic.id].containsKey(selectedProvince)) {
@@ -88,8 +82,6 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
         isNewFile = true;
         await boxData[selectedTopic.id]
             .putIfAbsent(selectedProvince, () => [fileId]); // update boxData
-        // Hive learning: need to put again for data persistence on app restart
-        await box.put(1, boxData); // put boxData
       } else {
         // province key exists. check if newFile
         List<String> fileIdsToUpdate =
@@ -112,10 +104,10 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
           (currData) => fileIdsToUpdate,
           ifAbsent: () => [...fileIdsToUpdate],
         ); // update boxData
-        // Hive learning: need to put again for data persistence on app restart
-        await box.put(1, boxData); // put boxData
       }
-    }
+    } // update boxData
+    // Hive learning: need to put again for data persistence on app restart
+    await box.put(1, boxData); // put boxData
   }
   return isNewFile;
 }

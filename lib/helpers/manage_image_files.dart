@@ -3,23 +3,32 @@ import 'package:hive/hive.dart';
 import './base.dart';
 
 Future<void> saveTopicImagePath(Box box, String filePath, int objId) async {
+  Map boxData;
   // filePaths are saved at key 0
   if (!box.containsKey(0)) {
     // 0 key not exists. so newFilePath
-    await box.put(0, [filePath]);
+    await box.put(0, {objId: filePath});
   } else {
     // 0 key exists. store newFilePath or replace oldFilePath
-    List<String> filePathsList = await box.get(0);
-    if (filePathsList.isEmpty || !filePathsList.asMap().containsKey(objId)) {
-      // pathsList empty or no such key yet. so newFilePath
-      filePathsList.add(filePath);
+    boxData = await box.get(0);
+    if (!boxData.containsKey(objId)) {
+      // topic key not exists. so newFilePath
+      await boxData.putIfAbsent(
+        objId,
+        () => filePath,
+      ); // update boxData
     } else {
-      // pathsList not empty and key exists
+      // topic key exists, replace oldFilePath
       // make sure path is unique, then replace oldFilePath
       // filePath = generateUniqueFilePath(filePathsList, objId, filePath);
-      filePathsList.replaceRange(objId, objId + 1, [filePath]);
-    }
-    await box.put(0, filePathsList);
+      await boxData.update(
+        objId,
+        (curr) => filePath,
+        ifAbsent: () => filePath,
+      ); // update boxData
+    } // update boxData
+    // Hive learning: need to put again for data persistence on app restart
+    await box.put(0, boxData); // put boxData
   }
 }
 
@@ -47,29 +56,37 @@ String generateUniqueFilePath(
 }
 
 Future<bool> isNewTopicImage(Box box, String fileId, int objId) async {
+  Map boxData;
   bool isNewFile;
   // etags are saved at key 1
   if (!box.containsKey(1)) {
     // 1 key not exists. so newFile
     isNewFile = true;
-    await box.put(1, [fileId]);
+    await box.put(1, {objId: fileId});
   } else {
     // 1 key exists. check if newFile
-    List<String> fileIdsToUpdate = box.get(1);
-    if (fileIdsToUpdate.isEmpty ||
-        !fileIdsToUpdate.asMap().containsKey(objId)) {
-      // fileIdsToUpdate empty or no such key yet. so newFile.
+    boxData = await box.get(1);
+    if (!boxData.containsKey(objId)) {
+      // topic key not exists. so newFile
       isNewFile = true;
-      fileIdsToUpdate.add(fileId);
+      await boxData.putIfAbsent(
+        objId,
+        () => fileId,
+      ); // update boxData
     } else {
-      // fileIdsToUpdate not empty and key exists. check if newFile.
-      isNewFile = (fileId != fileIdsToUpdate[objId]);
+      // topic key exists. check if newFile.
+      isNewFile = (fileId != boxData[objId]);
       if (isNewFile) {
         // replace old fileId
-        fileIdsToUpdate.replaceRange(objId, objId + 1, [fileId]);
+        await boxData.update(
+          objId,
+          (curr) => fileId,
+          ifAbsent: () => fileId,
+        ); // update boxData
       }
-    }
-    await box.put(1, fileIdsToUpdate); // put boxData
+    } // update boxData
+    // Hive learning: need to put again for data persistence on app restart
+    await box.put(1, boxData); // put boxData
   }
   // if (isNewFile) {
   //   // delete old file
@@ -85,10 +102,10 @@ Future<bool> isNewTopicImage(Box box, String fileId, int objId) async {
   return isNewFile;
 }
 
-Future<void> setTopicImagePathsList() async {
+Future<void> setTopicImagePathsMap() async {
   await openTopicImageInfoBox().then((Box topicImageInfoBox) async {
-    topicImagePathsList =
-        topicImageInfoBox.containsKey(0) ? await topicImageInfoBox.get(0) : [];
+    topicImagePathsMap =
+        topicImageInfoBox.containsKey(0) ? await topicImageInfoBox.get(0) : {};
   });
 }
 

@@ -117,9 +117,9 @@ String getFilePath(String fileType, [Topic topic]) {
   bool pathExists;
   String filePath;
   if (fileType == fileTypes[0]) {
-    pathExists = topicImagePathsList.isNotEmpty
+    pathExists = topicImagePathsMap.isNotEmpty
         // avoiding Error of calling '.length' on []
-        ? topicImagePathsList.asMap().containsKey(objId)
+        ? topicImagePathsMap.containsKey(objId)
         : false;
   } else if (fileType == fileTypes[1]) {
     pathExists = (chapterPdfPathsList != null)
@@ -144,7 +144,7 @@ String getFilePath(String fileType, [Topic topic]) {
   } else {
     // topicImagePathsList or chapterPdfPathsList is ready or contains path
     filePath = (fileType == fileTypes[0])
-        ? topicImagePathsList[objId]
+        ? topicImagePathsMap[objId]
         : (fileType == fileTypes[1])
             ? chapterPdfPathsList[objId]
             : null;
