@@ -25,7 +25,7 @@ List<Topic> topics = [];
 List<String> provinces = [];
 List<Chapter> specificChapters = [];
 Map topicImagePathsMap = {};
-List<String> chapterPdfPathsList = [];
+Map chapterPdfPathsMap = {};
 int isOnline = 2; // basically it is bool(0, 1), 2 during app start-up
 
 // global variables declared

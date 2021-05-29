@@ -1,15 +1,17 @@
 import 'package:hive/hive.dart';
 
 import 'base.dart';
+import './manage_files.dart' as mf;
 
-Future<void> saveChapterPdfPath(Box box, String filePath, int objId) async {
+Future<void> saveChapterPdfPath(Box box, String filePath, int chapterId) async {
   Map boxData;
+  Map filePathsMap;
   // filePaths are saved at key 0
   if (!box.containsKey(0)) {
     // 0 key not exists. so newFilePath
     await box.put(0, {
       selectedTopic.id: {
-        selectedProvince: [filePath]
+        selectedProvince: {chapterId: filePath}
       }
     });
   } else {
@@ -18,32 +20,36 @@ Future<void> saveChapterPdfPath(Box box, String filePath, int objId) async {
     if (!boxData.containsKey(selectedTopic.id)) {
       // topic key not exists. so newFilePath
       await boxData.putIfAbsent(
-          selectedTopic.id,
-          () => {
-                selectedProvince: [filePath]
-              }); // update boxData
+        selectedTopic.id,
+        () => {
+          selectedProvince: {chapterId: filePath}
+        },
+      ); // update boxData
     } else {
       // topic key exists
       if (!boxData[selectedTopic.id].containsKey(selectedProvince)) {
         // province key not exists. so newFilePath
-        await boxData[selectedTopic.id]
-            .putIfAbsent(selectedProvince, () => [filePath]); // update boxData
+        await boxData[selectedTopic.id].putIfAbsent(
+          selectedProvince,
+          () => {chapterId: filePath},
+        ); // update boxData
       } else {
         // province key exists. store newFilePath or replace oldFilePath
-        List<String> filePathsList =
-            boxData[selectedTopic.id][selectedProvince];
-        if (filePathsList.isEmpty ||
-            !filePathsList.asMap().containsKey(objId)) {
-          // pathsList empty or no such key yet. so newFilePath
-          filePathsList.add(filePath);
+        filePathsMap = boxData[selectedTopic.id][selectedProvince];
+        if (!filePathsMap.containsKey(chapterId)) {
+          // empty or no such chapter key yet. so newFilePath
+          filePathsMap[chapterId] = filePath; // update filePathsMap
         } else {
-          // pathsList not empty and key exists. replace oldFilePath
-          filePathsList.replaceRange(objId, objId + 1, [filePath]);
+          // not empty and chapter key exists.
+          // make sure path is unique, then replace oldFilePath
+          filePath = await mf.generateUniqueFilePath(
+              filePathsMap, chapterId, filePath);
+          filePathsMap[chapterId] = filePath; // update filePathsMap
         }
         await boxData[selectedTopic.id].update(
           selectedProvince,
-          (curr) => filePathsList,
-          ifAbsent: () => filePathsList,
+          (curr) => filePathsMap,
+          ifAbsent: () => filePathsMap,
         ); // update boxData
       }
     } // update boxData
@@ -52,8 +58,9 @@ Future<void> saveChapterPdfPath(Box box, String filePath, int objId) async {
   }
 }
 
-Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
+Future<bool> isNewChapterPdf(Box box, String fileId, int chapterId) async {
   Map boxData;
+  Map fileIdsMap;
   bool isNewFile;
   // etags are saved at key 1
   if (!box.containsKey(1)) {
@@ -61,7 +68,7 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
     isNewFile = true;
     await box.put(1, {
       selectedTopic.id: {
-        selectedProvince: [fileId]
+        selectedProvince: {chapterId: fileId}
       }
     });
   } else {
@@ -71,38 +78,39 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
       // topic key not exists. so newFile
       isNewFile = true;
       await boxData.putIfAbsent(
-          selectedTopic.id,
-          () => {
-                selectedProvince: [fileId]
-              });
+        selectedTopic.id,
+        () => {
+          selectedProvince: {chapterId: fileId}
+        },
+      );
     } else {
       // topic key exists
       if (!boxData[selectedTopic.id].containsKey(selectedProvince)) {
         // province key not exists. so newFile
         isNewFile = true;
-        await boxData[selectedTopic.id]
-            .putIfAbsent(selectedProvince, () => [fileId]); // update boxData
+        await boxData[selectedTopic.id].putIfAbsent(
+          selectedProvince,
+          () => {chapterId: fileId},
+        ); // update boxData
       } else {
         // province key exists. check if newFile
-        List<String> fileIdsToUpdate =
-            boxData[selectedTopic.id][selectedProvince];
-        if (fileIdsToUpdate.isEmpty ||
-            !fileIdsToUpdate.asMap().containsKey(objId)) {
-          // fileIdsToUpdate empty or no such key yet. so newFile.
+        fileIdsMap = boxData[selectedTopic.id][selectedProvince];
+        if (!fileIdsMap.containsKey(chapterId)) {
+          // empty or no such chapter key yet. so newFile.
           isNewFile = true;
-          fileIdsToUpdate.add(fileId);
+          fileIdsMap[chapterId] = fileId; // update fileIdsMap
         } else {
-          // fileIdsToUpdate not empty and key exists. check if newFile.
-          isNewFile = (fileId != fileIdsToUpdate[objId]);
+          // not empty and chapter key exists. check if newFile.
+          isNewFile = (fileId != fileIdsMap[chapterId]);
           if (isNewFile) {
             // replace old fileId
-            fileIdsToUpdate.replaceRange(objId, objId + 1, [fileId]);
+            fileIdsMap[chapterId] = fileId; // update fileIdsMap
           }
         }
         await boxData[selectedTopic.id].update(
           selectedProvince,
-          (currData) => fileIdsToUpdate,
-          ifAbsent: () => [...fileIdsToUpdate],
+          (currData) => fileIdsMap,
+          ifAbsent: () => fileIdsMap,
         ); // update boxData
       }
     } // update boxData
@@ -112,11 +120,11 @@ Future<bool> isNewChapterPdf(Box box, String fileId, int objId) async {
   return isNewFile;
 }
 
-Future<void> setChapterPdfPathsList() async {
+Future<void> setChapterPdfPathsMap() async {
   await openChapterPdfInfoBox().then((Box chapterPdfInfoBox) async {
-    chapterPdfPathsList = chapterPdfInfoBox.containsKey(0)
+    chapterPdfPathsMap = chapterPdfInfoBox.containsKey(0)
         ? await chapterPdfInfoBox.get(0)[selectedTopic.id][selectedProvince]
-        : [];
+        : {};
   });
 }
 

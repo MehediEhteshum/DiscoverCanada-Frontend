@@ -122,9 +122,9 @@ String getFilePath(String fileType, [Topic topic]) {
         ? topicImagePathsMap.containsKey(objId)
         : false;
   } else if (fileType == fileTypes[1]) {
-    pathExists = (chapterPdfPathsList != null)
+    pathExists = (chapterPdfPathsMap != null)
         // avoiding nullError
-        ? chapterPdfPathsList.asMap().containsKey(objId)
+        ? chapterPdfPathsMap.containsKey(objId)
         : false;
   }
   if (!pathExists) {
@@ -146,7 +146,7 @@ String getFilePath(String fileType, [Topic topic]) {
     filePath = (fileType == fileTypes[0])
         ? topicImagePathsMap[objId]
         : (fileType == fileTypes[1])
-            ? chapterPdfPathsList[objId]
+            ? chapterPdfPathsMap[objId]
             : null;
   }
   return filePath; // also check 'saveFiles' function above
@@ -170,4 +170,42 @@ Future<void> delFilePathsToBeDel() async {
       await box.clear();
     }
   });
+}
+
+Future<String> generateUniqueFilePath(
+    Map filePathsMap, int objId, String filePath) async {
+  final String oldFilePath = filePathsMap[objId];
+  if (filePath == oldFilePath) {
+    // path is not unique
+    final int lastDotId = oldFilePath.lastIndexOf(".");
+    final int verId = oldFilePath.lastIndexOf("-ver");
+    if (verId == -1) {
+      // "-ver" doesn't exist in oldFilePath.
+      filePath = oldFilePath.substring(0, lastDotId) +
+          "-ver0" +
+          oldFilePath.substring(lastDotId);
+    } else {
+      // "-ver" exists in oldFilePath.
+      filePath =
+          oldFilePath.substring(0, verId) + oldFilePath.substring(lastDotId);
+    }
+  }
+  await openFilePathsToBeDelBox().then((Box box) async {
+    // save FilePathsToBeDel at 0
+    List<String> filePathsToBeDel;
+    if (!box.containsKey(0)) {
+      // 0 key not exists. fully empty. add filePathToBeDel
+      await box.put(0, [oldFilePath]); // update box
+    } else {
+      // 0 key exists. add filePathToBeDel if not added
+      filePathsToBeDel = await box.get(0);
+      if (!filePathsToBeDel.contains(oldFilePath)) {
+        // oldFilePath wasn't added, so add
+        filePathsToBeDel.add(oldFilePath);
+        // Hive learning: need to put again for data persistence on app restart
+        await box.put(0, filePathsToBeDel); // update box
+      }
+    }
+  });
+  return filePath;
 }

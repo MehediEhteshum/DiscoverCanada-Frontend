@@ -25,7 +25,7 @@ Future<dynamic> fetchAndSetSpecificChapters(
                 chaptersBox, extractedData["data"], topicId, provinceName);
             if (topicIdsContainPdf.contains(topicId)) {
               // only when topicIdContainsPdf
-              setChapterPdfPathsList();
+              setChapterPdfPathsMap();
             }
             final List<Chapter> loadedChapters =
                 _createChaptersList(extractedData["data"]);
