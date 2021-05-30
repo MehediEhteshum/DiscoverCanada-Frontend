@@ -83,7 +83,12 @@ Future<bool> isNewFile(
     String url, int objId, Function openBox, String fileType) async {
   try {
     final Dio dio = Dio();
-    final Response testResponse = await dio.request(url);
+    final Response testResponse = await dio
+        .request(url)
+        .timeout(Duration(seconds: timeOut))
+        .catchError((e) {
+      print("manage_files0 $fileType $e");
+    });
     String fileId = testResponse.headers.value("etag");
     bool _isNewFile = await openBox().then((Box box) async {
       bool isNew;

@@ -16,7 +16,13 @@ Future<dynamic> fetchTopics(int isOnline) async {
       try {
         String topicsUrl =
             "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/topics";
-        final Response response = await Dio().get(topicsUrl);
+        final Response response = await Dio()
+            .get(topicsUrl)
+            .timeout(Duration(seconds: timeOut))
+            .catchError((e) {
+          print("topics0 $e");
+          error = Future.error(e.toString());
+        });
         if (response.statusCode == successCode) {
           final dynamic extractedData = response.data;
           if (extractedData["data"] != null) {

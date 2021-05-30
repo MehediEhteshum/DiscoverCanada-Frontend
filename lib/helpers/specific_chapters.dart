@@ -17,7 +17,13 @@ Future<dynamic> fetchAndSetSpecificChapters(
       try {
         String specificChaptersUrl =
             "${FlutterConfig.get('BASE_URL')}:${FlutterConfig.get('PORT')}/discover-canada/api/$topicId/$provinceName/chapters";
-        final Response response = await Dio().get(specificChaptersUrl);
+        final Response response = await Dio()
+            .get(specificChaptersUrl)
+            .timeout(Duration(seconds: timeOut))
+            .catchError((e) {
+          print("specific_chapters0 $e");
+          error = Future.error(e.toString());
+        });
         if (response.statusCode == successCode) {
           final extractedData = response.data;
           if (extractedData["data"] != null) {
