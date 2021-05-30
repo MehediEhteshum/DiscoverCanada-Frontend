@@ -49,25 +49,35 @@ class _PdfViewerState extends State<PdfViewer> {
       try {
         Dio()
             .download(
-          _pdfUrl,
-          _filePath,
-          onReceiveProgress: _calculateDownloadProgress,
-          cancelToken: _cancelToken,
-          options: Options(
-              responseType: ResponseType.bytes,
-              headers: {HttpHeaders.acceptEncodingHeader: "*"}),
-        )
+              _pdfUrl,
+              _filePath,
+              onReceiveProgress: _calculateDownloadProgress,
+              cancelToken: _cancelToken,
+              options: Options(
+                  responseType: ResponseType.bytes,
+                  headers: {HttpHeaders.acceptEncodingHeader: "*"}),
+            )
             .then((_) {
-          _setStateIfMounted(() {
-            _fileExists = File(_filePath).existsSync();
-            if (_fileExists) {
-              // load from file
-              _downloadProgress = 1;
-            }
-          });
-        });
+              _setStateIfMounted(() {
+                _fileExists = File(_filePath).existsSync();
+                if (_fileExists) {
+                  // load from file
+                  _downloadProgress = 1;
+                }
+              });
+            })
+            .timeout(Duration(seconds: timeOut))
+            .catchError((e) {
+              print("pdf_viewer1 $e");
+              _setStateIfMounted(() {
+                _downloadProgress = -1;
+              });
+            });
       } catch (e) {
-        print("pdf_viewer1 $e");
+        print("pdf_viewer2 $e");
+        _setStateIfMounted(() {
+          _downloadProgress = -1;
+        });
       }
     }
     if (_fileExists) {
@@ -104,12 +114,25 @@ class _PdfViewerState extends State<PdfViewer> {
           ? PdfViewStack(
               filePath: _filePath,
             )
-          : DownloadProgressContainer(downloadProgress: _downloadProgress),
+          : _downloadProgress >= 0 && _downloadProgress <= 1
+              ? DownloadProgressContainer(downloadProgress: _downloadProgress)
+              : const Center(
+                  child: const Text(
+                    "DownLoad Failed!",
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: fontSize1,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
     );
   }
 
   Future<bool> _willPop() async {
-    final value = (_downloadProgress < 1)
+    final value = (_downloadProgress >= 0 && _downloadProgress < 1)
         // download not complete. alert.
         ? await showDialog<bool>(
             context: context,

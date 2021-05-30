@@ -56,24 +56,34 @@ class _TopicImageState extends State<TopicImage> {
       try {
         Dio()
             .download(
-          _imageUrl,
-          _filePath,
-          onReceiveProgress: _calculateDownloadProgress,
-          cancelToken: _cancelToken,
-          options: Options(
-              responseType: ResponseType.bytes,
-              headers: {HttpHeaders.acceptEncodingHeader: "*"}),
-        )
+              _imageUrl,
+              _filePath,
+              onReceiveProgress: _calculateDownloadProgress,
+              cancelToken: _cancelToken,
+              options: Options(
+                  responseType: ResponseType.bytes,
+                  headers: {HttpHeaders.acceptEncodingHeader: "*"}),
+            )
             .then((_) {
-          _setStateIfMounted(() {
-            _fileExists = File(_filePath).existsSync();
-            if (_fileExists) {
-              _downloadProgress = 1;
-            }
-          });
-        });
+              _setStateIfMounted(() {
+                _fileExists = File(_filePath).existsSync();
+                if (_fileExists) {
+                  _downloadProgress = 1;
+                }
+              });
+            })
+            .timeout(Duration(seconds: timeOut))
+            .catchError((e) {
+              print("topic_image1 $e");
+              _setStateIfMounted(() {
+                _downloadProgress = -1;
+              });
+            });
       } catch (e) {
-        print("topic_image1 $e");
+        print("topic_image2 $e");
+        _setStateIfMounted(() {
+          _downloadProgress = -1;
+        });
       }
     }
     if (_fileExists) {
@@ -123,12 +133,19 @@ class _TopicImageState extends State<TopicImage> {
             width: double.infinity,
             fit: BoxFit.cover,
           )
-        : Image.memory(
-            kTransparentImage,
-            height: widget._imageHeight,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          );
+        : _downloadProgress >= 0 && _downloadProgress <= 1
+            ? Image.memory(
+                kTransparentImage,
+                height: widget._imageHeight,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              )
+            : Image.asset(
+                noInternetImage,
+                height: widget._imageHeight,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              );
   }
 
   @override
