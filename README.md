@@ -1,4 +1,4 @@
-# DiscoverCanada-Frontend (TO BE UPDATED)
+# Discover Canada App - Frontend (TO BE UPDATED)
 
 A new Flutter project.
 
